@@ -312,7 +312,6 @@ typedef struct
                                                                        The maximum value is (2^16)-1. 
                                                                         Possible value is 1.*/
     CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT]; /**< @brief  It is a character array that represents the the numeric identifier of the event.
-                                                                        The maximum size is 255 bytes long. 
                                                                         It is a vendor specific value.*/
 
 }CMMGMT_CM_EventLogEntry_t;
@@ -575,7 +574,6 @@ CM_DIPLEXER_SETTINGS;
 
 /**
 * @brief Retrieves the global information for all shared DBs and makes them accessible locally.
-* @param None
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -587,7 +585,6 @@ INT cm_hal_InitDB(void);
 
 /**
 * @brief Init global PHY level info and DBs and get direct access to DS HW.
-* @param None
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -599,7 +596,6 @@ INT docsis_InitDS(void);
 
 /**
 * @brief Init global PHY level info and DBs and get direct access to US HW.
-* @param None
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -764,7 +760,6 @@ INT docsis_SetMddIpModeOverride(CHAR *pValue);
 
 /**
 * @brief Retrieve the US channel ID in its MAC domain.
-* @param None
 *
 * @return UINT8 - Channel ID.
 *
@@ -779,17 +774,12 @@ UINT8 docsis_GetUSChannelId(void);
 *                  \n The maximum value is (2^31)-1.
 *                  \n Possible Example: 12.
 *
-* @return None
-*
-* 
-*
 *
 */
 void docsis_SetUSChannelId(INT index);
 
 /**
 * @brief Retrieve the current primary channel DS channel frequency from the LKF table.
-* @param None
 *
 * @return ULONG - channel frequency.
 *
@@ -803,10 +793,6 @@ ULONG docsis_GetDownFreq(void);
 * @brief Change the DS primary channel frequency in the LKF table.
 * @param[in] value  It is an unsigned long value which provides primary channel frequency value that is to be set.
 *                  \n The maximum value is (2^32)-1. Example: 12750.
-*
-* @return None
-*
-* 
 *
 *
 */
@@ -830,7 +816,6 @@ INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len
 
 /**
 * @brief Clear the DOCSIS event log.
-* @param None
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -976,7 +961,6 @@ INT cm_hal_Get_HTTP_Download_Interface(unsigned int* pinterface);
 /* cm_hal_HTTP_Download - 3 */
 /**
 * @brief Start Http Download.
-* @param None
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any Downloading is in process.
@@ -989,7 +973,6 @@ INT cm_hal_HTTP_Download ();
 /* cm_hal_ Get_HTTP_Download _Status ? 4 */
 /**
 * @brief Get the HTTP Download Status.
-* @param None
 * @return the status of the HTTP Download.
 * @retval 0 -   Download is not started.
 * @retval 0-100 - Values of percent of download.
@@ -1025,7 +1008,6 @@ INT cm_hal_Reboot_Ready(ULONG *pValue);
 /* cm_hal_HTTP_DL_Reboot_Now - 6*/
 /**
 * @brief Http Download Reboot Now.
-* @param None
 * @return the status of the reboot operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any reboot is in process.
@@ -1053,7 +1035,6 @@ INT cm_hal_FWupdateAndFactoryReset(char* pUrl, char* pImagename);
 
 /**
 * @brief Reinit CM.  Performs reinit MAC only to same DS/US.
-* @param None
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -1193,7 +1174,7 @@ INT cm_hal_Get_ErouterResetCount(ULONG *resetcnt);
 
 /**
 * @brief Enable/Disable HTTP LED Flashing.
-* @param[in] bLEDFlashState Enable/Disable LED Flash. It is a Boolean value.
+* @param[in] LedFlash Enable/Disable LED Flash. It is a Boolean value.
 *                           \n Possible values is 1 to enable LEDFlash or 0 to disable.
 *
 * @return The status of the operation.
@@ -1267,7 +1248,6 @@ INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output
 
 /**
 * @brief Get the LLD enable status.
-* @param None
 *
 * @return The status of the LLD status.
 * @retval ENABLE if LLD is enabled in bootfile.
