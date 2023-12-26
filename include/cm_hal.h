@@ -237,10 +237,8 @@ _CMMGMT_CM_DOCSIS_INFO
                                                                                    The maximum value is (2^32)-1.*/
     CHAR                            ToDStatus[64];                    /**< @brief  It is a character array that represents the ToD Status.
                                                                                    Possible Values are "Complete", "NotStarted".*/
-    BOOLEAN                         BPIState;                         /**< @brief  It is an boolean value that represents the BPIState.
-                                                                                   Possible values are TRUE or FALSE.*/
-    BOOLEAN                         NetworkAccess;                    /**< @brief  It is an boolean value that represents the Network Access.
-                                                                                   Possible values are TRUE or FALSE.*/   
+    BOOLEAN                         BPIState;                         /**< @brief  It is an boolean value that represents the BPIState. */
+    BOOLEAN                         NetworkAccess;                    /**< @brief  It is an boolean value that represents the Network Access. */   
     ANSC_IPV4_ADDRESS               UpgradeServerIP;                  /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the Upgrade Server IP.*/
     ULONG                           MaxCpeAllowed;                    /**< @brief  It is an unsigned long value that represents the Max Cpe Allowed.
                                                                                    The maximum value is (2^32)-1. */
@@ -560,6 +558,14 @@ CM_DIPLEXER_SETTINGS;
  *  CM Subsystem level function prototypes
  *
 **********************************************************************************/
+
+/*
+ * TODO:
+ *
+ * 1. Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future.
+ *    This was reported during the review for header file migration to opensource github.
+ *
+ */
 
 /**
  * @addtogroup CM_HAL_APIS
