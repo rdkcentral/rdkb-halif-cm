@@ -5,6 +5,11 @@
 - `HAL` \- Hardware Abstraction Layer
 - `RDK-B` \- Reference Design Kit for Broadband Devices
 - `OEM` \- Original Equipment Manufacture
+- `CM` \- Cable Modem
+- `PLC` \- PHY Link Channel
+- `NCP` \-  Network Control Protocol
+- `OFDM` \- Orthogonal Frequency Division Multiplexing
+
 
 ## Description
 
