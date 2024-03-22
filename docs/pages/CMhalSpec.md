@@ -18,12 +18,11 @@ Broadband CM HAL is an abstraction layer implemented to abstract the underlying 
 
 ### Initialization and Startup
 
-The below mentioned APIs initialize the Broadband CM HAL layers/code. Broadband CM client module should call the mentioned APIs initially during bootup/initialization.
+During initialization and startup, the Broadband CM client module is required to invoke the following APIs in sequence:
 
 - `cm_hal_InitDB()`
 
-3rd party vendors will implement appropriately to meet operational requirements. This interface is expected to block if the hardware is not ready.
-
+This interface is expected to block if the hardware is not ready.
 
 ## Threading Model
 
