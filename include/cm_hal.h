@@ -429,9 +429,9 @@ CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
 
 //>> Docsis3.1
 typedef struct {
-    unsigned int ChannelId;                     /**< The Cable Modem Termination System identification of the OFDM downstream channel within this particular MAC interface. if the interface is down, the object returns the most current value.  If the downstream channel ID is unknown, this object returns a value of 0. */
-    unsigned int ChanIndicator;                 /**< This data type defines the subcarrier spacing for the FFT mode in use. For downstream OFDM channels, if the FFT mode is 4K mode, then spacing is 50 kHz; if it is 8K mode, then the spacing is 25 kHz. For upstream OFDMA channels, if the FFT mode is 2K mode, then the spacing is 50kHz; if the mode is 4K mode, then the spacing is 25kHz. In units of kHz. other(1), primary(2), backupPrimary(3), nonPrimary(4) */
-    unsigned int SubcarrierZeroFreq;            /**< The center frequency of the subcarrier 0 of the OFDM transmission. Note that since ubcarrier 0 is always excluded, it will actually be below the allowed downstream spectrum band. This is the frequency of subcarrier X(0) in the definition of the DFT. */
+    unsigned int ChannelId;                     /**< The identification number of the downstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
+    unsigned int ChanIndicator;                 /**< This attribute is used to identify the OFDM downstream channel as primary, backup primary or non-primary. A value of'primary(2)' indicates that OFDM channel is assigned to be the CM's primary downstream channel.  A value of 'backupPrimary(3)' indicates that the OFDM channel is assigned to be the CM's backup primary downstream channel.  A value of 'nonPrimary(4)'indicates the OFDM channel is not assigned to be CM's primary or backup primary downstream channel*/
+    unsigned int SubcarrierZeroFreq;            /**< The center frequency of subcarrier 0 of the OFDM transmission within a downstream channel of the Cable Modem Termination System (CMTS).*/
     unsigned int FirstActiveSubcarrierNum;      /**< The number of the first non-excluded subcarrier. The valid range is 148 to 7895 */
     unsigned int LastActiveSubcarrierNum;       /**< The number of the last non-excluded subcarrier. The valid range is 148 to 7895 */
     unsigned int NumActiveSubcarriers;          /**< The number of active data subcarriers within the OFDM downstream channel (i.e. this exclude subcarriers for continuous pilots and the PLC). For 4K FFT mode, the maximum number of subcarriers including continuous pilots and the PLC cannot exceed 3800, and for 8K FFT mode, the maximum number of active subcarriers including continuous pilots and the PLC cannot be greater than 7600. */
@@ -443,7 +443,7 @@ typedef struct {
     unsigned int NumPilots;                     /**< The number of continuous pilots configured for the OFDM downstream channel as received in the OCD message. */
     unsigned int TimeInterleaverDepth;          /**< The time interleaving used for this downstream channel as received in the OCD message. */
     char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< The averageSNR value of this downstream channel */
-    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< The power level of this downstream channel */
+    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< The power level of this downstream channel. Power level is expressed as in tenths of a dBmV */
     unsigned long long PlcTotalCodewords;       /**< The total number of PLC codewords received by the CM. */
     unsigned long long PlcUnreliableCodewords;  /**< The total number of PLC codewords which failed post-decoding LDPC syndrome check. */
     unsigned long long NcpTotalFields;          /**< The total number of NCP fields received by the CM. */
@@ -455,12 +455,12 @@ typedef struct {
 /**
  * @brief Represents information about a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
  *
- * Holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel like Channel ID,Configuration change count, subcarrier frequencies, active subcarriers, subcarrier spacing., cycling prefix, roll-off period, number of symbols per frame, transmit power and pre-equalization status.
+ * This structure about various parameters of DOCSIS 3.1 OFDMA upstream channel
  */
 
 
 typedef struct {
-    unsigned int ChannelId;                     /**< The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.  If the upstream channel ID is unknown, this object returns a value of 0. */
+    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
     unsigned int ConfigChangeCt;                /**< The value of the Configuration Change Count field in the Upstream Channel Descriptor (UCD) MAC Management Message corresponding to this OFDMA channel. */
     unsigned int SubcarrierZeroFreq;            /**< The lower edge frequency of the OFDMA upstream channel in Hz */
     unsigned int FirstActiveSubcarrierNum;      /**< The upper edge of the OFDMA upstream channel. The minimum channel width for an OFDMA upstream channel is 6.4 MHz in 4K mode and 10MHz in 2K mode. The valid range is 74 to 3947. */
