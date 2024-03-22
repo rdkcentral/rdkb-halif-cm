@@ -22,7 +22,9 @@
 
 #ifndef __CM_HAL_H__
 #define __CM_HAL_H__
-
+/*
+ * TODO: Upgrade interface to support stdint
+ */
 #include <stdint.h>
 #include <sys/time.h>
 
@@ -88,6 +90,9 @@ extern "C"{
 #define DISABLE  0
 #endif
 
+/*
+ * TODO: Move INT return codes to enum
+ */
 #ifndef RETURN_OK
 #define RETURN_OK   0
 #endif
@@ -96,22 +101,24 @@ extern "C"{
 #define RETURN_ERR   -1
 #endif
 
+/**
+ *
+ * If the constant IPV4_ADDRESS_SIZE is not already defined, it is set to 4.
+ * This ensures that the size of IPv4 addresses is standardized to 4 bytes throughout the code.
+ */
 #ifndef IPV4_ADDRESS_SIZE
 #define  IPV4_ADDRESS_SIZE                          4
 #endif
 
 #ifndef ANSC_IPV4_ADDRESS
 /* 
- * TODO:
- * While we're trying really hard to smooth the procedure of switch-over from IPv4 to IPv4, there
- * are many places where using the IP address as an integer for comparision and calculation is much
- * easier than array-based operation.
+ * TODO: While we're trying really hard to smooth the procedure of switch-over from IPv4 to IPv4, there are many places where using the IP address as an integer for comparision and calculation is much easier than array-based operation.
  */
 #define  ANSC_IPV4_ADDRESS                                                                  \
          union                                                                              \
          {                                                                                  \
-            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< @brief  An unsigned character array of size 4. Possible value is {192, 168, 0, 100}*/                        \
-            uint32_t                Value;                          /**< @brief  A 32 bit unsigned integer value.*/                        \
+            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< An unsigned character array of size 4. Possible value is {192, 168, 0, 100}*/                        \
+            uint32_t                Value;                          /**< A 32 bit unsigned integer value.*/                        \
          }
 #endif
 
@@ -144,30 +151,35 @@ extern "C"{
  * Holds information about the downstream channel like channel ID, frequency, power level, SNR level,modulation, octets, correcteds and lock status.
  */
 
+/**
+ * TODO: Coding Standard: usage of *PCMMGMT_CM_DS_CHANNEL , *PCMMGMT_CM_US_CHANNEL; etc. should be removed.
+ * TODO: Coding Standard: structure should not be defined as CAPS, only Macros are allowed to be.
+ */
+
 typedef  struct
-_CMMGMT_CM_DS_CHANNEL {
-    ULONG                           ChannelID;      /**< @brief It is an unsigned long value that represents the Channel ID.
-                                                           The maximum value is (2^32)-1. 
-                                                            Possible value is 11. */
-    CHAR                            Frequency[64];  /**< @brief  It is a character array that represents the DS channel Frequency.
-                                                                  Possible value is "6449". */
-    CHAR                            PowerLevel[64]; /**< @brief  It is a character array that represents the DS channel Power Level.
-                                                                 Possible value is "75.1 dBmV"  */
-    CHAR                            SNRLevel[64];   /**< @brief  It is a character array that represents the DS channel SNR Level.
-                                                                 Possible value is "50 dB".*/
-    CHAR                            Modulation[64]; /**< @brief  It is a character array that represents the Modulation of the DS channel.
-                                                                Possible Values is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
-    ULONG                           Octets;         /**< @brief  It is an unsigned long value that represents the Octets.
-                                                                 The maximum value is (2^32)-1.
-                                                                  Possible Values is 123.*/
-    ULONG                           Correcteds;     /**< @brief  It is an unsigned long value that represents the Correcteds.
-                                                                The maximum value is (2^32)-1.
-                                                                 It is a vendor specific value. Possible value is 100. */
-    ULONG                           Uncorrectables; /**< @brief  It is an unsigned long value that represents the Uncorrectables.
-                                                                 The maximum value is (2^32)-1.
-                                                                 It is a vendor specific value. Possible value is 12.*/
-    CHAR                            LockStatus[64]; /**< @brief  It is a character array that represents the DS Lock Status.
-                                                                 Possible value is "Locked", "NotLocked".*/
+{
+    ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID.
+                                                         The maximum value is (2^32)-1. 
+                                                         Possible value is 11. */
+    CHAR                            Frequency[64];  /**< It is a character array that represents the DS channel Frequency.
+                                                         Possible value is "6449". */
+    CHAR                            PowerLevel[64]; /**< It is a character array that represents the DS channel Power Level.
+                                                         Possible value is "75.1 dBmV"  */
+    CHAR                            SNRLevel[64];   /**< It is a character array that represents the DS channel SNR Level.
+                                                         Possible value is "50 dB".*/
+    CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the DS channel.
+                                                         Possible Values is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
+    ULONG                           Octets;         /**< It is an unsigned long value that represents the Octets.
+                                                         The maximum value is (2^32)-1.
+                                                         Possible Values is 123.*/
+    ULONG                           Correcteds;     /**< It is an unsigned long value that represents the Correcteds.
+                                                         The maximum value is (2^32)-1.
+                                                         It is a vendor specific value. Possible value is 100. */
+    ULONG                           Uncorrectables; /**< It is an unsigned long value that represents the Uncorrectables.
+                                                         The maximum value is (2^32)-1.
+                                                         It is a vendor specific value. Possible value is 12.*/
+    CHAR                            LockStatus[64]; /**< It is a character array that represents the DS Lock Status.
+                                                         Possible value is "Locked", "NotLocked".*/
 }
 CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 
@@ -179,21 +191,20 @@ CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 
 typedef  struct
 _CMMGMT_CM_US_CHANNEL {
-    ULONG                           ChannelID;      /**< @brief It is an unsigned long value that represents the Channel ID of the US channel.
-                                                                The maximum value is (2^32)-1. Possible value is 12. */
-    CHAR                            Frequency[64];  /**< @brief  It is a character array that represents the Frequency of the US channel.
-                                                                 Possible value is "12750".*/
-    CHAR                            PowerLevel[64]; /**< @brief   It is a character array that represents the PowerLevel of the US channel.
-                                                                  Possible value is "60".*/
-    CHAR                            ChannelType[64];/**< @brief   It is a character array that represents the ChannelType of the US channel.
-                                                                   Possible Values: "UNKNOWN","TDMA","ATDMA","SCDMA","TDMA_AND_ATDMA".*/
-    CHAR                            SymbolRate[64]; /**< @brief  It is a character array that represents the SymbolRate of the US channel.
-                                                                 Possible value is "115200". */
-    CHAR                            Modulation[64]; /**< @brief  It is a character array that represents the Modulation of the US channel.
-                                                                 Possible value is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
-
-    CHAR                            LockStatus[64]; /**< @brief  It is a character array that represents the LockStatus.
-                                                                 Possible value is: "Locked", "NotLocked". */
+    ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID of the US channel.
+                                                         The maximum value is (2^32)-1. Possible value is 12. */
+    CHAR                            Frequency[64];  /**< It is a character array that represents the Frequency of the US channel.
+                                                         Possible value is "12750".*/
+    CHAR                            PowerLevel[64]; /**< It is a character array that represents the PowerLevel of the US channel.
+                                                         Possible value is "60".*/
+    CHAR                            ChannelType[64];/**< It is a character array that represents the ChannelType of the US channel.
+                                                         Possible Values: "UNKNOWN","TDMA","ATDMA","SCDMA","TDMA_AND_ATDMA".*/
+    CHAR                            SymbolRate[64]; /**< It is a character array that represents the SymbolRate of the US channel.
+                                                         Possible value is "115200". */
+    CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the US channel.
+                                                         Possible value is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
+    CHAR                            LockStatus[64]; /**< It is a character array that represents the LockStatus.
+                                                         Possible value is: "Locked", "NotLocked". */
 
 }
 CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
@@ -207,51 +218,44 @@ CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
 typedef  struct
 _CMMGMT_CM_DOCSIS_INFO
 {
-    CHAR                            DOCSISVersion[64];               /**< @brief It is a character array that represents the DOCSIS Version.
-                                                                                 It is a vendor specific value. 
-                                                                                 Possible Values are "other","1.0","1.1","2.0","3.0","3.1" */
-    CHAR                            DOCSISDownstreamScanning[64];     /**< @brief It is a character array that represents the DOCSIS Downstream Scanning Status.
-                                                                                   It is a vendor specific value. 
-                                                                                   Possible Values are "NotStarted", "InProgress", "Complete".  */
-    CHAR                            DOCSISDownstreamRanging[64];      /**< @brief  It is a character array that represents the DOCSIS Downstream Ranging Status.
-                                                                                   It is a vendor specific value. 
-                                                                                   Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISUpstreamScanning[64];       /**< @brief  It is a character array that represents the DOCSIS Upstream Scanning Status.
-                                                                                   It is a vendor specific value. 
-                                                                                   Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISUpstreamRanging[64];        /**< @brief  It is a character array that represents the DOCSIS Upstream Ranging Status.
-                                                                                   It is a vendor specific value.  
-                                                                                   Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISTftpStatus[64];             /**< @brief  It is a character array that represents the DOCSIS Tftp Status.
-                                                                                   It is a vendor specific value. 
-                                                                                   Possible Values are "NotStarted","In Progress" ,"Download Complete" .*/
-    CHAR                            DOCSISDataRegComplete[64];        /**< @brief  It is a character array that represents the DOCSIS Data Reg Complete Status.
-                                                                                   It is a vendor specific value. 
-                                                                                   Possible Values are "In Progress" ,"Registration Complete" .*/
-    ULONG                           DOCSISDHCPAttempts;               /**< @brief  It is an unsigned long value that represents the DOCSIS DHCP Attempts.
-                                                                                   The maximum value is (2^32)-1. 
-                                                                                   Possible Value is 3.*/
-    CHAR                            DOCSISConfigFileName[64];         /**< @brief  It is a character array that represents the DOCSIS Config File Name.
-                                                                                   Possible Value is "goldenjim.cm".*/
-    ULONG                           DOCSISTftpAttempts;               /**< @brief  It is an unsigned long value that represents the DOCSIS Tftp Attempts.
-                                                                                   The maximum value is (2^32)-1.*/
-    CHAR                            ToDStatus[64];                    /**< @brief  It is a character array that represents the ToD Status.
-                                                                                   Possible Values are "Complete", "NotStarted".*/
-    BOOLEAN                         BPIState;                         /**< @brief  It is an boolean value that represents the BPIState. */
-    BOOLEAN                         NetworkAccess;                    /**< @brief  It is an boolean value that represents the Network Access. */   
-    ANSC_IPV4_ADDRESS               UpgradeServerIP;                  /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the Upgrade Server IP.*/
-    ULONG                           MaxCpeAllowed;                    /**< @brief  It is an unsigned long value that represents the Max Cpe Allowed.
-                                                                                   The maximum value is (2^32)-1. */
-    CHAR                            UpstreamServiceFlowParams[64];    /**< @brief  It is a character array that holds the Upstream Service Flow Params.
-                                                                                   Possible value is "Dummy"*/
-    CHAR                            DownstreamServiceFlowParams[64];  /**< @brief  It is a character array that represents the Downstream Service Flow Params.
-                                                                                   Possible value is "Dummy"*/
-    CHAR                            DOCSISDownstreamDataRate[64];     /**< @brief  It is a character array that represents the DOCSIS Downstream Data Rate.
-                                                                                   Possible value is "20000".*/
-    CHAR                            DOCSISUpstreamDataRate[64];       /**< @brief  It is a character array that represents the DOCSIS Upstream Data Rate.
-                                                                                   Possible value is "10000".*/
-    CHAR                            CoreVersion[64];                  /**< @brief  It is a character array that represents the Core Version.
-                                                                                   Possible value is "1.0".*/
+    CHAR                            DOCSISVersion[64];               /**< It is a character array that represents the DOCSIS Version.
+                                                                          Possible Values are "other","1.0","1.1","2.0","3.0","3.1" */
+    CHAR                            DOCSISDownstreamScanning[64];    /**< It is a character array that represents the DOCSIS Downstream Scanning Status.
+                                                                          Possible Values are "NotStarted", "InProgress", "Complete".  */
+    CHAR                            DOCSISDownstreamRanging[64];     /**< It is a character array that represents the DOCSIS Downstream Ranging Status.
+                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
+    CHAR                            DOCSISUpstreamScanning[64];      /**< It is a character array that represents the DOCSIS Upstream Scanning Status.
+                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
+    CHAR                            DOCSISUpstreamRanging[64];       /**< It is a character array that represents the DOCSIS Upstream Ranging Status.
+                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
+    CHAR                            DOCSISTftpStatus[64];            /**< It is a character array that represents the DOCSIS Tftp Status.
+                                                                          Possible Values are "NotStarted","In Progress" ,"Download Complete" .*/
+    CHAR                            DOCSISDataRegComplete[64];       /**< It is a character array that represents the DOCSIS Data Reg Complete Status.
+                                                                          Possible Values are "In Progress" ,"Registration Complete" .*/
+    ULONG                           DOCSISDHCPAttempts;              /**< It is an unsigned long value that represents the DOCSIS DHCP Attempts.
+                                                                          The maximum value is (2^32)-1. 
+                                                                          Possible Value is 3.*/
+    CHAR                            DOCSISConfigFileName[64];        /**< It is a character array that represents the DOCSIS Config File Name.
+                                                                          Possible Value is "goldenjim.cm".*/
+    ULONG                           DOCSISTftpAttempts;              /**< It is an unsigned long value that represents the DOCSIS Tftp Attempts.
+                                                                          The maximum value is (2^32)-1.*/
+    CHAR                            ToDStatus[64];                   /**< It is a character array that represents the ToD Status.
+                                                                          Possible Values are "Complete", "NotStarted".*/
+    BOOLEAN                         BPIState;                        /**< It is an boolean value that represents the BPIState. */
+    BOOLEAN                         NetworkAccess;                   /**< It is an boolean value that represents the Network Access. */   
+    ANSC_IPV4_ADDRESS               UpgradeServerIP;                 /**< It a ANSC_IPV4_ADDRESS union type value that represents the Upgrade Server IP.*/
+    ULONG                           MaxCpeAllowed;                   /**< It is an unsigned long value that represents the Max Cpe Allowed.
+                                                                          The maximum value is (2^32)-1. */
+    CHAR                            UpstreamServiceFlowParams[64];   /**< It is a character array that holds the Upstream Service Flow Params.
+                                                                          Possible value is "Dummy"*/
+    CHAR                            DownstreamServiceFlowParams[64]; /**< It is a character array that represents the Downstream Service Flow Params.
+                                                                          Possible value is "Dummy"*/
+    CHAR                            DOCSISDownstreamDataRate[64];    /**< It is a character array that represents the DOCSIS Downstream Data Rate.
+                                                                          Possible value is "20000".*/
+    CHAR                            DOCSISUpstreamDataRate[64];      /**< It is a character array that represents the DOCSIS Upstream Data Rate.
+                                                                          Possible value is "10000".*/
+    CHAR                            CoreVersion[64];                 /**< It is a character array that represents the Core Version.
+                                                                          Possible value is "1.0".*/
 }
 CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
 
@@ -261,33 +265,20 @@ CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
  * Holds information about the error codewords including the number of unerrored, correctable and uncorrectable codewords.
  */
 
+/*
+ * TODO: Correct CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS , no caps, and remove *PCMMGMT_CM_ERROR_CODEWORDS
+ */
+
 typedef  struct
 _CMMGMT_CM_ERROR_CODEWORDS {
-    ULONG                           UnerroredCodewords;       /**< @brief It is an unsigned long value that holds the Unerrored Codewords. 
-                                                                          It is a vendor specific value. */
-    ULONG                           CorrectableCodewords;     /**< @brief It is an unsigned long value that holds the Correctable Codewords.   
-			                                                              It is a vendor specific value.*/
-    ULONG                           UncorrectableCodewords;   /**< @brief  It is an unsigned long value that holds the Uncorrectable Codewords. 
-			                                                               It is a vendor specific value.*/
+    ULONG                           UnerroredCodewords;       /**< It is an unsigned long value that holds the Unerrored Codewords. 
+                                                                   It is a vendor specific value. */
+    ULONG                           CorrectableCodewords;     /**< It is an unsigned long value that holds the Correctable Codewords.   
+			                                           It is a vendor specific value.*/
+    ULONG                           UncorrectableCodewords;   /**< It is an unsigned long value that holds the Uncorrectable Codewords. 
+			                                           It is a vendor specific value.*/
 }
 CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
-
-/*
-typedef enum
-{
-    PRI_EMERGENCY = 1,
-    PRI_ALERT,
-    PRI_CRITICAL,
-    PRI_ERROR,
-    PRI_WARNING,
-    PRI_NOTICE,
-    PRI_INFORMATION,
-    PRI_DEBUG,
-
-    PRI_LAST = 0xffffffff
-
-}CMMGMT_CM_EventMgrPriorit_e;
-*/
 
 #define EVM_MAX_EVENT_TEXT      255      /**< Maximum length of event text */
 
@@ -299,20 +290,20 @@ typedef enum
 
 typedef struct
 {
-    UINT                docsDevEvIndex;                   /**< @brief It is an unsigned integer value that represents the snmp docsDevEvIndex.
-                                                                      The maximum value is (2^16)-1. 
-                                                                      Possible value is 1. */
-    struct timeval      docsDevEvFirstTime;               /**< @brief  It is a struct timeval type structure that holds the local date and time when this event was generated.*/
-    struct timeval      docsDevEvLastTime;                /**< @brief  It is a struct timeval type structure that holds the local date and time when this event was generated.*/
-    UINT                docsDevEvCounts;                  /**< @brief  It is an unsigned integer value that represents the docsDevEvCounts.
-                                                                       The maximum value is (2^16)-1.
-                                                                        Possible value is 1.*/
-    UINT                docsDevEvLevel;                   /**< @brief  It is an unsigned integer value that represents the DOCSIS priority level associated with the event. Possible value is 1.*/
-    UINT                docsDevEvId;                      /**< @brief  The maximum value is (2^16)-1. It is an unsigned integer value that represents the numeric identifier of the event. 
-                                                                       The maximum value is (2^16)-1. 
-                                                                        Possible value is 1.*/
-    CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT]; /**< @brief  It is a character array that represents the the numeric identifier of the event.
-                                                                        It is a vendor specific value.*/
+    UINT                docsDevEvIndex;                   /**< It is an unsigned integer value that represents the snmp docsDevEvIndex.
+                                                               The maximum value is (2^16)-1. 
+                                                               Possible value is 1. */
+    struct timeval      docsDevEvFirstTime;               /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
+    struct timeval      docsDevEvLastTime;                /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
+    UINT                docsDevEvCounts;                  /**< It is an unsigned integer value that represents the docsDevEvCounts.
+                                                               The maximum value is (2^16)-1.
+                                                               Possible value is 1.*/
+    UINT                docsDevEvLevel;                   /**< It is an unsigned integer value that represents the DOCSIS priority level associated with the event. Possible value is 1.*/
+    UINT                docsDevEvId;                      /**< The maximum value is (2^16)-1. It is an unsigned integer value that represents the numeric identifier of the event. 
+                                                               The maximum value is (2^16)-1. 
+                                                               Possible value is 1.*/
+    CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT];/**< It is a character array that represents the the numeric identifier of the event.
+                                                               It is a vendor specific value.*/
 
 }CMMGMT_CM_EventLogEntry_t;
 /**
@@ -321,10 +312,14 @@ typedef struct
  * Holds information of the configuration settings of CM logging related to CM logging and if the Docsis log should be cleared.
  */
 
+/*
+ * TODO: Correct CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG , no caps, and remove *PCMMGMT_DML_CM_LOG
+ */
+
 typedef  struct
-_CMMGMT_DML_CM_LOG {
-    BOOLEAN                         EnableLog;             /**< @brief  Represents whether the CM logging is enabled*/
-    BOOLEAN                         ClearDocsisLog;        /**< @brief  Represents whether to clear the  Docsis Log*/
+{
+    BOOLEAN                         EnableLog;             /**< Represents whether the CM logging is enabled*/
+    BOOLEAN                         ClearDocsisLog;        /**< Represents whether to clear the  Docsis Log*/
 }
 CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
 
@@ -333,14 +328,18 @@ CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
  *
  * Holds information related to the Docsis log entry like the index, event ID, event level, timestamp and description.
  */
- 
+
+/*
+ * TODO: Correct CMMGMT_DML_DOCSISLOG_FULL, *PCMMGMT_DML_DOCSISLOG_FULL , no caps, and remove *PCMMGMT_DML_DOCSISLOG_FULL
+ */
+
 typedef  struct
 _CMMGMT_DML_DOCSISLOG_FULL {
-    ULONG                           Index;         /**< @brief  Index of Docsis log entry*/
-    ULONG                           EventID;       /**< @brief  Event ID associated with the log entry*/
-    ULONG                           EventLevel;    /**< @brief  Event level of the log entry*/
-    CHAR                            Time[64];      /**< @brief  Timestamp of the log entry*/
-    CHAR                            Description[256]; /**< @brief  Description of log entry*/
+    ULONG                           Index;         /**< Index of Docsis log entry*/
+    ULONG                           EventID;       /**< Event ID associated with the log entry*/
+    ULONG                           EventLevel;    /**< Event level of the log entry*/
+    CHAR                            Time[64];      /**< Timestamp of the log entry*/
+    CHAR                            Description[256]; /**< Description of log entry*/
 }
 CMMGMT_DML_DOCSISLOG_FULL,  *PCMMGMT_DML_DOCSISLOG_FULL;
 
@@ -353,22 +352,22 @@ CMMGMT_DML_DOCSISLOG_FULL,  *PCMMGMT_DML_DOCSISLOG_FULL;
 typedef  struct
 _CMMGMT_CM_DHCP_INFO
 {
-    ANSC_IPV4_ADDRESS               IPAddress;              /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the IP Address.
-                                                                         Possible values is "IPAddress.Dot = {192, 168, 0, 100}".*/
-    CHAR                            BootFileName[64];       /**< @brief  It is a character array that represents the Boot File Name. Possible values is "ccsp.boot".*/
-    ANSC_IPV4_ADDRESS               SubnetMask;             /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the Subnet Mask.
-                                                                         Possible values is "SubnetMask.Dot = {255, 255, 255, 0}".*/
-    ANSC_IPV4_ADDRESS               Gateway;                /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the Gateway.
-                                                                         Possible values is "Gateway.Dot={192, 168, 0, 1}".*/
-    ANSC_IPV4_ADDRESS               TFTPServer;             /**< @brief  It a ANSC_IPV4_ADDRESS union type value that represents the TFTP Server.
-                                                                         Possible values is "TFTPServer.Dot = {192, 168, 0, 10}".*/
-    CHAR                            TimeServer[64];         /**< @brief  It is a character array that represents the Time Server. Possible values is "ntp.cisco.com"*/
-    INT                             TimeOffset;             /**< @brief  It is an integer value. The maximum value is (2^31)-1 that represents the Time Offset. Possible values is 8.*/
-    ULONG                           LeaseTimeRemaining;     /**< @brief  It is an unsigned long value that represents the Lease Time Remaining. The maximum value iss 0 to (2^32)-1. Possible values is 3600.*/
-    CHAR                            RebindTimeRemaining[64]; /**< @brief It is a character array that represents the Rebind Time Remaining. Possible values is 3700.*/
-    CHAR                            RenewTimeRemaining[64];  /**< @brief It is a character array that represents the Renew Time Remaining. Possible values is 1200. */
-    CHAR                            MACAddress[64];          /**< @brief  It is a character array that represents the MAC Address. Possible values is "00:1A:2B:11:22:33".*/
-    CHAR                            DOCSISDHCPStatus[64];     /**< @brief  It is a character array that represents the DOCSIS DHCP Status. Possible values is "Complete".*/
+    ANSC_IPV4_ADDRESS               IPAddress;              /**< It a ANSC_IPV4_ADDRESS union type value that represents the IP Address.
+                                                                 Possible values is "IPAddress.Dot = {192, 168, 0, 100}".*/
+    CHAR                            BootFileName[64];       /**< It is a character array that represents the Boot File Name. Possible values is "ccsp.boot".*/
+    ANSC_IPV4_ADDRESS               SubnetMask;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the Subnet Mask.
+                                                                 Possible values is "SubnetMask.Dot = {255, 255, 255, 0}".*/
+    ANSC_IPV4_ADDRESS               Gateway;                /**< It a ANSC_IPV4_ADDRESS union type value that represents the Gateway.
+                                                                 Possible values is "Gateway.Dot={192, 168, 0, 1}".*/
+    ANSC_IPV4_ADDRESS               TFTPServer;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the TFTP Server.
+                                                                 Possible values is "TFTPServer.Dot = {192, 168, 0, 10}".*/
+    CHAR                            TimeServer[64];         /**< It is a character array that represents the Time Server. Possible values is "ntp.cisco.com"*/
+    INT                             TimeOffset;             /**< It is an integer value. The maximum value is (2^31)-1 that represents the Time Offset. Possible values is 8.*/
+    ULONG                           LeaseTimeRemaining;     /**< It is an unsigned long value that represents the Lease Time Remaining. The maximum value iss 0 to (2^32)-1. Possible values is 3600.*/
+    CHAR                            RebindTimeRemaining[64]; /**< It is a character array that represents the Rebind Time Remaining. Possible values is 3700.*/
+    CHAR                            RenewTimeRemaining[64];  /**< It is a character array that represents the Renew Time Remaining. Possible values is 1200. */
+    CHAR                            MACAddress[64];          /**< It is a character array that represents the MAC Address. Possible values is "00:1A:2B:11:22:33".*/
+    CHAR                            DOCSISDHCPStatus[64];    /**< It is a character array that represents the DOCSIS DHCP Status. Possible values is "Complete".*/
 }
 CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
 
@@ -381,27 +380,27 @@ CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
 typedef  struct
 _CMMGMT_CM_IPV6DHCP_INFO
 {
-    CHAR                            IPv6Address[40];             /**< @brief  It is a character array that represents the IPv6 Address.
-                                                                              Possible value is "2012:cafe:100::1".*/
-    CHAR                            IPv6BootFileName[64];        /**< @brief  It is a character array that represents the IPv6 Boot File Name. 
-                                                                              Possible value is "ccsp.v6.boot".*/
-    CHAR                            IPv6Prefix[40];               /**< @brief  It is a character array that represents the IPv6 Prefix. 
-                                                                               Possible value is 2012:cafe::/32.*/
-    CHAR                            IPv6Router[40];               /**< @brief  It is a character array that represents the IPv6 Router.
-                                                                               Possible value is 2012:cafe::1.*/
-    CHAR                            IPv6TFTPServer[40];           /**< @brief  It is a character array that represents the IPv6 TFTP Server.
-                                                                               Possible value is "2012:cafe::2".*/
-    CHAR                            IPv6TimeServer[40];            /**< @brief  It is a character array that represents the IPv6 Time Server. 
-                                                                                Possible value is "ntp.cisco.com"*/
-    ULONG                           IPv6LeaseTimeRemaining;         /**< @brief It is an unsigned long value that represents the IPv6 Lease Time Remaining. 
-                                                                                The maximum value is(2^32)-1. 
-                                                                                Possible value is 3600.*/
-    ULONG                           IPv6RebindTimeRemaining;        /**< @brief  It is an unsigned long value that represents the IPv6 Rebind Time Remaining. 
-                                                                                 The maximum value is (2^32)-1. 
-                                                                                 Possible value is 3700.*/
-    ULONG                           IPv6RenewTimeRemaining;         /**< @brief  It is an unsigned long value that represents the IPv6 Renew Time Remaining. 
-                                                                                 The maximum value is (2^32)-1. 
-                                                                                 Possible value is 1200.*/
+    CHAR                            IPv6Address[40];             /**< It is a character array that represents the IPv6 Address.
+                                                                      Possible value is "2012:cafe:100::1".*/
+    CHAR                            IPv6BootFileName[64];        /**< It is a character array that represents the IPv6 Boot File Name. 
+                                                                      Possible value is "ccsp.v6.boot".*/
+    CHAR                            IPv6Prefix[40];               /**< It is a character array that represents the IPv6 Prefix. 
+                                                                       Possible value is 2012:cafe::/32.*/
+    CHAR                            IPv6Router[40];               /**< It is a character array that represents the IPv6 Router.
+                                                                       Possible value is 2012:cafe::1.*/
+    CHAR                            IPv6TFTPServer[40];           /**< It is a character array that represents the IPv6 TFTP Server.
+                                                                       Possible value is "2012:cafe::2".*/
+    CHAR                            IPv6TimeServer[40];            /**< It is a character array that represents the IPv6 Time Server. 
+                                                                        Possible value is "ntp.cisco.com"*/
+    ULONG                           IPv6LeaseTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Lease Time Remaining. 
+                                                                         The maximum value is(2^32)-1. 
+                                                                         Possible value is 3600.*/
+    ULONG                           IPv6RebindTimeRemaining;        /**< It is an unsigned long value that represents the IPv6 Rebind Time Remaining. 
+                                                                         The maximum value is (2^32)-1. 
+                                                                         Possible value is 3700.*/
+    ULONG                           IPv6RenewTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Renew Time Remaining. 
+                                                                         The maximum value is (2^32)-1. 
+                                                                         Possible value is 1200.*/
 }
 CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 
@@ -414,10 +413,10 @@ CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 typedef  struct
 _CMMGMT_DML_CPE_LIST
 {
-    CHAR                            IPAddress[32];      /**< @brief  It is a character array that contains the IP Address of the CPE. 
-                                                                     Possible value is 192.168.0.1.*/
-    CHAR                            MACAddress[32];     /**< @brief  It is a character array that contains the MAC Address of the CPE. 
-                                                                     The MAC Address should be in the format AA:BB:CC:DD:EE:FF (colon-separated).*/
+    CHAR                            IPAddress[32];      /**< It is a character array that contains the IP Address of the CPE. 
+                                                             Possible value is 192.168.0.1.*/
+    CHAR                            MACAddress[32];     /**< It is a character array that contains the MAC Address of the CPE. 
+                                                             The MAC Address should be in the format AA:BB:CC:DD:EE:FF (colon-separated).*/
 }
 CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
 
@@ -425,30 +424,30 @@ CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
 /**
  * @brief Represents the information about a DOCSIS 3.1 OFDM downstream channel in a cable modem.
  *
- * Holds information about the parameters associated with a DOCSIS 3.1 OFDM downstream channel including channel ID, subcarrier spacing, subcarrier frequencies, active subcarriers, subcarrier spacing, cyclic prefix, roll-off period, PLC frequency, number of pilots, time interleaver depth, average SNR, power level, PLC codewords, unreliable PLC codewords,NCP fields and NCP field CRC failures.
+ * This structure holds information about parameters in associattion with the DOCSIS 3.1. OFDM downstream channel.
  */
 
 //>> Docsis3.1
-typedef struct _DOCSIF31_CM_DS_OFDM_CHAN {
-    unsigned int ChannelId;                     /**< @brief The Cable Modem Termination System identification of the OFDM downstream channel within this particular MAC interface. if the interface is down, the object returns the most current value.  If the downstream channel ID is unknown, this object returns a value of 0. */
-    unsigned int ChanIndicator;                 /**< @brief This data type defines the subcarrier spacing for the FFT mode in use. For downstream OFDM channels, if the FFT mode is 4K mode, then spacing is 50 kHz; if it is 8K mode, then the spacing is 25 kHz. For upstream OFDMA channels, if the FFT mode is 2K mode, then the spacing is 50kHz; if the mode is 4K mode, then the spacing is 25kHz. In units of kHz. other(1), primary(2), backupPrimary(3), nonPrimary(4) */
-    unsigned int SubcarrierZeroFreq;            /**< @brief The center frequency of the subcarrier 0 of the OFDM transmission. Note that since ubcarrier 0 is always excluded, it will actually be below the allowed downstream spectrum band. This is the frequency of subcarrier X(0) in the definition of the DFT. */
-    unsigned int FirstActiveSubcarrierNum;      /**< @brief The number of the first non-excluded subcarrier. The valid range is 148 to 7895 */
-    unsigned int LastActiveSubcarrierNum;       /**< @brief The number of the last non-excluded subcarrier. The valid range is 148 to 7895 */
-    unsigned int NumActiveSubcarriers;          /**< @brief The number of active data subcarriers within the OFDM downstream channel (i.e. this exclude subcarriers for continuous pilots and the PLC). For 4K FFT mode, the maximum number of subcarriers including continuous pilots and the PLC cannot exceed 3800, and for 8K FFT mode, the maximum number of active subcarriers including continuous pilots and the PLC cannot be greater than 7600. */
-                                                /**< @brief There are a minimum of 56 continuous pilots in a 192MHz channel that has no exclusions, and the size of the PLC is 8 subcarriers for 4K FFT mode and 16 subcarriers for 8K FFT mode. Therefore the maximum value of NumActiveSubcarriers is 3736 (or 3800 - 56 - 8) for 4K FFT mode and 7528 (or 7600 - 56 - 16) for 8K FFT mode. */
-    unsigned int SubcarrierSpacing;             /**< @brief The subcarrier spacing associated with a particular FFT mode configured on the OFDM downstream channel. If it is 4K mode, then the subcarrier spacing is 50kHz. If it is 8K mode, then the subcarrier spacing is 25kHz (in kHz) */
-    unsigned int CyclicPrefix;                  /**< @brief Cyclic prefix enables the receiver to overcome the effects of inter-symbol-interference and intercarrier-interference caused  by micro-reflections in the channel. There are five possible alues for the length of the CP and the choice depends on the delay spread of the channel - a longer delay spread requires a longer cyclic prefix. The cyclic prefix (in usec) are converted into samples using the sample rate of 204.8 Msamples/s and is an integer multiple of: 1/64 * 20 us. */
-    unsigned int RollOffPeriod;                 /**< @brief Roll off period maximizes channel capacity by sharpening the edges of the spectrum of the OFDM signal. For windowing purposes another segment at the start of the IDFT output is appended to the end of the IDFT output - the roll-off postfix (RP). There are five possible values for the (RP), and the choice depends on the bandwidth of the channel and the number of exclusion bands within the channel. A larger RP provides sharper edges in the spectrum of the OFDM signal; however,  there is a time vs. frequency trade-off. Larger RP values reduce the efficiency of transmission in the time domain, but because the spectral edges are sharper, more useful subcarriers appear in the frequency domain. There is an optimum value for the RP that maximizes capacity for a given bandwidth and/or exclusion band scenario. */
-    unsigned int PlcFreq;                       /**< @brief This is the PHY Link Channel (PLC) frequency. It is the center frequency of the lowest frequency subcarrier of the PLC. The aim of the PLC is for the CMTS to convey to the CM the physical properties of the OFDM channel */
-    unsigned int NumPilots;                     /**< @brief The number of continuous pilots configured for the OFDM downstream channel as received in the OCD message. */
-    unsigned int TimeInterleaverDepth;          /**< @brief The time interleaving used for this downstream channel as received in the OCD message. */
-    char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< @brief The averageSNR value of this downstream channel */
-    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< @brief The power level of this downstream channel */
-    unsigned long long PlcTotalCodewords;       /**< @brief The total number of PLC codewords received by the CM. */
-    unsigned long long PlcUnreliableCodewords;  /**< @brief The total number of PLC codewords which failed post-decoding LDPC syndrome check. */
-    unsigned long long NcpTotalFields;          /**< @brief The total number of NCP fields received by the CM. */
-    unsigned long long NcpFieldCrcFailures;     /**< @brief The total number of NCP fields received by the CM which failed the CRC check. */
+typedef struct {
+    unsigned int ChannelId;                     /**< The Cable Modem Termination System identification of the OFDM downstream channel within this particular MAC interface. if the interface is down, the object returns the most current value.  If the downstream channel ID is unknown, this object returns a value of 0. */
+    unsigned int ChanIndicator;                 /**< This data type defines the subcarrier spacing for the FFT mode in use. For downstream OFDM channels, if the FFT mode is 4K mode, then spacing is 50 kHz; if it is 8K mode, then the spacing is 25 kHz. For upstream OFDMA channels, if the FFT mode is 2K mode, then the spacing is 50kHz; if the mode is 4K mode, then the spacing is 25kHz. In units of kHz. other(1), primary(2), backupPrimary(3), nonPrimary(4) */
+    unsigned int SubcarrierZeroFreq;            /**< The center frequency of the subcarrier 0 of the OFDM transmission. Note that since ubcarrier 0 is always excluded, it will actually be below the allowed downstream spectrum band. This is the frequency of subcarrier X(0) in the definition of the DFT. */
+    unsigned int FirstActiveSubcarrierNum;      /**< The number of the first non-excluded subcarrier. The valid range is 148 to 7895 */
+    unsigned int LastActiveSubcarrierNum;       /**< The number of the last non-excluded subcarrier. The valid range is 148 to 7895 */
+    unsigned int NumActiveSubcarriers;          /**< The number of active data subcarriers within the OFDM downstream channel (i.e. this exclude subcarriers for continuous pilots and the PLC). For 4K FFT mode, the maximum number of subcarriers including continuous pilots and the PLC cannot exceed 3800, and for 8K FFT mode, the maximum number of active subcarriers including continuous pilots and the PLC cannot be greater than 7600. */
+                                                /**< There are a minimum of 56 continuous pilots in a 192MHz channel that has no exclusions, and the size of the PLC is 8 subcarriers for 4K FFT mode and 16 subcarriers for 8K FFT mode. Therefore the maximum value of NumActiveSubcarriers is 3736 (or 3800 - 56 - 8) for 4K FFT mode and 7528 (or 7600 - 56 - 16) for 8K FFT mode. */
+    unsigned int SubcarrierSpacing;             /**< The subcarrier spacing associated with a particular FFT mode configured on the OFDM downstream channel. If it is 4K mode, then the subcarrier spacing is 50kHz. If it is 8K mode, then the subcarrier spacing is 25kHz (in kHz) */
+    unsigned int CyclicPrefix;                  /**< Cyclic prefix enables the receiver to overcome the effects of inter-symbol-interference and intercarrier-interference caused  by micro-reflections in the channel. There are five possible alues for the length of the CP and the choice depends on the delay spread of the channel - a longer delay spread requires a longer cyclic prefix. The cyclic prefix (in usec) are converted into samples using the sample rate of 204.8 Msamples/s and is an integer multiple of: 1/64 * 20 us. */
+    unsigned int RollOffPeriod;                 /**< Roll off period maximizes channel capacity by sharpening the edges of the spectrum of the OFDM signal. For windowing purposes another segment at the start of the IDFT output is appended to the end of the IDFT output - the roll-off postfix (RP). There are five possible values for the (RP), and the choice depends on the bandwidth of the channel and the number of exclusion bands within the channel. A larger RP provides sharper edges in the spectrum of the OFDM signal; however,  there is a time vs. frequency trade-off. Larger RP values reduce the efficiency of transmission in the time domain, but because the spectral edges are sharper, more useful subcarriers appear in the frequency domain. There is an optimum value for the RP that maximizes capacity for a given bandwidth and/or exclusion band scenario. */
+    unsigned int PlcFreq;                       /**< This is the PHY Link Channel (PLC) frequency. It is the center frequency of the lowest frequency subcarrier of the PLC. The aim of the PLC is for the CMTS to convey to the CM the physical properties of the OFDM channel */
+    unsigned int NumPilots;                     /**< The number of continuous pilots configured for the OFDM downstream channel as received in the OCD message. */
+    unsigned int TimeInterleaverDepth;          /**< The time interleaving used for this downstream channel as received in the OCD message. */
+    char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< The averageSNR value of this downstream channel */
+    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< The power level of this downstream channel */
+    unsigned long long PlcTotalCodewords;       /**< The total number of PLC codewords received by the CM. */
+    unsigned long long PlcUnreliableCodewords;  /**< The total number of PLC codewords which failed post-decoding LDPC syndrome check. */
+    unsigned long long NcpTotalFields;          /**< The total number of NCP fields received by the CM. */
+    unsigned long long NcpFieldCrcFailures;     /**< The total number of NCP fields received by the CM which failed the CRC check. */
 
 } DOCSIF31_CM_DS_OFDM_CHAN, *PDOCSIF31_CM_DS_OFDM_CHAN;
 
@@ -460,19 +459,19 @@ typedef struct _DOCSIF31_CM_DS_OFDM_CHAN {
  */
 
 
-typedef struct _DOCSIF31_CM_US_OFDMA_CHAN {
-    unsigned int ChannelId;                     /**< @brief The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.  If the upstream channel ID is unknown, this object returns a value of 0. */
-    unsigned int ConfigChangeCt;                /**< @brief The value of the Configuration Change Count field in the Upstream Channel Descriptor (UCD) MAC Management Message corresponding to this OFDMA channel. */
-    unsigned int SubcarrierZeroFreq;            /**< @brief The lower edge frequency of the OFDMA upstream channel in Hz */
-    unsigned int FirstActiveSubcarrierNum;      /**< @brief The upper edge of the OFDMA upstream channel. The minimum channel width for an OFDMA upstream channel is 6.4 MHz in 4K mode and 10MHz in 2K mode. The valid range is 74 to 3947. */
-    unsigned int LastActiveSubcarrierNum;       /**< @brief The last active subcarrier number. The valid range is 74 to 3947. */
-    unsigned int NumActiveSubcarriers;          /**< @brief The number of active subcarriers within the OFDMA upstream channel. The valid range is 1 to 3800. */
-    unsigned int SubcarrierSpacing;             /**< @brief The subcarrier spacing associated with a particular FFT mode configured on the OFDMA upstream channel. If it is 2K mode, then the subcarrier spacing is 50kHz. If it is 4K mode, then the subcarrier spacing is 25kHz. */
-    unsigned int CyclicPrefix;                  /**< @brief Cyclic prefix is added in order to enable the receiver to overcome the effects of inter-symbol interference (ISI) and inter-carrier interference caused by microreflections in the channel. The cyclic prefix (in usec) is converted into samples using the sample rate of 102.4 Msamples/s. There are eleven values for the length of the CP and the choice depends on the delay spread of the channel; a longer delay spread requires a longer cyclic prefix. */
-    unsigned int RollOffPeriod;                 /**< @brief Windowing is applied in order to maximize channel capacity by sharpening the edges of the spectrum of the OFDMA signal. Windowing is applied in the time domain by tapering (or rolling off) the edges using a raised cosine function. There are eight possible values of roll-off prefix. The Roll-Off Period is given in us and in number of samples using the sample rate of 102.4 Msamples/s. The configuration where Roll-off prefix value is greater than or equal to cyclic prefix value is considered invalid. */
-    unsigned int NumSymbolsPerFrame;            /**< @brief The number of symbol periods per frame. For channel bandwidth greater than 72MHz, the maximum number of symbol periods per frame is 18 for 2K mode and 9 for 4K mode. For channel bandwidth less than 72 MHz but greater than 48MHz, the maximum number of symbols per frame is 24 for 2K mode and 12 for 4K mode. For channel bandwidth less than 48MHz, the maximum number of symbol periods is 36 for 2K mode and 18 for 4K mode. The minimum number of symbol periods per frame is 6 for both the FFT modes and is independent of the channel bandwidth. */
-    unsigned int TxPower;                       /**< @brief The operational transmit power for the associated OFDMA upstream channel.The CM reports its Target Power, P1.6r_n as described in [PHYv3.1]. Valid values for this object are 68 to (213 + (4*(Pmax - 65 dBmV))), since 68 quarter dBmV represents the lowest Tx power value 17 dBmV and 213 represents the nearest quarter dBmV to the highest Tx power value 53.2 dBmV. */
-    unsigned char PreEqEnabled;                          /**< @brief Whether pre-equalization is enabled on the associated OFDMA upstream channel. */
+typedef struct {
+    unsigned int ChannelId;                     /**< The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.  If the upstream channel ID is unknown, this object returns a value of 0. */
+    unsigned int ConfigChangeCt;                /**< The value of the Configuration Change Count field in the Upstream Channel Descriptor (UCD) MAC Management Message corresponding to this OFDMA channel. */
+    unsigned int SubcarrierZeroFreq;            /**< The lower edge frequency of the OFDMA upstream channel in Hz */
+    unsigned int FirstActiveSubcarrierNum;      /**< The upper edge of the OFDMA upstream channel. The minimum channel width for an OFDMA upstream channel is 6.4 MHz in 4K mode and 10MHz in 2K mode. The valid range is 74 to 3947. */
+    unsigned int LastActiveSubcarrierNum;       /**< The last active subcarrier number. The valid range is 74 to 3947. */
+    unsigned int NumActiveSubcarriers;          /**< The number of active subcarriers within the OFDMA upstream channel. The valid range is 1 to 3800. */
+    unsigned int SubcarrierSpacing;             /**< The subcarrier spacing associated with a particular FFT mode configured on the OFDMA upstream channel. If it is 2K mode, then the subcarrier spacing is 50kHz. If it is 4K mode, then the subcarrier spacing is 25kHz. */
+    unsigned int CyclicPrefix;                  /**< Cyclic prefix is added in order to enable the receiver to overcome the effects of inter-symbol interference (ISI) and inter-carrier interference caused by microreflections in the channel. The cyclic prefix (in usec) is converted into samples using the sample rate of 102.4 Msamples/s. There are eleven values for the length of the CP and the choice depends on the delay spread of the channel; a longer delay spread requires a longer cyclic prefix. */
+    unsigned int RollOffPeriod;                 /**< Windowing is applied in order to maximize channel capacity by sharpening the edges of the spectrum of the OFDMA signal. Windowing is applied in the time domain by tapering (or rolling off) the edges using a raised cosine function. There are eight possible values of roll-off prefix. The Roll-Off Period is given in us and in number of samples using the sample rate of 102.4 Msamples/s. The configuration where Roll-off prefix value is greater than or equal to cyclic prefix value is considered invalid. */
+    unsigned int NumSymbolsPerFrame;            /**< The number of symbol periods per frame. For channel bandwidth greater than 72MHz, the maximum number of symbol periods per frame is 18 for 2K mode and 9 for 4K mode. For channel bandwidth less than 72 MHz but greater than 48MHz, the maximum number of symbols per frame is 24 for 2K mode and 12 for 4K mode. For channel bandwidth less than 48MHz, the maximum number of symbol periods is 36 for 2K mode and 18 for 4K mode. The minimum number of symbol periods per frame is 6 for both the FFT modes and is independent of the channel bandwidth. */
+    unsigned int TxPower;                       /**< The operational transmit power for the associated OFDMA upstream channel.The CM reports its Target Power, P1.6r_n as described in [PHYv3.1]. Valid values for this object are 68 to (213 + (4*(Pmax - 65 dBmV))), since 68 quarter dBmV represents the lowest Tx power value 17 dBmV and 213 represents the nearest quarter dBmV to the highest Tx power value 53.2 dBmV. */
+    unsigned char PreEqEnabled;                 /**< Whether pre-equalization is enabled on the associated OFDMA upstream channel. */
 } DOCSIF31_CM_US_OFDMA_CHAN, *PDOCSIF31_CM_US_OFDMA_CHAN;
 
 
@@ -483,15 +482,15 @@ typedef struct _DOCSIF31_CM_US_OFDMA_CHAN {
  * Holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel like Channel ID, T3 timeouts, T4 timeouts, ranging aborts, excessive T3 timeouts, muting status and ranging status.
  */
 
-typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
+typedef struct {
     // The full definitions for the fields below can be referenced within DOCS-IF31-MIB.
-    unsigned int ChannelId;                     /**< @brief The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.If the upstream channel ID is unknown,this object returns a value of 0.*/
-    unsigned int T3Timeouts;                    /**< @brief Number of T3 counter timeouts. */
-    unsigned int T4Timeouts;                    /**< @brief Number of T4 counter timeouts.*/
-    unsigned int RangingAborteds;               /**< @brief Number of times ranging process has been aborted.*/
-    unsigned int T3Exceededs;                   /**< @brief Number of excessive T3 timeouts.*/
-    unsigned char IsMuted;                      /**< @brief Indicates if upstream channel is muted.*/
-    unsigned int RangingStatus;                 /**< @brief Ranging State of CM: other(1),aborted(2),retriesExceeded(3),success(4),continue(5),timeoutT4(6)*/
+    unsigned int ChannelId;                     /**< The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.If the upstream channel ID is unknown,this object returns a value of 0.*/
+    unsigned int T3Timeouts;                    /**< Number of T3 counter timeouts. */
+    unsigned int T4Timeouts;                    /**< Number of T4 counter timeouts.*/
+    unsigned int RangingAborteds;               /**< Number of times ranging process has been aborted.*/
+    unsigned int T3Exceededs;                   /**< Number of excessive T3 timeouts.*/
+    unsigned char IsMuted;                      /**< Indicates if upstream channel is muted.*/
+    unsigned int RangingStatus;                 /**< Ranging State of CM: other(1),aborted(2),retriesExceeded(3),success(4),continue(5),timeoutT4(6)*/
 } DOCSIF31_CMSTATUSOFDMA_US, *PDOCSIF31_CMSTATUSOFDMA_US;
 //<< Docsis3.1
 
@@ -504,12 +503,12 @@ typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
  * Holds information about the fixed-length buffer with a specified length and a pointer to the buffer data .
  */
 
-typedef struct _fixed_length_buffer {
-    USHORT length;                               /**< @brief length variable is unsigned short. 
-                                                             The maximum value is (2^16)-1.*/
-    UINT8 *buffer;                               /**< @brief buffer variable is unsigned charcter pointer. 
-                                                             It is a variable that can store an integer value.
-                                                             The maximum value is (2^8)-1. */
+typedef struct {
+    USHORT length;                               /**< length variable is unsigned short. 
+                                                      The maximum value is (2^16)-1.*/
+    UINT8 *buffer;                               /**< buffer variable is unsigned charcter pointer. 
+                                                      It is a variable that can store an integer value.
+                                                      The maximum value is (2^8)-1. */
 } fixed_length_buffer_t;
 
 /**
@@ -518,9 +517,9 @@ typedef struct _fixed_length_buffer {
  * Holds information about the fixed length buffer for security name and security number .
  */
 
-typedef struct _snmpv3_kickstart_row {
-    fixed_length_buffer_t security_name;          /**< @brief  Fixed length buffer for the security name */
-    fixed_length_buffer_t security_number;        /**< @brief  Fixed length buffer for the security number*/
+typedef struct {
+    fixed_length_buffer_t security_name;          /**< Fixed length buffer for the security name */
+    fixed_length_buffer_t security_number;        /**< Fixed length buffer for the security number*/
 } snmp_kickstart_row_t;
 
 
@@ -530,9 +529,9 @@ typedef struct _snmpv3_kickstart_row {
  * Holds information about the SNMPv3 kickstart table including the number of rows and an array of SNMPv3 kickstart rows.
  */
 
-typedef struct _snmpv3_kickstart_table {
-    UINT8 n_rows;                                                /**< @brief It is an unsigned character contains the count of snmp kickstart rows. */
-    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< @brief It is a pointer array of size 5 contains list of snmp kickstart rows, with security_name and security_number. */
+typedef struct {
+    UINT8 n_rows;                                                /**< It is an unsigned character contains the count of snmp kickstart rows. */
+    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< It is a pointer array of size 5 contains list of snmp kickstart rows, with security_name and security_number. */
 } snmpv3_kickstart_table_t;
 
 /**
@@ -544,8 +543,8 @@ typedef struct _snmpv3_kickstart_table {
 typedef  struct
 _CM_DIPLEXER_SETTINGS
 {
-    UINT    usDiplexerSetting; /**< @brief Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
-    UINT    dsDiplexerSetting; /**< @brief Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
+    UINT    usDiplexerSetting; /**< Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
+    UINT    dsDiplexerSetting; /**< Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
 }
 CM_DIPLEXER_SETTINGS;
 
@@ -559,11 +558,7 @@ CM_DIPLEXER_SETTINGS;
 **********************************************************************************/
 
 /*
- * TODO:
- *
- * 1. Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future.
- *    This was reported during the review for header file migration to opensource github.
- *
+ * TODO: Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future. This was reported during the review for header file migration to opensource github.
  */
 
 /**
