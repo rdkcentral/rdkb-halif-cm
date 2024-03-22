@@ -148,7 +148,7 @@ extern "C"{
 /**
  * @brief Represents the information about a downstream channel of a cable modem.
  *
- * Holds information about the downstream channel like channel ID, frequency, power level, SNR level,modulation, octets, correcteds and lock status.
+ * This structure holds information about the downstream channel like channel ID, frequency, power level, SNR level,modulation, octets, correcteds and lock status.
  */
 
 /**
@@ -186,7 +186,7 @@ CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 /**
  * @brief Represents the information about a upstream channel of a cable modem.
  *
- * Holds information about the upstream channel like channel ID, frequency, power level, ,channel type, symbol rate, modulation and lock status.
+ * This structure holds information about the upstream channel like channel ID, frequency, power level, ,channel type, symbol rate, modulation and lock status.
  */
 
 typedef  struct
@@ -212,7 +212,7 @@ CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
 /**
  * @brief Represents the information about DOCSIS of a cable modem.
  *
- * Holds information about various DOCSIS related information version downstream and upstream scannimg and ranging statuses, TFTP starus, DHCP attempts, cnfiguration file name,TFTP attempts, Time of Day status,BPI state, network access, upgrade server IP, maximum CPE allowed, service flow parameters,data rates for downstream and upstream and core version.
+ * This structure holds information about various DOCSIS related information version downstream and upstream scannimg and ranging statuses, TFTP starus, DHCP attempts, cnfiguration file name,TFTP attempts, Time of Day status,BPI state, network access, upgrade server IP, maximum CPE allowed, service flow parameters,data rates for downstream and upstream and core version.
  */
 
 typedef  struct
@@ -262,7 +262,7 @@ CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
 /**
  * @brief Represents the information of errorcode words of a cable modem.
  *
- * Holds information about the error codewords including the number of unerrored, correctable and uncorrectable codewords.
+ * This structure holds information about the error codewords including the number of unerrored, correctable and uncorrectable codewords.
  */
 
 /*
@@ -285,7 +285,7 @@ CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
 /**
  * @brief Represents the information of entry in the cable modem's event log.
  *
- * Holds information about an event log entry, including the event index, first and last time the event occured, event counts, event level, event ID and the text associated with the event.
+ * This structure holds information about an event log entry, including the event index, first and last time the event occured, event counts, event level, event ID and the text associated with the event.
  */
 
 typedef struct
@@ -309,7 +309,7 @@ typedef struct
 /**
  * @brief Represents the configuration settings of CM logging.
  *
- * Holds information of the configuration settings of CM logging related to CM logging and if the Docsis log should be cleared.
+ * This structure holds information of the configuration settings of CM logging related to CM logging and if the Docsis log should be cleared.
  */
 
 /*
@@ -326,7 +326,7 @@ CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
 /**
  * @brief Represents the information for a Docsis log entry.
  *
- * Holds information related to the Docsis log entry like the index, event ID, event level, timestamp and description.
+ * This structure holds information related to the Docsis log entry like the index, event ID, event level, timestamp and description.
  */
 
 /*
@@ -346,7 +346,7 @@ CMMGMT_DML_DOCSISLOG_FULL,  *PCMMGMT_DML_DOCSISLOG_FULL;
 /**
  * @brief Represents the information of DHCP configuration of a cable modem.
  *
- * Holds information about the DHCP configuration like the IP Address, boot file name, subnet mask, gateway, TFTP server, time server, time offset, remaining lease time, remaining rebind time, remaining renew time, MAC address and DOCSIS DHCP status.
+ * This structure holds information about the DHCP configuration like the IP Address, boot file name, subnet mask, gateway, TFTP server, time server, time offset, remaining lease time, remaining rebind time, remaining renew time, MAC address and DOCSIS DHCP status.
  */
 
 typedef  struct
@@ -374,7 +374,7 @@ CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
 /**
  * @brief Represents the information of IPv6 DHCP configuration of a cable modem.
  *
- * Holds information about the IPv6 DHCP configuration like the IPv6 address, IPv6 boot file name, IPv6 prefix, IPv6 router, IPv6 TFTP server, IPv6 time server, remaining IPv6 lease time, remaining IPv6 rebind time and remaining IPv6 renew time.
+ * This structure holds information about the IPv6 DHCP configuration like the IPv6 address, IPv6 boot file name, IPv6 prefix, IPv6 router, IPv6 TFTP server, IPv6 time server, remaining IPv6 lease time, remaining IPv6 rebind time and remaining IPv6 renew time.
  */
 
 typedef  struct
@@ -407,7 +407,7 @@ CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 /**
  * @brief Represents the list of customer premises equipment.
  *
- * Holds information about the customer premises equipment including the IP address and MAC address.
+ * This structure holds information about the customer premises equipment including the IP address and MAC address.
  */
 
 typedef  struct
@@ -460,15 +460,15 @@ typedef struct {
 
 
 typedef struct {
-    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
-    unsigned int ConfigChangeCt;                /**< The value of the Configuration Change Count field in the Upstream Channel Descriptor (UCD) MAC Management Message corresponding to this OFDMA channel. */
-    unsigned int SubcarrierZeroFreq;            /**< The lower edge frequency of the OFDMA upstream channel in Hz */
-    unsigned int FirstActiveSubcarrierNum;      /**< The upper edge of the OFDMA upstream channel. The minimum channel width for an OFDMA upstream channel is 6.4 MHz in 4K mode and 10MHz in 2K mode. The valid range is 74 to 3947. */
-    unsigned int LastActiveSubcarrierNum;       /**< The last active subcarrier number. The valid range is 74 to 3947. */
+    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
+    unsigned int ConfigChangeCt;                /**< This is a count that keeps track of how many times the configuration of the Upstream Channel Descriptor (UCD) MAC Management Message has been changed for a specific OFDMA channel. */
+    unsigned int SubcarrierZeroFreq;            /**< This variable holds the lower edge frequency of the OFDMA upstream channel in Hertz (Hz). */
+    unsigned int FirstActiveSubcarrierNum;      /**< This variable holds the index or number of the first active subcarrier in the OFDMA upstream channel. The valid range is 74 to 3947. */
+    unsigned int LastActiveSubcarrierNum;       /**< This variable holds the index or number of the last active subcarrier in the OFDMA upstream channel. The valid range is 74 to 3947. */
     unsigned int NumActiveSubcarriers;          /**< The number of active subcarriers within the OFDMA upstream channel. The valid range is 1 to 3800. */
     unsigned int SubcarrierSpacing;             /**< The subcarrier spacing associated with a particular FFT mode configured on the OFDMA upstream channel. If it is 2K mode, then the subcarrier spacing is 50kHz. If it is 4K mode, then the subcarrier spacing is 25kHz. */
     unsigned int CyclicPrefix;                  /**< Cyclic prefix is added in order to enable the receiver to overcome the effects of inter-symbol interference (ISI) and inter-carrier interference caused by microreflections in the channel. The cyclic prefix (in usec) is converted into samples using the sample rate of 102.4 Msamples/s. There are eleven values for the length of the CP and the choice depends on the delay spread of the channel; a longer delay spread requires a longer cyclic prefix. */
-    unsigned int RollOffPeriod;                 /**< Windowing is applied in order to maximize channel capacity by sharpening the edges of the spectrum of the OFDMA signal. Windowing is applied in the time domain by tapering (or rolling off) the edges using a raised cosine function. There are eight possible values of roll-off prefix. The Roll-Off Period is given in us and in number of samples using the sample rate of 102.4 Msamples/s. The configuration where Roll-off prefix value is greater than or equal to cyclic prefix value is considered invalid. */
+    unsigned int RollOffPeriod;                 /**< This parameter represents the duration of the windowing applied to maximize the channel capacity by sharpening the edges of the spectrum of the OFDMA signal. There are typically eight possible values of roll-off prefix, each corresponding to a specific roll-off period. The roll-off period may be provided in microseconds and also in the number of samples using a sample rate of 102.4 Msamples/s. */
     unsigned int NumSymbolsPerFrame;            /**< The number of symbol periods per frame. For channel bandwidth greater than 72MHz, the maximum number of symbol periods per frame is 18 for 2K mode and 9 for 4K mode. For channel bandwidth less than 72 MHz but greater than 48MHz, the maximum number of symbols per frame is 24 for 2K mode and 12 for 4K mode. For channel bandwidth less than 48MHz, the maximum number of symbol periods is 36 for 2K mode and 18 for 4K mode. The minimum number of symbol periods per frame is 6 for both the FFT modes and is independent of the channel bandwidth. */
     unsigned int TxPower;                       /**< The operational transmit power for the associated OFDMA upstream channel.The CM reports its Target Power, P1.6r_n as described in [PHYv3.1]. Valid values for this object are 68 to (213 + (4*(Pmax - 65 dBmV))), since 68 quarter dBmV represents the lowest Tx power value 17 dBmV and 213 represents the nearest quarter dBmV to the highest Tx power value 53.2 dBmV. */
     unsigned char PreEqEnabled;                 /**< Whether pre-equalization is enabled on the associated OFDMA upstream channel. */
@@ -479,12 +479,12 @@ typedef struct {
  * @brief Represents information about a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
  *
  *
- * Holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel like Channel ID, T3 timeouts, T4 timeouts, ranging aborts, excessive T3 timeouts, muting status and ranging status.
+ * This structure holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel.
  */
 
 typedef struct {
     // The full definitions for the fields below can be referenced within DOCS-IF31-MIB.
-    unsigned int ChannelId;                     /**< The Cable Modem identification of the OFDMA upstream channel within this particular MAC interface. If the interface is down, the object returns the most current value.If the upstream channel ID is unknown,this object returns a value of 0.*/
+    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
     unsigned int T3Timeouts;                    /**< Number of T3 counter timeouts. */
     unsigned int T4Timeouts;                    /**< Number of T4 counter timeouts.*/
     unsigned int RangingAborteds;               /**< Number of times ranging process has been aborted.*/
@@ -500,51 +500,50 @@ typedef struct {
 /**
  * @brief Represents the fixed-length buffer.
  *
- * Holds information about the fixed-length buffer with a specified length and a pointer to the buffer data .
+ * This structure holds information about the fixed-length buffer with a specified length and a pointer to the buffer data .
  */
 
 typedef struct {
     USHORT length;                               /**< length variable is unsigned short. 
                                                       The maximum value is (2^16)-1.*/
     UINT8 *buffer;                               /**< buffer variable is unsigned charcter pointer. 
-                                                      It is a variable that can store an integer value.
-                                                      The maximum value is (2^8)-1. */
+                                                      It is a variable that can store an integer value. */
 } fixed_length_buffer_t;
 
 /**
  * @brief Represents a row in the SNMPv3 kickstart.
  *
- * Holds information about the fixed length buffer for security name and security number .
+ * This structure holds information about the fixed length buffer for security name and security number .
  */
 
 typedef struct {
-    fixed_length_buffer_t security_name;          /**< Fixed length buffer for the security name */
-    fixed_length_buffer_t security_number;        /**< Fixed length buffer for the security number*/
+    fixed_length_buffer_t security_name;          /**< Structure to describe the buffer for the security name */
+    fixed_length_buffer_t security_number;        /**< Structure to describe the buffer for the security number*/
 } snmp_kickstart_row_t;
 
 
 /**
  * @brief Represents a SNMPv3 kickstart table.
  *
- * Holds information about the SNMPv3 kickstart table including the number of rows and an array of SNMPv3 kickstart rows.
+ * This structure holds information about the SNMPv3 kickstart table including the number of rows and an array of SNMPv3 kickstart rows.
  */
 
 typedef struct {
-    UINT8 n_rows;                                                /**< It is an unsigned character contains the count of snmp kickstart rows. */
-    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< It is a pointer array of size 5 contains list of snmp kickstart rows, with security_name and security_number. */
+    UINT8 n_rows;                                                /**< Count of snmp kickstart rows. */
+    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< Pointer to an array of smp kickstart rows. */
 } snmpv3_kickstart_table_t;
 
 /**
- * @brief Represents the diplexer settings for cable modem.
+ * @brief Diplexer settings for cable modem.
  *
- * Holds information about the diplexer settings for both upstream and downstream channels including the upper edge frequency in megahertz (MHz).
+ * This structure holds information about the diplexer settings for both upstream and downstream channels including the upper edge frequency in megahertz (MHz).
  */
 
 typedef  struct
 _CM_DIPLEXER_SETTINGS
 {
-    UINT    usDiplexerSetting; /**< Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
-    UINT    dsDiplexerSetting; /**< Unsigned integer representing the Upper Edge in MHz. It is a Vendor specific value.*/
+    UINT    usDiplexerSetting; /**< Upstream upper band edge of diplexer in MHz*/
+    UINT    dsDiplexerSetting; /**< Downstream upper band edge of diplexer in MHz*/
 }
 CM_DIPLEXER_SETTINGS;
 
@@ -568,7 +567,7 @@ CM_DIPLEXER_SETTINGS;
 
 
 /**
-* @brief Retrieves the global information for all shared DBs and makes them accessible locally.
+* @brief Initialize the Hal and associated requirements.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -579,7 +578,7 @@ CM_DIPLEXER_SETTINGS;
 INT cm_hal_InitDB(void);
 
 /**
-* @brief Init global PHY level info and DBs and get direct access to DS HW.
+* @brief Initiates global Physical (PHY) level information and databases, and establishes direct access to the Downstream (DS) hardware (HW).
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -590,7 +589,7 @@ INT cm_hal_InitDB(void);
 INT docsis_InitDS(void);
 
 /**
-* @brief Init global PHY level info and DBs and get direct access to US HW.
+* @brief Initiates global Physical (PHY) level information and databases, and establishes direct access to the Upstream (US) hardware (HW).
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -617,24 +616,25 @@ INT docsis_InitUS(void);
 INT docsis_getCMStatus(CHAR *cm_status);
 
 /**
-* @brief Retrieve all the relevant DS channel info from global DBs.
+* @brief Retrieve relevant downstream (DS) channel information.
+*
+* This function retrieves relevant downstream channel information and allocates memory for the PCMMGMT_CM_DS_CHANNEL structure.
+* The memory allocated for the PCMMGMT_CM_DS_CHANNEL structure is owned by the function and should be freed by the caller when no longer needed.
+*
 * @param[out] ppinfo Pointer to PCMMGMT_CM_DS_CHANNEL structure that will hold all the info of DS channel to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-*
-*
-*
 */
 INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
 
 /**
-* @brief Retrieve all the relevant US channel info from global DBs.
-* @param[in]  i     Index to the US channel. It ranges from 0 to n where n is an unsigned short value.
-* @param[out] pinfo Info of one US channel, to be returned.
+* @brief Retrieve status of the upstream (US) channel information.
+*
+* @param[in]  i     Index of the upstream channel. Valid range is from 0 to n, where n is an unsigned short value.
+* @param[out] pinfo Info of upstream channel to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -646,8 +646,12 @@ INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
 INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
 
 /**
-* @brief Retrieve particular US channel information from global DBs.
-* @param[out] ppinfo Pointer to a PCMMGMT_CM_US_CHANNEL structure that will hold all the info of the specific US channel, to be returned.
+* @brief Retrieve relevant upstream (US) channel information.
+*
+* This function retrieves relevant upstream channel information and allocates memory for the PCMMGMT_CM_US_CHANNEL structure.
+* The memory allocated for the PCMMGMT_CM_US_CHANNEL structure is owned by the function and should be freed by the caller when no longer needed.
+*
+* @param[out] ppinfo Pointer to a PCMMGMT_CM_US_CHANNEL structure that will hold all the info of the specific Upstream channel, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -666,15 +670,13 @@ INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
+* Note: The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
 */
 INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 
 /**
-* @brief Retrieve number of US channels actively in use in current registration.
-* @param[out] cnt Pointer to an unsigned long variable that will store the number of active US channels, to be returned.
-*                 \n The maximum size allocated should be atleast 100 bytes.
-*                 \n It represents a vendor-specific value.
+* @brief Retrieve number of Upstream channels actively in use in current registration.
+* @param[out] cnt Pointer to an unsigned long variable that will store the number of active Upstream channels, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -686,10 +688,8 @@ INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
 
 /**
-* @brief Retrieve number of DS channels actively in use in current registration.
-* @param[out] cnt Pointer to an unsigned long variable that will store the number of active DS channels, to be returned.
-*                 \n The maximum size allocated should be atleast 100 bytes.
-*                 \n It represents a vendor-specific value.
+* @brief Retrieve number of Downstream channels actively in use in current registration.
+* @param[out] cnt Pointer to an unsigned long variable that will store the number of active Downstream channels, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -703,22 +703,23 @@ INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
 INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
 
 /**
-* @brief Scan all active DS channels and report errors in packets received.
-* @param[out] ppinfo Pointer to a PCMMGMT_CM_ERROR_CODEWORDS structure holding the error info retrieved.
-*                    \n The maximum size allocated should be atleast 24 bytes.
+* @brief Scan all active downstream (DS) channels and report errors in received packets.
 *
+* This function scans all active downstream channels and reports errors in received packets. 
+* Error information is stored in a PCMMGMT_CM_ERROR_CODEWORDS structure, the memory for which is allocated and released by the caller of this function.
+*
+* @param[out] ppinfo Pointer to a pointer to the PCMMGMT_CM_ERROR_CODEWORDS structure where the error information will be stored. 
+* 
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
 *
 *
 */
 INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 
 /**
-* @brief Retrieve the current MIMO status.
+* @brief Retrieve the current IP Provisioning Mode Override status.
 * @param[out] pValue Pointer to character array holding the current IP Provisioning Mode retrieved.
 *                    \n Possible Values are "ipv4Only" , "ipv6Only" , "APM" , "DualStack" , "honorMdd" , "not defined".
 *                    \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set.
@@ -736,10 +737,10 @@ INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 INT docsis_GetMddIpModeOverride(CHAR *pValue);
 
 /**
-* @brief Set the current global MIMO status.
+* @brief Set the current IP Provisioning Mode Override status.
 * @param[in] pValue Value that the IP Provisioning Mode is to be set to.
 *                   \n Possible Values are ipv4Only (0), ipv6Only (1), APM (2), DualStack (3), honorMdd (4), ""
-*                   \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set. Refer docsIf3CmMdCfgIpProvMode.
+*                   \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set.
 *                   \n The maximum size allocated should be atleast 64 bytes.
 *
 * @return The status of the operation.
@@ -754,7 +755,9 @@ INT docsis_GetMddIpModeOverride(CHAR *pValue);
 INT docsis_SetMddIpModeOverride(CHAR *pValue);
 
 /**
-* @brief Retrieve the US channel ID in its MAC domain.
+* @brief Retrieve the Channel ID of the Upstream channel within its MAC (Media Access Control) domain.
+*
+* This function retrieves the Channel ID of the Upstream channel within its MAC domain, which refers to the network segment controlled by a single MAC address. The MAC domain encompasses the network devices, such as modems and routers, that share the same MAC address and communicate using the same protocols.
 *
 * @return UINT8 - Channel ID.
 *
@@ -764,7 +767,10 @@ INT docsis_SetMddIpModeOverride(CHAR *pValue);
 UINT8 docsis_GetUSChannelId(void);
 
 /**
-* @brief Set the US channel ID in its MAC domain.
+* @brief Set the Channel ID of the Upstream channel within its MAC (Media Access Control) domain.
+*
+* This function sets the Channel ID of the Upstream channel within its MAC domain, which refers to the network segment controlled by a single MAC address. The MAC domain encompasses the network devices, such as modems and routers, that share the same MAC address and communicate using the same protocols.
+*
 * @param[in] index It is integer value which provides index to set the Upstream Channel ID to.
 *                  \n The maximum value is (2^31)-1.
 *                  \n Possible Example: 12.
@@ -865,17 +871,16 @@ INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* 
-*
-*
-*
 */
 INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR* LanMode);
 
 /**
-* @brief Retrieve the market of this modem.
-* @param[out] market Pointer to the character array containing the name of the market for this modem, "US" or "EURO", to be returned
-*                       \n The maximum size allocated should be atleast 100 bytes.
+* @brief Retrieve the market region of this modem.
+*
+*This function retrieves the market region of the modem, indicating whether it belongs to the "US" (United States) or "EURO" (Europe) market.
+*
+* @param[out] market Pointer to the character array where the name of the market region will be stored.
+*                    \n The maximum size allocated should be atleast 100 bytes.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
