@@ -670,7 +670,7 @@ INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* Note: The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
+* @note The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
 */
 INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 
@@ -780,9 +780,9 @@ UINT8 docsis_GetUSChannelId(void);
 void docsis_SetUSChannelId(INT index);
 
 /**
-* @brief Retrieve the current primary channel DS channel frequency from the LKF table.
+* @brief Retrieve the current primary downstream (DS) channel frequency from the LKF (Low-Level Kernel Filtering) table.
 *
-* @return ULONG - channel frequency.
+* @return ULONG - channel frequency in Hertz.
 *
 * 
 *
@@ -791,7 +791,7 @@ void docsis_SetUSChannelId(INT index);
 ULONG docsis_GetDownFreq(void);
 
 /**
-* @brief Change the DS primary channel frequency in the LKF table.
+* @brief Set the current primary downstream (DS) channel frequency in the LKF (Low-Level Kernel Filtering) table.
 * @param[in] value  It is an unsigned long value which provides primary channel frequency value that is to be set.
 *                  \n The maximum value is (2^32)-1. Example: 12750.
 *
@@ -806,10 +806,7 @@ void docsis_SetStartFreq(ULONG value);
 * @param[in] len Length of log entries.
 *                \n It is integer datatype. The maximum value is (2^32)-1.
 *
-* @return INT - number of log entries retrieved.
-*
-*
-* 
+* @return INT number of log entries retrieved.
 *
 *
 */
@@ -820,9 +817,6 @@ INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-* 
 *
 *
 */
@@ -836,9 +830,8 @@ INT docsis_ClearDocsisEventLog(void);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-* 
-*
+* @note The caller is responsible for allocating memory for the pInfo structure before calling this function.
+*       The memory allocated for pInfo should be freed by the caller when it is no longer needed.
 *
 */
 INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
@@ -851,9 +844,8 @@ INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-* 
-*
+* @note The caller is responsible for allocating memory for the pInfo structure before calling this function.
+*       The memory allocated for pInfo should be freed by the caller when it is no longer needed.
 *
 */
 INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
@@ -862,7 +854,7 @@ INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 * @brief Retrieve list of CPEs connected to the CM.
 * @param[out] ppCPEList List of all CPE, to be returned.
 *
-* @param[out] InstanceNum Pointer to the number of instances, to be returned.
+* @param[out] InstanceNum Pointer to a variable that will hold the number of instances returned in the CPE list.
 *                         The possibe range of acceptable values is 0 to (2^32)-1.
 * @param[in]  LanMode     Input of "router" or "bridge" mode of the modem.
 *                         \n The maximum size allocated should be atleast 100 bytes.
@@ -870,6 +862,9 @@ INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
+*
+* @note The caller is responsible for allocating memory for both the ppCPEList and LanMode parameters before calling this function.
+*       The memory allocated for the ppCPEList structure and LanMode string should be freed by the caller when they are no longer needed.
 *
 */
 INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR* LanMode);
@@ -886,10 +881,6 @@ INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-* 
-*
-*
 */
 INT cm_hal_GetMarket(CHAR* market);
 
@@ -898,18 +889,15 @@ INT cm_hal_GetMarket(CHAR* market);
 /* cm_hal_Set_HTTP_DL_Url  - 1 */
 
 /**
-* @brief Set Http Download Settings.
+* @brief Sets the HTTP download configuration.
 * @param[in] pHttpUrl   HTTP download URL to be stored in HTTP download config file.
-*                       \n The maximum size allocated should be atleast 60 bytes.
-*                       \n Possible value is "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
+*                       \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
 * @param[in] pfilename  HTTP download filename to be stored in HTTP download config file.
-*                       \n The maximum size allocated should be atleast 60 bytes.
-*                       \n Possible value is "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
+*                       \n Example: "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any Downloading is in process or Url string is invalided.
-*
 *
 */
 INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
@@ -918,15 +906,17 @@ INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
 * @brief Get Http Download Url.
 * @param[out] pHttpUrl  HTTP download URL fetched from HTTP download config file.
 *                       \n The maximum size allocated should be atleast 200 bytes.
-*                       \n Possible value is "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
+*                       \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
 * @param[out] pfilename HTTP download filename fetched from HTTP download config file.
 *                       \n The maximum size allocated should be atleast 200 bytes.
-*                       \n Possible value is "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
+*                       \n Example: "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if http url string is empty.
 *
+* @note The memory for the buffers pHttpUrl and pFilename is expected to be pre-allocated by the caller.
+*       If the provided buffer size is smaller than required, the function may overwrite adjacent memory, leading to undefined behavior.
 *
 */
 INT cm_hal_Get_HTTP_Download_Url (char *pHttpUrl, char* pfilename);
@@ -935,42 +925,34 @@ INT cm_hal_Get_HTTP_Download_Url (char *pHttpUrl, char* pfilename);
 * @brief Set the HTTP Download Interface.
 * @param[in] interface Interface numerical value to be saved to the config file.
 *                      \n Possible values are interface=0 for wan0, interface=1 for erouter0.
-*                      \n The maximum size allocated should be atleast 100 bytes.
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 */
-/* interface=0 for wan0, interface=1 for erouter0 */
 INT cm_hal_Set_HTTP_Download_Interface(unsigned int interface);
 
 /**
 * @brief Get the HTTP Download Interface
 * @param[out] pinterface Interface numerical value to be fetched from the config file.
 *                        \n Values: interface=0 for wan0, interface=1 for erouter0.
-*                        \n The buffer size should be atleast 100 bytes long.
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
 *
 */
-/* interface=0 for wan0, interface=1 for erouter0 */
 INT cm_hal_Get_HTTP_Download_Interface(unsigned int* pinterface);
 
-/* cm_hal_HTTP_Download - 3 */
 /**
 * @brief Start Http Download.
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any Downloading is in process.
-*
-* 
+* @retval RETURN_ERR if a download operation is already in progress.
 *
 */
 INT cm_hal_HTTP_Download ();
 
-/* cm_hal_ Get_HTTP_Download _Status ? 4 */
 /**
 * @brief Get the HTTP Download Status.
 * @return the status of the HTTP Download.
@@ -990,12 +972,10 @@ INT cm_hal_HTTP_Download ();
 */
 INT cm_hal_Get_HTTP_Download_Status();
 
-/* cm_hal_Reboot_Ready - 5 */
 /**
 * @brief Get the Reboot Ready Status.
 * @param[out] *pValue Pointer to the integer containing Reboot Ready Status.
 *                     \n It is a unsigned long value.
-*                     \n The maximum size allocated should be atleast 100 bytes.
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
@@ -1005,7 +985,6 @@ INT cm_hal_Get_HTTP_Download_Status();
 */
 INT cm_hal_Reboot_Ready(ULONG *pValue);
 
-/* cm_hal_HTTP_DL_Reboot_Now - 6*/
 /**
 * @brief Http Download Reboot Now.
 * @return the status of the reboot operation.
