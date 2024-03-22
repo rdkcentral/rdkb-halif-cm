@@ -27,11 +27,11 @@ The below mentioned APIs initialize the Broadband CM HAL layers/code. Broadband 
 
 ## Threading Model
 
-The interface is not thread safe.
+The interface is not required to be thread safe.
 
-Any module which is invoking the API should ensure calls are made in a thread safe manner.
+Callers to this API have the responsibility to use it in a thread safe manner.
 
-Vendors can create internal threads/events to meet their operation requirements.  These should be responsible to synchronize between the calls, events and cleaned up on closure.
+Vendors have the flexibility to create internal threads and events for tailored operations, but they must assume full accountability for their synchronization, call management, and thorough cleanup upon closure.
 
 ## Process Model
 
@@ -39,16 +39,19 @@ All API's are expected to be called from multiple process.
 
 ## Memory Model
 
-The client is responsible to allocate and de-allocate memory for necessary APIs as specified in API documentation.
-Different 3rd party vendors allowed to allocate memory for internal operational requirements. In this case 3rd party implementations should be responsible to de-allocate internally.
+### Caller Responsiblities
 
-TODO:
-State a footprint requirement. Example: This should not exceed XXXX KB.
+   1. Callers must assume full responsibility for managing any memory explicitly given to the module functions to populate. This includes proper allocation and de-allocation to prevent memory leaks.
 
-## Power Management Requirements
+### Module Responsibilities
 
-The HAL is not involved in any of the power management operation.
-Any power management state transitions MUST not affect the operation of the HAL.
+   1. Modules must independently allocate and de-allocate memory for their internal operations, ensuring efficient resource management.
+   
+   2. Modules are required to release all internally allocated memory upon closure to prevent resource leaks.
+   
+   3. All module implementations and caller code must strictly adhere to these memory management requirements for optimal performance and system stability. Unless otherwise stated specifically in the API documentation.
+   
+TODO: State a footprint requirement. Example: This should not exceed XXXX KB.
 
 ## Asynchronous Notification Model
 
@@ -59,8 +62,7 @@ There are no asynchronous notifications.
 The APIs are expected to work synchronously and should complete within a time period commensurate with the complexity of the operation and in accordance with any relevant Broadband CM specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any API documentation.
 The upper layers will call this API from a single thread context, this API should not suspend.
 
-TODO:
-As we state that they should complete within a time period, we need to state what that time target is, and pull it from the spec if required. Define the timeout requirement.
+TODO: As we state that they should complete within a time period, we need to state what that time target is, and pull it from the spec if required. Define the timeout requirement.
 
 ## Internal Error Handling
 
@@ -68,8 +70,7 @@ All the Broadband CM HAL APIs should return error synchronously as a return argu
 
 ## Persistence Model
 
-There is no requirement for HAL to persist any setting information. The caller is responsible to persist any settings related to Broadband CM feature.
-
+There is no requirement for the HAL to persist any setting information. The caller is responsible to persist any settings.
 
 ## Nonfunctional requirements
 
@@ -81,7 +82,7 @@ The component should log all the error and critical informative messages, prefer
 
 The logging should be consistent across all HAL components.
 
-If the vendor is going to log then it has to be logged in `xxx_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` or `/var/tmp/` directory.
+If the vendor is going to log then it has to be logged in `cm_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` or `/var/tmp/` directory.
 
 Logging should be defined with log levels as per Linux standard logging.
 
@@ -93,7 +94,7 @@ The component should not contributing more to memory and CPU utilization while p
 
 ## Quality Control
 
-Broadband CM HAL implementation should pass checks using any third party tools like `Coverity`, `Black duck`, `Valgrind` etc. without any issue to ensure quality.
+To maintain software quality, it is recommended that the Firmware Management HAL implementation is verified without any errors using third-party tools such as Coverity, Black Duck, Valgrind, etc.
 
 There should not be any memory leaks/corruption introduced by HAL and underneath 3rd party software implementation.
 
@@ -103,11 +104,11 @@ Broadband CM HAL implementation is expected to released under the Apache License
 
 ## Build Requirements
 
-The source code should be able to be built under Linux Yocto environment and should be delivered as a shared library `libcm_mgnt.so`
+The source code should be capable of being built under Linux Yocto environment and should be delivered as a shared library `libcm_mgnt.so`
 
 ## Variability Management
 
-Changes to the interface will be controlled by versioning, vendors will be expected to implement to a fixed version of the interface, and based on SLA agreements move to later versions as demand requires.
+The role of adjusting the interface, guided by versioning, rests solely within architecture requirements. Thereafter, vendors are obliged to align their implementation with a designated version of the interface. As per Service Level Agreement (SLA) terms, they may transition to newer versions based on demand needs.
 
 Each API interface will be versioned using [Semantic Versioning 2.0.0](https://semver.org/), the vendor code will comply with a specific version of the interface.
 
