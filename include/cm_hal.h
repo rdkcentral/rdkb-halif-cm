@@ -817,7 +817,9 @@ INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
+* @retval RETURN_ERR if an error is encountered during the operation, such as failure to set the event log clear entry.
 *
+* @note This function must not suspend and must not invoke any blocking system calls. It should probably just send a message to a driver event handler task.
 *
 */
 INT docsis_ClearDocsisEventLog(void);
@@ -980,7 +982,7 @@ INT cm_hal_Get_HTTP_Download_Status();
  *
  * @return The status of the operation.
  * @retval RETURN_OK if successful.
- * @retval RETURN_ERR if an error is detected.
+ * @retval RETURN_ERR if an error is detected during the operation, such as failure in retrieving operational status, EMTA (Embedded Multimedia Terminal Adapter) line status, or accessing required resources.
  */
 INT cm_hal_Reboot_Ready(ULONG *pValue);
 
@@ -988,7 +990,7 @@ INT cm_hal_Reboot_Ready(ULONG *pValue);
 * @brief Http Download Reboot Now.
 * @return the status of the reboot operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any reboot is in process.
+* @retval RETURN_ERR if the function fails to create the reboot file or encounters an error during the reboot process.
 */
 INT cm_hal_HTTP_Download_Reboot_Now();
 
@@ -996,12 +998,10 @@ INT cm_hal_HTTP_Download_Reboot_Now();
 * @brief Firmware update and factory reset the device.
 * @param[in] pUrl       Url for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
 *                         \n It is variable of character pointer datatype.
-*                         \n The maximum size allocated should be atleast 1024 bytes.
-*                         \n Possible value is "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
+*                         \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
 * @param[in] pImagename Imagename for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
 *                         \n It is variable of character pointer datatype.
-*                         \n The maximum size allocated should be atleast 1024 bytes.
-*                         \n Possible value is CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT
+*                         \n Example: CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT
 *
 * @return the status of the Firmware update and factory reset operation.
 * @retval RETURN_OK if successful.
@@ -1012,14 +1012,13 @@ INT cm_hal_HTTP_Download_Reboot_Now();
 INT cm_hal_FWupdateAndFactoryReset(char* pUrl, char* pImagename);
 
 /**
-* @brief Reinit CM.  Performs reinit MAC only to same DS/US.
+* @brief Reinitializes the Cable Modem (CM) by reinitializing the Media Access Control (MAC) layer, preserving the existing downstream (DS) and upstream (US) channels.
+*
+* This function triggers a reinitialization of the MAC layer of the CM, ensuring that the current DS and US channels are retained.
 *
 * @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-* 
-*
+* @retval RETURN_OK if the MAC reinitialization is successful.
+* @retval RETURN_ERR if any error is detected during the reinitialization process.
 *
 */
 INT cm_hal_ReinitMac();
@@ -1028,49 +1027,41 @@ INT cm_hal_ReinitMac();
 * @brief Retrieve the provisioned wan0 IP type.
 * @param[out] pValue Integer pointer containing the ip type currently provisioned on wan0.
 *                    \n It is variable of character pointer datatype.
-*                    \n The maximum size allocated should be atleast 100 bytes.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
 *
 */
 INT docsis_GetProvIpType(CHAR *pValue);
 
 /**
-* @brief Retrieve the location of the certificate.
-* @param[out] pCert Pointer to character array holding the certificate location, to be returned.
-*                   \n It is variable of character pointer datatype.
-*                   \n The maximum size allocated should be atleast 100 bytes.
-*                   \n Possible Value is "/nvram/cmcert.bin".
+* @brief Retrieves the location of the CM certificate file.
+*
+* This function retrieves the file path where the CM certificate is stored in the file system.
+*
+* @param[out] pCert Pointer to a character array where the certificate file location will be stored.
+*                   \n Example value: "/nvram/cmcert.bin".
 *
 * @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
+* @retval RETURN_OK if the certificate location is successfully retrieved.
+* @retval RETURN_ERR if any error is detected during the retrieval process.
 *
 */
 INT docsis_GetCert(CHAR* pCert);
 
 /**
-* @brief Retrieve status of the certificate.
-* @param[out] pVal Pointer to value containing the certificate status, to be returned.
-*                  \n It is a unsigned long value.
-*                  \n The maximum size allocated should be atleast 100 bytes.
-*                  \n Possible Values is 0 or 1.
+* @brief Retrieves the status of the CM certificate.
+*
+* This function retrieves the status of the CM certificate, indicating whether it is enabled or disabled.
+*
+* @param[out] pVal Pointer to a value containing the certificate status, to be returned.
+*                  \n It is an unsigned long value.
+*                  \n Values: 0 (disabled) or 1 (enabled).
 *
 * @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*
-* 
+* @retval RETURN_OK if the certificate status is successfully retrieved.
+* @retval RETURN_ERR if any error is detected during the retrieval process.
 *
 */
 INT docsis_GetCertStatus(ULONG *pVal);
@@ -1079,89 +1070,63 @@ INT docsis_GetCertStatus(ULONG *pVal);
 * @brief Retrieve the count of cable modem reset
 * @param[out] resetcnt Pointer to the count of cable modem resets, to be returned.
 *                      \n It is a unsigned long value.
-*                      \n The maximum size allocated should be atleast 100 bytes.
-*                      \n Possible value is 1.
+*                      \n Possible value: Any non-negative integer representing the count of cable modem resets.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
 
 /**
-* @brief Retrieve the count of local reset.
-* @param[out] resetcnt Pointer to the count of local cable modem resets.
+* @brief Retrieve the count of local reset events for the cable modem.
+* @param[out] resetcnt Pointer to the count of local cable modem reset events.
 *                      \n It is a unsigned long value.
-*                      \n The maximum size allocated should be atleast 100 bytes.
-*                      \n Possible value is 2.
+*                      \n Possible value: Any non-negative integer representing the count of local cable modem resets.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 
 INT cm_hal_Get_LocalResetCount(ULONG *resetcnt);
 
 /**
-* @brief Retrieve the count of docsis reset.
-* @param[out] resetcnt Pointer to the count of docsis resets.
+* @brief Retrieve the count of DOCSIS reset events for the cable modem.
+* @param[out] resetcnt Pointer to the count of DOCSIS reset events.
 *                      \n It is a unsigned long value.
-*                      \n The maximum size allocated should be atleast 100 bytes.
-*                      \n Possible value is 3.
+*                      \n Possible value: Any non-negative integer representing the count of DOCSIS resets.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 
 INT cm_hal_Get_DocsisResetCount(ULONG *resetcnt);
 
 /**
-* @brief Retrieve the count of erouter reset.
+* @brief Retrieve the count of eRouter reset events.
 * @param[out] resetcnt Pointer to the count of erouter resets.
 *                      \n It is a unsigned long value.
-*                      \n The maximum size allocated should be atleast 100 bytes.
-*                      \n Possible value is 4.
+*                      \n Possible value: Any non-negative integer representing the count of erouter resets.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 
 INT cm_hal_Get_ErouterResetCount(ULONG *resetcnt);
 
 /**
-* @brief Enable/Disable HTTP LED Flashing.
-* @param[in] LedFlash Enable/Disable LED Flash. It is a Boolean value.
-*                           \n Possible values is 1 to enable LEDFlash or 0 to disable.
+* @brief Function to control the flashing of an HTTP LED.
+* @param[in] LedFlash Boolean value indicating whether to enable (1) or disable (0) LED Flash.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 
@@ -1169,17 +1134,14 @@ INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 
 //>> Docsis3.1
 /**
-* @brief Get the Downstream DSOF channel table (docsIf31CmDsOfdmChanTable).
-* @param[out] ppinfo Pointer to get the return array.
+* @brief Get the Downstream OFDM (DSOF) channel table.
 *
-* @param[out] output_NumberOfEntries Array size needs to be returned with output_NumberOfEntries. The maximum value is (2^31)-1.
+* @param[out] ppinfo Pointer to get the return array.
+* @param[out] output_NumberOfEntries Array size needs to be returned with output_NumberOfEntries.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
 *
 * @note HAL function need to allocate the array of DOCSIF31_CM_DS_OFDM_CHAN and return with ppinfo.
 *
@@ -1187,17 +1149,16 @@ INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_NumberOfEntries);
 
 /**
-* @brief Get the Upstream DSOFA channel table (docsIf31CmUsOfdmaChanTables).
-* @param[out] ppinfo Pointer to get the return array.
+* @brief Retrieve the Upstream OFDMA channel table (docsIf31CmUsOfdmaChanTables).
+* This function retrieves information about the Upstream OFDMA (Orthogonal Frequency Division Multiple Access) channels from the cable communication system. 
 *
-* @param[out] output_NumberOfEntries variable is a integer pointer. The maximum value is (2^31)-1.
+* @param[out] ppinfo Pointer to receive the array containing Upstream OFDMA channel information.
+*
+* @param[out] output_NumberOfEntries Pointer to an integer where the size of the returned array will be stored.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
 *
 * @note HAL function need to allocate the array of DOCSIF31_CM_US_OFDMA_CHAN and return with ppinfo.
 *
@@ -1205,17 +1166,13 @@ INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_Num
 INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_NumberOfEntries);
 
 /**
-* @brief Get the Upstream DSOFA channel status table (docsIf31CmStatusOfdmaUsTable)
+* @brief Retrieve the Upstream OFDMA channel status table (docsIf31CmStatusOfdmaUsTable)
 * @param[out] ppinfo variable is a pointer to get the return array.
 *
-* @param[out] output_NumberOfEntries variable is a integer pointer. The maximum values is (2^31)-1.
+* @param[out] output_NumberOfEntries variable is a integer pointer.
 *
-* @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
 *
 * @note HAL function need to allocate the array of DOCSIF31_CMSTATUSOFDMA_US and return with ppinfo.
 *
@@ -1223,48 +1180,43 @@ INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_N
 INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output_NumberOfEntries);
 //<< Docsis3.1
 
+/*
+ * TODO: All functions in this interface will be upgraded to return enums where enums are implied, and INT will not be used in the future
+ */
 
 /**
-* @brief Get the LLD enable status.
+* @brief Get the Low Latency DOCSIS (LLD) enable status.
 *
 * @return The status of the LLD status.
 * @retval ENABLE if LLD is enabled in bootfile.
 * @retval DISABLE if LLD is disabled/entry doesn't exists in bootfile.
 * @retval RETURN_ERR if any other error detected.
 *
-* 
 */
 
 INT docsis_LLDgetEnableStatus();
 
 /**
-* @brief Configure the SNMPv3 security parameters on the CM.
+* @brief Initialize SNMPv3 security parameters on the Cable Modem (CM).
 * @param[in] pKickstart_Table a pointer to the SNMPv3 kickstart table.
-*
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-* 
-*
 *
 */
 INT cm_hal_snmpv3_kickstart_initialize(snmpv3_kickstart_table_t *pKickstart_Table);
 /** @} */  //END OF GROUP CM_HAL_APIS
 
 /**
-* @brief Get the docsis energy to detect WAN mode.
-* @param[out] pEnergyDetected variable is a boolean pointer.
-*             \n Possible values is 0 for No Docsis, 1 if DOCSIS is connected.
+* @brief Check if DOCSIS energy is detected to determine WAN mode.
+* @param[out] pEnergyDetected Pointer to a boolean variable:
+*                             - Set to 0 if no DOCSIS energy is detected, implying no DOCSIS connection.
+*                             - Set to 1 if DOCSIS energy is detected, indicating a DOCSIS connection.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 
@@ -1272,44 +1224,43 @@ INT docsis_IsEnergyDetected( BOOLEAN *pEnergyDetected );
 
 
 /**
-* @brief Set ReinitMacThreshold value.
-* @param[in] value ReinitMacThreshold value to be set.
-*             \n It is a unsigned long value. The maximum value is (2^32)-1.
+* @brief Set the value of ReinitMacThreshold.
 *
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* This function sets the ReinitMacThreshold value to the specified unsigned long value. 
+* The ReinitMacThreshold value determines the threshold at which the MAC (Media Access Control) layer of the cable modem should be reinitialized.
 *
+* @param[in] value The ReinitMacThreshold value to be set.
 *
-*
+* @return The status of the operation:
+*         - RETURN_OK if the operation is successful.
+*         - RETURN_ERR if any error is detected.
 */
+
 INT cm_hal_set_ReinitMacThreshold(ULONG value);
 
 /**
-* @brief Get ReinitMacThreshold value.
-* @param[out] pValue Pointer to ReinitMacThreshold value to be returned.
-*              \n It is a unsigned long pointer. The maximum value is (2^32)-1.
+* @brief Retrieve the ReinitMacThreshold value.
 *
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* This function retrieves the current value of the ReinitMacThreshold parameter, which determines the threshold for reinitializing the MAC (Media Access Control) layer in the cable modem.
 *
+* @param[out] pValue Pointer to store the ReinitMacThreshold value.
+*                    \n It should be an unsigned long pointer.
 *
-* 
-*
+* @return The status of the operation:
+*         - RETURN_OK if the operation is successful.
+*         - RETURN_ERR if any error occurs.
 */
 INT cm_hal_get_ReinitMacThreshold(ULONG *pValue);
 
 /**
-* @brief Get Current Diplexer Settings.
-* @param[out] pValue Pointer to the current Diplexer Settings value to be returned.
+* @brief Retrieve the current Diplexer settings.
 *
+* This function retrieves the current Diplexer settings, which refer to the configuration of the Diplexer used in the cable modem. 
+* A Diplexer is a passive device used in telecommunications and cable TV networks to separate or combine signals on different frequencies. In the context of cable modems, Diplexer settings may include parameters related to signal filtering, frequency band selection, or signal routing.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
 *
 */
 INT cm_hal_get_DiplexerSettings(CM_DIPLEXER_SETTINGS *pValue);
@@ -1322,20 +1273,22 @@ INT cm_hal_get_DiplexerSettings(CM_DIPLEXER_SETTINGS *pValue);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
 */
 typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiplexerValue);
 
 /**
 * @brief To register callback for receiving dynamic diplexer settings
+*
+* This function registers a callback function to receive dynamic diplexer settings updates.
+*
 * @param[in] callback_proc is from cm_hal_DiplexerVariationCallback function.
 *                stCMDiplexerValue variable is from the structure CM_DIPLEXER_SETTINGS.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if not supported or implemented (e.g., stub, unsupported feature, misconfiguration).
 *
-*
+* @note The callback function will be triggered whenever there is a change in the diplexer settings, such as a change in frequency band selection, signal filtering, or signal routing.
 *
 */
 INT cm_hal_Register_DiplexerVariationCallback(cm_hal_DiplexerVariationCallback callback_proc);
