@@ -886,8 +886,6 @@ INT cm_hal_GetMarket(CHAR* market);
 
 /* HTTP Download HAL API Prototype */
 
-/* cm_hal_Set_HTTP_DL_Url  - 1 */
-
 /**
 * @brief Sets the HTTP download configuration.
 * @param[in] pHttpUrl   HTTP download URL to be stored in HTTP download config file.
@@ -973,16 +971,17 @@ INT cm_hal_HTTP_Download ();
 INT cm_hal_Get_HTTP_Download_Status();
 
 /**
-* @brief Get the Reboot Ready Status.
-* @param[out] *pValue Pointer to the integer containing Reboot Ready Status.
-*                     \n It is a unsigned long value.
-*
-* @return the status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
-*
-*/
+ * @brief Retrieves the reboot readiness status.
+ *
+ * This function retrieves the reboot readiness status and stores it in the provided integer pointer.
+ * 
+ * @param[out] pValue Pointer to an unsigned long integer to hold the reboot readiness status.
+ *                    1 for Ready, 2 for Not Ready
+ *
+ * @return The status of the operation.
+ * @retval RETURN_OK if successful.
+ * @retval RETURN_ERR if an error is detected.
+ */
 INT cm_hal_Reboot_Ready(ULONG *pValue);
 
 /**
