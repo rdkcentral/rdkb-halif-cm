@@ -6,9 +6,12 @@
 - `RDK-B` \- Reference Design Kit for Broadband Devices
 - `OEM` \- Original Equipment Manufacture
 - `CM` \- Cable Modem
+- `US` \- Upstream
+- `DS` \- Downstream 
 - `PLC` \- PHY Link Channel
 - `NCP` \-  Network Control Protocol
 - `OFDM` \- Orthogonal Frequency Division Multiplexing
+- `LKF` \- Low-Level Kernel Filtering
 
 
 ## Description
