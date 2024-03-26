@@ -18,9 +18,19 @@
 
 The diagram below describes a high-level software architecture of the Broadband CM HAL module stack.
 
-![Broadband CM HAL Architecture Diag](images/broadband_cm_hal_architecture.png)
+```mermaid
 
-Broadband CM HAL is an abstraction layer implemented to abstract the underlying Cable Modem hardware and interact with the underlying vendor software through a standard set of APIs. CM HAL provides interfaces for integrating WAN interfaces with RDK-B. CM related parameters are fetched through CM HAL APIs. Mainly CcspCMAgent, GW provisioning processes are linked to CM HAL.
+flowchart   
+    stack["CcspCMAgent\n`RDKB Stack`"] --> cm_hal("cm_hal.h\n`RDKB Contract`");
+    cm_hal --> Vendor_Wrapper("libcm_mgnt.so\n`Vendor-Delivery`");
+    Vendor_Wrapper --> Vendor_Software;
+    style stack fill:#0088ff;
+    style cm_hal fill:#0088ff;
+    style Vendor_Wrapper fill:#00ffee;
+    style Vendor_Software fill:#00ffee;
+```
+
+Broadband CM HAL is an abstraction layer implemented to abstract the underlying Cable Modem hardware and interact with the underlying vendor software through a standard set of APIs. CM HAL provides interfaces for integrating WAN interfaces with RDK-B. CM related parameters are fetched through CM HAL APIs.
 
 ## Component Runtime Execution Requirements
 
