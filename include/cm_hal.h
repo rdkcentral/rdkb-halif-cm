@@ -602,15 +602,13 @@ INT docsis_InitUS(void);
 /**
 * @brief Retrieve, format and output the Cable Modem DOCSIS status.
 * @param[out] cm_status Pointer to a character array that will hold the Cable Modem DOCSIS status string to be returned.
-*                       \n The maximum size allocated should be atleast 700 bytes.
 *                       \n  Possible Status values are "Unsupported status","OTHER","NOT_READY","NOT_SYNCHRONIZED","PHY_SYNCHRONIZED","US_PARAMETERS_ACQUIRED","RANGING_COMPLETE","DHCPV4_COMPLETE","TOD_ESTABLISHED","SECURITY_ESTABLISHED","CONFIG_FILE_DOWNLOAD_COMPLETE","REGISTRATION_COMPLETE","OPERATIONAL","ACCESS_DENIED","EAE_IN_PROGRESS","DHCPV4_IN_PROGRESS","DHCPV6_IN_PROGRESS","DHCPV6_COMPLETE","REGISTRATION_IN_PROGRESS","BPI_INIT","FORWARDING_DISABLED","DS_TOPOLOGY_RESOLUTION_IN_PROGRESS","RANGING_IN_PROGRESS",
 *                           "RF_MUTE_ALL"
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-* 
+* TODO: cm_status must be updated to an enum
 *
 */
 INT docsis_getCMStatus(CHAR *cm_status);
@@ -889,17 +887,20 @@ INT cm_hal_GetMarket(CHAR* market);
 /* HTTP Download HAL API Prototype */
 
 /**
-* @brief Sets the HTTP download configuration.
-* @param[in] pHttpUrl   HTTP download URL to be stored in HTTP download config file.
-*                       \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
-* @param[in] pfilename  HTTP download filename to be stored in HTTP download config file.
-*                       \n Example: "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
+* @brief Set the configuration for HTTP downloads.
 *
-* @return the status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any Downloading is in process or Url string is invalided.
+* This function sets the HTTP download configuration by specifying the HTTP download URL and filename to be stored in the HTTP download configuration file.
 *
+* @param[in] pHttpUrl HTTP download URL to be stored in the configuration file. 
+*                     Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
+* @param[in] pfilename HTTP download filename to be stored in the configuration file. 
+*                      Example: "CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT"
+*
+* @return The status of the operation:
+*         - RETURN_OK if the operation is successful.
+*         - RETURN_ERR if any downloading is in process or the URL string is invalid.
 */
+
 INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
 
 /**
