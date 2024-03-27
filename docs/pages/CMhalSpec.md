@@ -52,7 +52,9 @@ Vendors have the flexibility to create internal threads and events for tailored 
 
 ## Process Model
 
-All API's are expected to be called from multiple process.
+This module is expected to be called from multiple process.
+
+The requirement is to ensure that the module can handle concurrent calls effectively. The vendor needs to implement proper synchronization and scalability measures for robust performance.
 
 ## Memory Model
 
@@ -83,7 +85,7 @@ TODO: As we state that they should complete within a time period, we need to sta
 
 ## Internal Error Handling
 
-All the Broadband CM HAL APIs should return error synchronously as a return argument. HAL is responsible to handle system errors(e.g. out of memory) internally.
+All the Broadband CM HAL APIs should return error synchronously as a return argument. While HAL is responsible for managing internal system errors, such as out of memory conditions, it's important to note that the interface level may not always handle recovery from severe system errors effectively. Instead, HAL should prioritize graceful handling of recoverable errors and logging critical issues for further investigation and resolution.
 
 ## Persistence Model
 
@@ -102,7 +104,7 @@ The logging should be consistent across all HAL components.
 If the vendor is going to log then it has to be logged in `cm_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` or `/var/tmp/` directory.
 
 Logging should be defined with log levels as per Linux standard logging.
-
+The logging levels specified by the Linux standard logging, in descending order of severity, are FATAL, ERROR, WARNING, NOTICE, INFO, DEBUG, TRACE.
 
 ## Memory and performance requirements
 
@@ -144,6 +146,7 @@ All HAL function prototypes and datatype definitions are available in `cm_hal.h`
 Covered as per "Description" sections in the API documentation.
 
 ## Sequence Diagram
+Here, XXXX refers to multiple functions, please refer header file (cm_hal.h) for more information.
 
 ```mermaid
 sequenceDiagram
