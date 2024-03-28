@@ -17,8 +17,14 @@
  * limitations under the License.
 */
 
-/
-
+/*
+ * Docsis 3.1 specification:
+ *
+ * Physical Layer Specification: https://account.cablelabs.com/server/alfresco/6f4e0e98-cea4-465b-af19-28b1143c3c4e
+ *
+ * Cable Modem Operations Support System Interface Specification: https://account.cablelabs.com/server/alfresco/3fb47021-ef6f-499f-a319-84fc2a0ccc0f
+ *
+*/
 
 #ifndef __CM_HAL_H__
 #define __CM_HAL_H__
@@ -160,24 +166,21 @@ typedef  struct
 {
     ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID.
                                                          The maximum value is (2^32)-1. 
-                                                         Possible value is 11. */
+                                                         Example Value: 11. */
     CHAR                            Frequency[64];  /**< It is a character array that represents the DS channel Frequency.
-                                                         Possible value is "6449". */
+                                                         Example Value: "6449". */
     CHAR                            PowerLevel[64]; /**< It is a character array that represents the DS channel Power Level.
-                                                         Possible value is "75.1 dBmV"  */
+                                                         Example Value: "75.1 dBmV"  */
     CHAR                            SNRLevel[64];   /**< It is a character array that represents the DS channel SNR Level.
-                                                         Possible value is "50 dB".*/
+                                                         Example Value: "50 dB".*/
     CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the DS channel.
                                                          Possible Values is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
     ULONG                           Octets;         /**< It is an unsigned long value that represents the Octets.
-                                                         The maximum value is (2^32)-1.
-                                                         Possible Values is 123.*/
+                                                         Example Value: 123.*/
     ULONG                           Correcteds;     /**< It is an unsigned long value that represents the Correcteds.
-                                                         The maximum value is (2^32)-1.
-                                                         It is a vendor specific value. Possible value is 100. */
+                                                         It is a vendor specific value. Example Value: 100. */
     ULONG                           Uncorrectables; /**< It is an unsigned long value that represents the Uncorrectables.
-                                                         The maximum value is (2^32)-1.
-                                                         It is a vendor specific value. Possible value is 12.*/
+                                                         It is a vendor specific value. Example Value: 12.*/
     CHAR                            LockStatus[64]; /**< It is a character array that represents the DS Lock Status.
                                                          Possible value is "Locked", "NotLocked".*/
 }
@@ -192,15 +195,15 @@ CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 typedef  struct
 _CMMGMT_CM_US_CHANNEL {
     ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID of the US channel.
-                                                         The maximum value is (2^32)-1. Possible value is 12. */
+                                                         Example Value: 12. */
     CHAR                            Frequency[64];  /**< It is a character array that represents the Frequency of the US channel.
-                                                         Possible value is "12750".*/
+                                                         Example Value: "12750".*/
     CHAR                            PowerLevel[64]; /**< It is a character array that represents the PowerLevel of the US channel.
-                                                         Possible value is "60".*/
+                                                         Example Value: "60".*/
     CHAR                            ChannelType[64];/**< It is a character array that represents the ChannelType of the US channel.
                                                          Possible Values: "UNKNOWN","TDMA","ATDMA","SCDMA","TDMA_AND_ATDMA".*/
     CHAR                            SymbolRate[64]; /**< It is a character array that represents the SymbolRate of the US channel.
-                                                         Possible value is "115200". */
+                                                         Example Value: "115200". */
     CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the US channel.
                                                          Possible value is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
     CHAR                            LockStatus[64]; /**< It is a character array that represents the LockStatus.
@@ -291,17 +294,14 @@ CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
 typedef struct
 {
     UINT                docsDevEvIndex;                   /**< It is an unsigned integer value that represents the snmp docsDevEvIndex.
-                                                               The maximum value is (2^16)-1. 
-                                                               Possible value is 1. */
+                                                               Example Value: 1. */
     struct timeval      docsDevEvFirstTime;               /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
     struct timeval      docsDevEvLastTime;                /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
     UINT                docsDevEvCounts;                  /**< It is an unsigned integer value that represents the docsDevEvCounts.
-                                                               The maximum value is (2^16)-1.
-                                                               Possible value is 1.*/
+                                                               Example Value: 1.*/
     UINT                docsDevEvLevel;                   /**< It is an unsigned integer value that represents the DOCSIS priority level associated with the event. Possible value is 1.*/
-    UINT                docsDevEvId;                      /**< The maximum value is (2^16)-1. It is an unsigned integer value that represents the numeric identifier of the event. 
-                                                               The maximum value is (2^16)-1. 
-                                                               Possible value is 1.*/
+    UINT                docsDevEvId;                      /**< It is an unsigned integer value that represents the numeric identifier of the event. 
+                                                               Example Value: 1.*/
     CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT];/**< It is a character array that represents the the numeric identifier of the event.
                                                                It is a vendor specific value.*/
 
@@ -353,21 +353,21 @@ typedef  struct
 _CMMGMT_CM_DHCP_INFO
 {
     ANSC_IPV4_ADDRESS               IPAddress;              /**< It a ANSC_IPV4_ADDRESS union type value that represents the IP Address.
-                                                                 Possible values is "IPAddress.Dot = {192, 168, 0, 100}".*/
-    CHAR                            BootFileName[64];       /**< It is a character array that represents the Boot File Name. Possible values is "ccsp.boot".*/
+                                                                 Example value: "IPAddress.Dot = {192, 168, 0, 100}".*/
+    CHAR                            BootFileName[64];       /**< It is a character array that represents the Boot File Name. Example value: "ccsp.boot".*/
     ANSC_IPV4_ADDRESS               SubnetMask;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the Subnet Mask.
-                                                                 Possible values is "SubnetMask.Dot = {255, 255, 255, 0}".*/
+                                                                 Example value: "SubnetMask.Dot = {255, 255, 255, 0}".*/
     ANSC_IPV4_ADDRESS               Gateway;                /**< It a ANSC_IPV4_ADDRESS union type value that represents the Gateway.
-                                                                 Possible values is "Gateway.Dot={192, 168, 0, 1}".*/
+                                                                 Example value: "Gateway.Dot={192, 168, 0, 1}".*/
     ANSC_IPV4_ADDRESS               TFTPServer;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the TFTP Server.
-                                                                 Possible values is "TFTPServer.Dot = {192, 168, 0, 10}".*/
-    CHAR                            TimeServer[64];         /**< It is a character array that represents the Time Server. Possible values is "ntp.cisco.com"*/
-    INT                             TimeOffset;             /**< It is an integer value. The maximum value is (2^31)-1 that represents the Time Offset. Possible values is 8.*/
-    ULONG                           LeaseTimeRemaining;     /**< It is an unsigned long value that represents the Lease Time Remaining. The maximum value iss 0 to (2^32)-1. Possible values is 3600.*/
-    CHAR                            RebindTimeRemaining[64]; /**< It is a character array that represents the Rebind Time Remaining. Possible values is 3700.*/
-    CHAR                            RenewTimeRemaining[64];  /**< It is a character array that represents the Renew Time Remaining. Possible values is 1200. */
-    CHAR                            MACAddress[64];          /**< It is a character array that represents the MAC Address. Possible values is "00:1A:2B:11:22:33".*/
-    CHAR                            DOCSISDHCPStatus[64];    /**< It is a character array that represents the DOCSIS DHCP Status. Possible values is "Complete".*/
+                                                                 Example value: "TFTPServer.Dot = {192, 168, 0, 10}".*/
+    CHAR                            TimeServer[64];         /**< It is a character array that represents the Time Server. Example value: "ntp.cisco.com"*/
+    INT                             TimeOffset;             /**< It is an integer value. The maximum value is (2^31)-1 that represents the Time Offset. Example value: 8.*/
+    ULONG                           LeaseTimeRemaining;     /**< It is an unsigned long value that represents the Lease Time Remaining. Example value: 3600.*/
+    CHAR                            RebindTimeRemaining[64]; /**< It is a character array that represents the Rebind Time Remaining. Example value: 3700.*/
+    CHAR                            RenewTimeRemaining[64];  /**< It is a character array that represents the Renew Time Remaining. Example value: 1200. */
+    CHAR                            MACAddress[64];          /**< It is a character array that represents the MAC Address. Example value: "00:1A:2B:11:22:33".*/
+    CHAR                            DOCSISDHCPStatus[64];    /**< It is a character array that represents the DOCSIS DHCP Status. Example value: "Complete".*/
 }
 CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
 
@@ -381,26 +381,23 @@ typedef  struct
 _CMMGMT_CM_IPV6DHCP_INFO
 {
     CHAR                            IPv6Address[40];             /**< It is a character array that represents the IPv6 Address.
-                                                                      Possible value is "2012:cafe:100::1".*/
+                                                                      Example value: "2012:cafe:100::1".*/
     CHAR                            IPv6BootFileName[64];        /**< It is a character array that represents the IPv6 Boot File Name. 
-                                                                      Possible value is "ccsp.v6.boot".*/
+                                                                      Example value: "ccsp.v6.boot".*/
     CHAR                            IPv6Prefix[40];               /**< It is a character array that represents the IPv6 Prefix. 
-                                                                       Possible value is 2012:cafe::/32.*/
+                                                                       Example value: "2012:cafe::/32"*/
     CHAR                            IPv6Router[40];               /**< It is a character array that represents the IPv6 Router.
-                                                                       Possible value is 2012:cafe::1.*/
+                                                                       Example value: 2012:cafe::1.*/
     CHAR                            IPv6TFTPServer[40];           /**< It is a character array that represents the IPv6 TFTP Server.
-                                                                       Possible value is "2012:cafe::2".*/
+                                                                       Example value: "2012:cafe::2".*/
     CHAR                            IPv6TimeServer[40];            /**< It is a character array that represents the IPv6 Time Server. 
-                                                                        Possible value is "ntp.cisco.com"*/
+                                                                        Example value: "ntp.cisco.com"*/
     ULONG                           IPv6LeaseTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Lease Time Remaining. 
-                                                                         The maximum value is(2^32)-1. 
-                                                                         Possible value is 3600.*/
+                                                                         Example value: 3600.*/
     ULONG                           IPv6RebindTimeRemaining;        /**< It is an unsigned long value that represents the IPv6 Rebind Time Remaining. 
-                                                                         The maximum value is (2^32)-1. 
-                                                                         Possible value is 3700.*/
+                                                                         Example value: 3700.*/
     ULONG                           IPv6RenewTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Renew Time Remaining. 
-                                                                         The maximum value is (2^32)-1. 
-                                                                         Possible value is 1200.*/
+                                                                         Example value: 1200.*/
 }
 CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 
@@ -414,7 +411,7 @@ typedef  struct
 _CMMGMT_DML_CPE_LIST
 {
     CHAR                            IPAddress[32];      /**< It is a character array that contains the IP Address of the CPE. 
-                                                             Possible value is 192.168.0.1.*/
+                                                             Example value: 192.168.0.1.*/
     CHAR                            MACAddress[32];     /**< It is a character array that contains the MAC Address of the CPE. 
                                                              The MAC Address should be in the format AA:BB:CC:DD:EE:FF (colon-separated).*/
 }
@@ -442,7 +439,7 @@ typedef struct {
     unsigned int PlcFreq;                       /**< This is the PHY Link Channel (PLC) frequency. It is the center frequency of the lowest frequency subcarrier of the PLC. The aim of the PLC is for the CMTS to convey to the CM the physical properties of the OFDM channel */
     unsigned int NumPilots;                     /**< The number of continuous pilots configured for the OFDM downstream channel as received in the OCD message. */
     unsigned int TimeInterleaverDepth;          /**< The time interleaving used for this downstream channel as received in the OCD message. */
-    char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< The averageSNR value of this downstream channel */
+    char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< Average Signal-to-Noise Ratio (SNR) of the downstream channel */
     char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< The power level of this downstream channel. Power level is expressed as in tenths of a dBmV */
     unsigned long long PlcTotalCodewords;       /**< The total number of PLC codewords received by the CM. */
     unsigned long long PlcUnreliableCodewords;  /**< The total number of PLC codewords which failed post-decoding LDPC syndrome check. */
@@ -899,6 +896,8 @@ INT cm_hal_GetMarket(CHAR* market);
 * @return The status of the operation:
 *         - RETURN_OK if the operation is successful.
 *         - RETURN_ERR if any downloading is in process or the URL string is invalid.
+*
+* TODO: As pHttpUrl and pfilename are inputs, change it to 'const char'
 */
 
 INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
@@ -1290,6 +1289,7 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @retval RETURN_ERR if not supported or implemented (e.g., stub, unsupported feature, misconfiguration).
 *
 * @note The callback function will be triggered whenever there is a change in the diplexer settings, such as a change in frequency band selection, signal filtering, or signal routing.
+*       This callback is registered during initialization and it cannot be removed.
 *
 */
 INT cm_hal_Register_DiplexerVariationCallback(cm_hal_DiplexerVariationCallback callback_proc);
