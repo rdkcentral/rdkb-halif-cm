@@ -1280,6 +1280,7 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @brief To register callback for receiving dynamic diplexer settings
 *
 * This function registers a callback function to receive dynamic diplexer settings updates.
+* This callback is registered during initialization and it cannot be removed.
 *
 * @param[in] callback_proc is from cm_hal_DiplexerVariationCallback function.
 *                stCMDiplexerValue variable is from the structure CM_DIPLEXER_SETTINGS.
@@ -1289,7 +1290,7 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @retval RETURN_ERR if not supported or implemented (e.g., stub, unsupported feature, misconfiguration).
 *
 * @note The callback function will be triggered whenever there is a change in the diplexer settings, such as a change in frequency band selection, signal filtering, or signal routing.
-*       This callback is registered during initialization and it cannot be removed.
+* 
 *
 */
 INT cm_hal_Register_DiplexerVariationCallback(cm_hal_DiplexerVariationCallback callback_proc);
