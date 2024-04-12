@@ -165,7 +165,6 @@ extern "C"{
 typedef  struct
 {
     ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID.
-                                                         The maximum value is (2^32)-1. 
                                                          Example Value: 11. */
     CHAR                            Frequency[64];  /**< It is a character array that represents the DS channel Frequency.
                                                          Example Value: "6449". */
@@ -652,20 +651,19 @@ INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-*
 */
 INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
 
 /**
 * @brief Retrieve current DOCSIS registration status and report it.
+* The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
+* 
 * @param[out] pinfo DOCSIS Registration info, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* @note The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
 */
 INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 
@@ -799,7 +797,6 @@ void docsis_SetStartFreq(ULONG value);
 * @param[out] *entryArray entries to be returned.
 *
 * @param[in] len Length of log entries.
-*                \n It is integer datatype. The maximum value is (2^32)-1.
 *
 * @return INT number of log entries retrieved.
 *
@@ -809,46 +806,48 @@ INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len
 
 /**
 * @brief Clear the DOCSIS event log.
+* This function must not suspend and must not invoke any blocking system calls. It should probably just send a message to a driver event handler task.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if an error is encountered during the operation, such as failure to set the event log clear entry.
-*
-* @note This function must not suspend and must not invoke any blocking system calls. It should probably just send a message to a driver event handler task.
 *
 */
 INT docsis_ClearDocsisEventLog(void);
 
 /**
 * @brief Retrieve all the relevant DHCP info for this CM.
+* The caller is responsible for allocating memory for the pInfo structure before calling this function.
+* The memory allocated for pInfo should be freed by the caller when it is no longer needed.
+*
 * @param[out] pInfo All DHCP info for CM, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* @note The caller is responsible for allocating memory for the pInfo structure before calling this function.
-*       The memory allocated for pInfo should be freed by the caller when it is no longer needed.
-*
 */
 INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
 
 /**
 * @brief Retrieve all the relevant IPv6 DHCP info for this CM.
+* The caller is responsible for allocating memory for the pInfo structure before calling this function.
+* The memory allocated for pInfo should be freed by the caller when it is no longer needed.
+*
 * @param[out] pInfo All IPv6 DHCP info for CM, to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* @note The caller is responsible for allocating memory for the pInfo structure before calling this function.
-*       The memory allocated for pInfo should be freed by the caller when it is no longer needed.
-*
 */
 INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 
 /**
 * @brief Retrieve list of CPEs connected to the CM.
+* The caller is responsible for allocating memory for both the ppCPEList and LanMode parameters before calling this function.
+* The memory allocated for the ppCPEList structure and LanMode string should be freed by the caller when they are no longer needed.
+*
 * @param[out] ppCPEList List of all CPE, to be returned.
 *
 * @param[out] InstanceNum Pointer to a variable that will hold the number of instances returned in the CPE list.
@@ -859,9 +858,6 @@ INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-* @note The caller is responsible for allocating memory for both the ppCPEList and LanMode parameters before calling this function.
-*       The memory allocated for the ppCPEList structure and LanMode string should be freed by the caller when they are no longer needed.
 *
 */
 INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR* LanMode);
@@ -904,6 +900,9 @@ INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
 
 /**
 * @brief Get Http Download Url.
+* The memory for the buffers pHttpUrl and pFilename is expected to be pre-allocated by the caller.
+* If the provided buffer size is smaller than required, the function may overwrite adjacent memory, leading to undefined behavior.
+*
 * @param[out] pHttpUrl  HTTP download URL fetched from HTTP download config file.
 *                       \n The maximum size allocated should be atleast 200 bytes.
 *                       \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
@@ -915,8 +914,6 @@ INT cm_hal_Set_HTTP_Download_Url (char* pHttpUrl, char* pfilename);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if http url string is empty.
 *
-* @note The memory for the buffers pHttpUrl and pFilename is expected to be pre-allocated by the caller.
-*       If the provided buffer size is smaller than required, the function may overwrite adjacent memory, leading to undefined behavior.
 *
 */
 INT cm_hal_Get_HTTP_Download_Url (char *pHttpUrl, char* pfilename);
@@ -997,10 +994,8 @@ INT cm_hal_HTTP_Download_Reboot_Now();
 /**
 * @brief Firmware update and factory reset the device.
 * @param[in] pUrl       Url for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
-*                         \n It is variable of character pointer datatype.
 *                         \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
 * @param[in] pImagename Imagename for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
-*                         \n It is variable of character pointer datatype.
 *                         \n Example: CGM4331COM_DEV_23Q3_sprint_20230817053130sdy_GRT
 *
 * @return the status of the Firmware update and factory reset operation.
@@ -1026,7 +1021,6 @@ INT cm_hal_ReinitMac();
 /**
 * @brief Retrieve the provisioned wan0 IP type.
 * @param[out] pValue Integer pointer containing the ip type currently provisioned on wan0.
-*                    \n It is variable of character pointer datatype.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -1041,7 +1035,7 @@ INT docsis_GetProvIpType(CHAR *pValue);
 * This function retrieves the file path where the CM certificate is stored in the file system.
 *
 * @param[out] pCert Pointer to a character array where the certificate file location will be stored.
-*                   \n Example value: "/nvram/cmcert.bin".
+*                   \n Example value: "/nvram/cmcert.bin"
 *
 * @return The status of the operation.
 * @retval RETURN_OK if the certificate location is successfully retrieved.
@@ -1056,7 +1050,6 @@ INT docsis_GetCert(CHAR* pCert);
 * This function retrieves the status of the CM certificate, indicating whether it is enabled or disabled.
 *
 * @param[out] pVal Pointer to a value containing the certificate status, to be returned.
-*                  \n It is an unsigned long value.
 *                  \n Values: 0 (disabled) or 1 (enabled).
 *
 * @return The status of the operation.
@@ -1069,7 +1062,6 @@ INT docsis_GetCertStatus(ULONG *pVal);
 /**
 * @brief Retrieve the count of cable modem reset
 * @param[out] resetcnt Pointer to the count of cable modem resets, to be returned.
-*                      \n It is a unsigned long value.
 *                      \n Possible value: Any non-negative integer representing the count of cable modem resets.
 *
 * @return The status of the operation.
@@ -1082,7 +1074,6 @@ INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
 /**
 * @brief Retrieve the count of local reset events for the cable modem.
 * @param[out] resetcnt Pointer to the count of local cable modem reset events.
-*                      \n It is a unsigned long value.
 *                      \n Possible value: Any non-negative integer representing the count of local cable modem resets.
 *
 * @return The status of the operation.
@@ -1096,7 +1087,6 @@ INT cm_hal_Get_LocalResetCount(ULONG *resetcnt);
 /**
 * @brief Retrieve the count of DOCSIS reset events for the cable modem.
 * @param[out] resetcnt Pointer to the count of DOCSIS reset events.
-*                      \n It is a unsigned long value.
 *                      \n Possible value: Any non-negative integer representing the count of DOCSIS resets.
 *
 * @return The status of the operation.
@@ -1110,7 +1100,6 @@ INT cm_hal_Get_DocsisResetCount(ULONG *resetcnt);
 /**
 * @brief Retrieve the count of eRouter reset events.
 * @param[out] resetcnt Pointer to the count of erouter resets.
-*                      \n It is a unsigned long value.
 *                      \n Possible value: Any non-negative integer representing the count of erouter resets.
 *
 * @return The status of the operation.
@@ -1136,6 +1125,8 @@ INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 /**
 * @brief Get the Downstream OFDM (DSOF) channel table.
 *
+* This function must allocate the array of DOCSIF31_CM_US_OFDMA_CHAN internally, and it will return ppInfo, which will be de-allocated by the caller.
+*
 * @param[out] ppinfo Pointer to get the return array.
 * @param[out] output_NumberOfEntries Array size needs to be returned with output_NumberOfEntries.
 *
@@ -1143,14 +1134,13 @@ INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* @note HAL function need to allocate the array of DOCSIF31_CM_DS_OFDM_CHAN and return with ppinfo.
-*
 */
 INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_NumberOfEntries);
 
 /**
 * @brief Retrieve the Upstream OFDMA channel table (docsIf31CmUsOfdmaChanTables).
 * This function retrieves information about the Upstream OFDMA (Orthogonal Frequency Division Multiple Access) channels from the cable communication system. 
+* This function must allocate the array of DOCSIF31_CM_US_OFDMA_CHAN internally, and it will return ppInfo, which will be de-allocated by the caller
 *
 * @param[out] ppinfo Pointer to receive the array containing Upstream OFDMA channel information.
 *
@@ -1160,21 +1150,18 @@ INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_Num
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-* @note HAL function need to allocate the array of DOCSIF31_CM_US_OFDMA_CHAN and return with ppinfo.
-*
 */
 INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_NumberOfEntries);
 
 /**
 * @brief Retrieve the Upstream OFDMA channel status table (docsIf31CmStatusOfdmaUsTable)
-* @param[out] ppinfo variable is a pointer to get the return array.
+* This function must allocate the array of DOCSIF31_CMSTATUSOFDMA_US internally, and it will return ppInfo, which will be de-allocated by the caller
 *
+* @param[out] ppinfo variable is a pointer to get the return array.
 * @param[out] output_NumberOfEntries variable is a integer pointer.
 *
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-* @note HAL function need to allocate the array of DOCSIF31_CMSTATUSOFDMA_US and return with ppinfo.
 *
 */
 INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output_NumberOfEntries);
@@ -1280,6 +1267,7 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @brief To register callback for receiving dynamic diplexer settings
 *
 * This function registers a callback function to receive dynamic diplexer settings updates.
+* The callback function will be triggered whenever there is a change in the diplexer settings, such as a change in frequency band selection, signal filtering, or signal routing.
 * This callback is registered during initialization and it cannot be removed.
 *
 * @param[in] callback_proc is from cm_hal_DiplexerVariationCallback function.
@@ -1288,8 +1276,6 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if not supported or implemented (e.g., stub, unsupported feature, misconfiguration).
-*
-* @note The callback function will be triggered whenever there is a change in the diplexer settings, such as a change in frequency band selection, signal filtering, or signal routing.
 * 
 *
 */
