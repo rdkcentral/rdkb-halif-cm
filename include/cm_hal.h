@@ -155,9 +155,7 @@ extern "C"{
  * @brief Represents the information about a downstream channel of a cable modem.
  *
  * This structure holds information about the downstream channel like channel ID, frequency, power level, SNR level,modulation, octets, correcteds and lock status.
- */
-
-/**
+ *
  * TODO: Coding Standard: usage of *PCMMGMT_CM_DS_CHANNEL , *PCMMGMT_CM_US_CHANNEL; etc. should be removed.
  * TODO: Coding Standard: structure should not be defined as CAPS, only Macros are allowed to be.
  */
@@ -265,9 +263,7 @@ CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
  * @brief Represents the information of errorcode words of a cable modem.
  *
  * This structure holds information about the error codewords including the number of unerrored, correctable and uncorrectable codewords.
- */
-
-/*
+ *
  * TODO: Correct CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS , no caps, and remove *PCMMGMT_CM_ERROR_CODEWORDS
  */
 
@@ -309,10 +305,9 @@ typedef struct
  * @brief Represents the configuration settings of CM logging.
  *
  * This structure holds information of the configuration settings of CM logging related to CM logging and if the Docsis log should be cleared.
- */
-
-/*
+ *
  * TODO: Correct CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG , no caps, and remove *PCMMGMT_DML_CM_LOG
+ *
  */
 
 typedef  struct
@@ -326,10 +321,9 @@ CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
  * @brief Represents the information for a Docsis log entry.
  *
  * This structure holds information related to the Docsis log entry like the index, event ID, event level, timestamp and description.
- */
-
-/*
+ *
  * TODO: Correct CMMGMT_DML_DOCSISLOG_FULL, *PCMMGMT_DML_DOCSISLOG_FULL , no caps, and remove *PCMMGMT_DML_DOCSISLOG_FULL
+ *
  */
 
 typedef  struct
@@ -423,7 +417,7 @@ CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
  * This structure holds information about parameters in associattion with the DOCSIS 3.1. OFDM downstream channel.
  */
 
-//>> Docsis3.1
+//>> Docsis3.1, please refer to the specification at the top of this file
 typedef struct {
     unsigned int ChannelId;                     /**< The identification number of the downstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
     unsigned int ChanIndicator;                 /**< This attribute is used to identify the OFDM downstream channel as primary, backup primary or non-primary. A value of'primary(2)' indicates that OFDM channel is assigned to be the CM's primary downstream channel.  A value of 'backupPrimary(3)' indicates that the OFDM channel is assigned to be the CM's backup primary downstream channel.  A value of 'nonPrimary(4)'indicates the OFDM channel is not assigned to be CM's primary or backup primary downstream channel*/
@@ -488,7 +482,7 @@ typedef struct {
     unsigned char IsMuted;                      /**< Indicates if upstream channel is muted.*/
     unsigned int RangingStatus;                 /**< Ranging State of CM: other(1),aborted(2),retriesExceeded(3),success(4),continue(5),timeoutT4(6)*/
 } DOCSIF31_CMSTATUSOFDMA_US, *PDOCSIF31_CMSTATUSOFDMA_US;
-//<< Docsis3.1
+//<< Docsis3.1, please refer to the specification at the top of this file
 
 #define MAX_KICKSTART_ROWS 5   /**< Maximum number of rows of kickstart*/
 
@@ -598,7 +592,7 @@ INT docsis_InitUS(void);
 /**
 * @brief Retrieve, format and output the Cable Modem DOCSIS status.
 * @param[out] cm_status Pointer to a character array that will hold the Cable Modem DOCSIS status string to be returned.
-*                       \n  Possible Status values are "Unsupported status","OTHER","NOT_READY","NOT_SYNCHRONIZED","PHY_SYNCHRONIZED","US_PARAMETERS_ACQUIRED","RANGING_COMPLETE","DHCPV4_COMPLETE","TOD_ESTABLISHED","SECURITY_ESTABLISHED","CONFIG_FILE_DOWNLOAD_COMPLETE","REGISTRATION_COMPLETE","OPERATIONAL","ACCESS_DENIED","EAE_IN_PROGRESS","DHCPV4_IN_PROGRESS","DHCPV6_IN_PROGRESS","DHCPV6_COMPLETE","REGISTRATION_IN_PROGRESS","BPI_INIT","FORWARDING_DISABLED","DS_TOPOLOGY_RESOLUTION_IN_PROGRESS","RANGING_IN_PROGRESS",
+*                       \n  Expected Status values are "Unsupported status","OTHER","NOT_READY","NOT_SYNCHRONIZED","PHY_SYNCHRONIZED","US_PARAMETERS_ACQUIRED","RANGING_COMPLETE","DHCPV4_COMPLETE","TOD_ESTABLISHED","SECURITY_ESTABLISHED","CONFIG_FILE_DOWNLOAD_COMPLETE","REGISTRATION_COMPLETE","OPERATIONAL","ACCESS_DENIED","EAE_IN_PROGRESS","DHCPV4_IN_PROGRESS","DHCPV6_IN_PROGRESS","DHCPV6_COMPLETE","REGISTRATION_IN_PROGRESS","BPI_INIT","FORWARDING_DISABLED","DS_TOPOLOGY_RESOLUTION_IN_PROGRESS","RANGING_IN_PROGRESS",
 *                           "RF_MUTE_ALL"
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -714,7 +708,7 @@ INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 /**
 * @brief Retrieve the current IP Provisioning Mode Override status.
 * @param[out] pValue Pointer to character array holding the current IP Provisioning Mode retrieved.
-*                    \n Possible Values are "ipv4Only" , "ipv6Only" , "APM" , "DualStack" , "honorMdd" , "not defined".
+*                    \n Expected Values are "ipv4Only" , "ipv6Only" , "APM" , "DualStack" , "honorMdd" , "not defined".
 *                    \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set.
 *                    \n The maximum size allocated should be atleast 64 bytes.
 *
@@ -732,17 +726,13 @@ INT docsis_GetMddIpModeOverride(CHAR *pValue);
 /**
 * @brief Set the current IP Provisioning Mode Override status.
 * @param[in] pValue Value that the IP Provisioning Mode is to be set to.
-*                   \n Possible Values are ipv4Only (0), ipv6Only (1), APM (2), DualStack (3), honorMdd (4), ""
+*                   \n Expected Values are ipv4Only (0), ipv6Only (1), APM (2), DualStack (3), honorMdd (4), ""
 *                   \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set.
 *                   \n The maximum size allocated should be atleast 64 bytes.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 INT docsis_SetMddIpModeOverride(CHAR *pValue);
@@ -765,9 +755,6 @@ UINT8 docsis_GetUSChannelId(void);
 * This function sets the Channel ID of the Upstream channel within its MAC domain, which refers to the network segment controlled by a single MAC address. The MAC domain encompasses the network devices, such as modems and routers, that share the same MAC address and communicate using the same protocols.
 *
 * @param[in] index It is integer value which provides index to set the Upstream Channel ID to.
-*                  \n The maximum value is (2^31)-1.
-*                  \n Possible Example: 12.
-*
 *
 */
 void docsis_SetUSChannelId(INT index);
@@ -974,7 +961,7 @@ INT cm_hal_Get_HTTP_Download_Status();
  *
  * This function retrieves the reboot readiness status and stores it in the provided integer pointer.
  * 
- * @param[out] pValue Pointer to an unsigned long integer to hold the reboot readiness status.
+ * @param[out] pValue Pointer that holds the reboot readiness status.
  *                    1 for Ready, 2 for Not Ready
  *
  * @return The status of the operation.
@@ -1121,7 +1108,7 @@ INT cm_hal_Get_ErouterResetCount(ULONG *resetcnt);
 
 INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 
-//>> Docsis3.1
+//>> Docsis3.1, please refer to the specification at the top of this file
 /**
 * @brief Get the Downstream OFDM (DSOF) channel table.
 *
@@ -1165,7 +1152,7 @@ INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_N
 *
 */
 INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output_NumberOfEntries);
-//<< Docsis3.1
+//<< Docsis3.1, please refer to the specification at the top of this file
 
 /*
  * TODO: All functions in this interface will be upgraded to return enums where enums are implied, and INT will not be used in the future
