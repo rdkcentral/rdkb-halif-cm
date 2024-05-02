@@ -161,7 +161,7 @@ extern "C"{
  */
 
 typedef  struct
-{
+_CMMGMT_CM_DS_CHANNEL {
     ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID.
                                                          Example Value: 11. */
     CHAR                            Frequency[64];  /**< It is a character array that represents the DS channel Frequency.
@@ -311,7 +311,7 @@ typedef struct
  */
 
 typedef  struct
-{
+_CMMGMT_DML_CM_LOG {
     BOOLEAN                         EnableLog;             /**< Represents whether the CM logging is enabled*/
     BOOLEAN                         ClearDocsisLog;        /**< Represents whether to clear the  Docsis Log*/
 }
@@ -418,7 +418,7 @@ CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
  */
 
 //>> Docsis3.1, please refer to the specification at the top of this file
-typedef struct {
+typedef struct _DOCSIF31_CM_DS_OFDM_CHAN {
     unsigned int ChannelId;                     /**< The identification number of the downstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
     unsigned int ChanIndicator;                 /**< This attribute is used to identify the OFDM downstream channel as primary, backup primary or non-primary. A value of'primary(2)' indicates that OFDM channel is assigned to be the CM's primary downstream channel.  A value of 'backupPrimary(3)' indicates that the OFDM channel is assigned to be the CM's backup primary downstream channel.  A value of 'nonPrimary(4)'indicates the OFDM channel is not assigned to be CM's primary or backup primary downstream channel*/
     unsigned int SubcarrierZeroFreq;            /**< The center frequency of subcarrier 0 of the OFDM transmission within a downstream channel of the Cable Modem Termination System (CMTS).*/
@@ -449,7 +449,7 @@ typedef struct {
  */
 
 
-typedef struct {
+typedef struct _DOCSIF31_CM_US_OFDMA_CHAN {
     unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
     unsigned int ConfigChangeCt;                /**< Count that keeps track of how many times the configuration of the Upstream Channel Descriptor (UCD) MAC Management Message has been changed for a specific OFDMA channel. */
     unsigned int SubcarrierZeroFreq;            /**< Lower edge frequency of the OFDMA upstream channel in Hertz (Hz). */
@@ -472,7 +472,7 @@ typedef struct {
  * This structure holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel.
  */
 
-typedef struct {
+typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
     // The full definitions for the fields below can be referenced within DOCS-IF31-MIB.
     unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
     unsigned int T3Timeouts;                    /**< Number of T3 counter timeouts. */
@@ -493,7 +493,7 @@ typedef struct {
  * This structure holds information about the fixed-length buffer with a specified length and a pointer to the buffer data .
  */
 
-typedef struct {
+typedef struct _fixed_length_buffer {
     USHORT length;                               /**< length variable is unsigned short. 
                                                       The maximum value is (2^16)-1.*/
     UINT8 *buffer;                               /**< buffer variable is unsigned charcter pointer. 
@@ -506,7 +506,7 @@ typedef struct {
  * This structure holds information about the fixed length buffer for security name and security number .
  */
 
-typedef struct {
+typedef struct _snmpv3_kickstart_row {
     fixed_length_buffer_t security_name;          /**< Structure to describe the buffer for the security name */
     fixed_length_buffer_t security_number;        /**< Structure to describe the buffer for the security number*/
 } snmp_kickstart_row_t;
@@ -518,7 +518,7 @@ typedef struct {
  * This structure holds information about the SNMPv3 kickstart table including the number of rows and an array of SNMPv3 kickstart rows.
  */
 
-typedef struct {
+typedef struct _snmpv3_kickstart_table {
     UINT8 n_rows;                                                /**< Count of snmp kickstart rows. */
     snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< Pointer to an array of smp kickstart rows. */
 } snmpv3_kickstart_table_t;
@@ -563,7 +563,6 @@ CM_DIPLEXER_SETTINGS;
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
 */
 INT cm_hal_InitDB(void);
 
@@ -574,7 +573,6 @@ INT cm_hal_InitDB(void);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
 */
 INT docsis_InitDS(void);
 
@@ -584,7 +582,6 @@ INT docsis_InitDS(void);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
 *
 */
 INT docsis_InitUS(void);
@@ -628,8 +625,6 @@ INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-*
 */
 INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
 
@@ -669,8 +664,6 @@ INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
-*
 */
 INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
 
@@ -681,10 +674,6 @@ INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-* 
-*
 *
 */
 INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
@@ -701,7 +690,6 @@ INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
 *
-*
 */
 INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 
@@ -715,9 +703,6 @@ INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
-*
-*
-*
 *
 *
 */
@@ -744,8 +729,6 @@ INT docsis_SetMddIpModeOverride(CHAR *pValue);
 *
 * @return UINT8 - Channel ID.
 *
-*
-*
 */
 UINT8 docsis_GetUSChannelId(void);
 
@@ -764,9 +747,6 @@ void docsis_SetUSChannelId(INT index);
 *
 * @return ULONG - channel frequency in Hertz.
 *
-* 
-*
-*
 */
 ULONG docsis_GetDownFreq(void);
 
@@ -774,7 +754,6 @@ ULONG docsis_GetDownFreq(void);
 * @brief Set the current primary downstream (DS) channel frequency in the LKF (Low-Level Kernel Filtering) table.
 * @param[in] value  It is an unsigned long value which provides primary channel frequency value that is to be set.
 *                  \n The maximum value is (2^32)-1. Example: 12750.
-*
 *
 */
 void docsis_SetStartFreq(ULONG value);
@@ -786,7 +765,6 @@ void docsis_SetStartFreq(ULONG value);
 * @param[in] len Length of log entries.
 *
 * @return INT number of log entries retrieved.
-*
 *
 */
 INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len);
