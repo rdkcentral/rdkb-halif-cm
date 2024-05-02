@@ -101,7 +101,7 @@ The component should log all the error and critical informative messages, prefer
 
 The logging should be consistent across all HAL components.
 
-If the vendor is going to log then it has to be logged in `cm_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` or `/var/tmp/` directory.
+If the vendor is going to log then it has to be logged in `cm_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` directory.
 
 Logging should be defined with log levels as per Linux standard logging.
 The logging levels specified by the Linux standard logging, in descending order of severity, are FATAL, ERROR, WARNING, NOTICE, INFO, DEBUG, TRACE.
