@@ -571,7 +571,6 @@ INT cm_hal_InitDB(void);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
 *
 */
 INT docsis_InitDS(void);
@@ -581,7 +580,6 @@ INT docsis_InitDS(void);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
 *
 */
 INT docsis_InitUS(void);
@@ -697,7 +695,7 @@ INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 * @brief Retrieve the current IP Provisioning Mode Override status.
 * @param[out] pValue Pointer to character array holding the current IP Provisioning Mode retrieved.
 *                    \n Expected Values are "ipv4Only" , "ipv6Only" , "APM" , "DualStack" , "honorMdd" , "not defined".
-*                    \n It is possible to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4) can be set.
+*                    \n It is expected to return APM (2) and DualStack (3), but only ipv4Only(0) , ipv6Only (1) and hornorMdd (4).
 *                    \n The maximum size allocated should be atleast 64 bytes.
 *
 * @return The status of the operation.
@@ -890,7 +888,7 @@ INT cm_hal_Get_HTTP_Download_Url (char *pHttpUrl, char* pfilename);
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, if invalid interface is passed.
 */
 INT cm_hal_Set_HTTP_Download_Interface(unsigned int interface);
 
@@ -900,8 +898,7 @@ INT cm_hal_Set_HTTP_Download_Interface(unsigned int interface);
 *                        \n Values: interface=0 for wan0, interface=1 for erouter0.
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
+* @retval RETURN_ERR if any error is detected, , including invalid parameter passed and memory allocation failures.
 *
 */
 INT cm_hal_Get_HTTP_Download_Interface(unsigned int* pinterface);
@@ -958,6 +955,8 @@ INT cm_hal_HTTP_Download_Reboot_Now();
 
 /**
 * @brief Firmware update and factory reset the device.
+* This function returns Success if reset happens successfully, else Error if there is any issue in initiating reset.
+*
 * @param[in] pUrl       Url for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
 *                         \n Example: "https://ci.xconfds.coast.xcal.tv/featureControl/getSettings"
 * @param[in] pImagename Imagename for cm_hal_Set_HTTP_Download_Url. NULL for snmp.
@@ -1031,7 +1030,7 @@ INT docsis_GetCertStatus(ULONG *pVal);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
 *
 */
 INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
@@ -1043,7 +1042,7 @@ INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
 *
 */
 
@@ -1056,7 +1055,7 @@ INT cm_hal_Get_LocalResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
 *
 */
 
@@ -1069,7 +1068,7 @@ INT cm_hal_Get_DocsisResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
 *
 */
 
@@ -1113,7 +1112,7 @@ INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_Num
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed and memory allocation failures.
 *
 */
 INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_NumberOfEntries);
@@ -1126,7 +1125,7 @@ INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_N
 * @param[out] output_NumberOfEntries variable is a integer pointer.
 *
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid parameters and memory allocation issues.
 *
 */
 INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output_NumberOfEntries);
