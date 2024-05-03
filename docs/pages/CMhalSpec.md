@@ -69,6 +69,8 @@ The requirement is to ensure that the module can handle concurrent calls effecti
    2. Modules are required to release all internally allocated memory upon closure to prevent resource leaks.
    
    3. All module implementations and caller code must strictly adhere to these memory management requirements for optimal performance and system stability. Unless otherwise stated specifically in the API documentation.
+
+   4. All strings used in this module must be null-terminated, meaning they should end with a null character ('\0'). This ensures that string functions can accurately determine the length of the string and prevents buffer overflows when manipulating strings.
    
 TODO: State a footprint requirement. Example: This should not exceed XXXX KB.
 
