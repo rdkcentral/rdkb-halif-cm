@@ -757,7 +757,7 @@ INT docsis_SetMddIpModeOverride(CHAR *pValue);
 *
 * This function retrieves the Channel ID of the Upstream channel within its MAC domain, which refers to the network segment controlled by a single MAC address. The MAC domain encompasses the network devices, such as modems and routers, that share the same MAC address and communicate using the same protocols.
 *
-* @return UINT8 - Channel ID.
+* @return UINT8 - Channel ID. It is a value between 0 and 255.
 *
 */
 UINT8 docsis_GetUSChannelId(void);
