@@ -61,6 +61,9 @@ extern "C"{
 #endif
 
 #ifndef UINT8
+/*
+ * TODO: UINT8 is type uint8_t from stdint.h. Need to check if this is correct 
+ */
 #define UINT8 unsigned char
 #endif
 
@@ -123,8 +126,8 @@ extern "C"{
 #define  ANSC_IPV4_ADDRESS                                                                  \
          union                                                                              \
          {                                                                                  \
-            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< An unsigned character array of size 4. Possible value is {192, 168, 0, 100}*/                        \
-            uint32_t                Value;                          /**< A 32 bit unsigned integer value.*/                        \
+            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< An array of four unsigned characters representing each octet of the IPv4 address. Example value is {192, 168, 0, 100}*/                        \
+            uint32_t                Value;                          /**< A 32-bit unsigned integer representing the IPv4 address in big-endian format.*/                        \
          }
 #endif
 
@@ -560,8 +563,8 @@ CM_DIPLEXER_SETTINGS;
 * @brief Initialize the Hal and associated requirements.
 *
 * @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_OK if initialization is successful.
+* @retval RETURN_ERR if any error is encountered during initialization, such as failure to create threads or open files.
 *
 */
 INT cm_hal_InitDB(void);
@@ -585,10 +588,39 @@ INT docsis_InitDS(void);
 INT docsis_InitUS(void);
 
 /**
-* @brief Retrieve, format and output the Cable Modem DOCSIS status.
+* @brief Retrieve, format, and output the Cable Modem DOCSIS status.
+*
+* This function retrieves, formats, and outputs the Cable Modem DOCSIS status.
+* The status is stored in the character array pointed to by cm_status.
+*
+* Expected status values are:
+* - "Unsupported status"
+* - "OTHER"
+* - "NOT_READY"
+* - "NOT_SYNCHRONIZED"
+* - "PHY_SYNCHRONIZED"
+* - "US_PARAMETERS_ACQUIRED"
+* - "RANGING_COMPLETE"
+* - "DHCPV4_COMPLETE"
+* - "TOD_ESTABLISHED"
+* - "SECURITY_ESTABLISHED"
+* - "CONFIG_FILE_DOWNLOAD_COMPLETE"
+* - "REGISTRATION_COMPLETE"
+* - "OPERATIONAL"
+* - "ACCESS_DENIED"
+* - "EAE_IN_PROGRESS"
+* - "DHCPV4_IN_PROGRESS"
+* - "DHCPV6_IN_PROGRESS"
+* - "DHCPV6_COMPLETE"
+* - "REGISTRATION_IN_PROGRESS"
+* - "BPI_INIT"
+* - "FORWARDING_DISABLED"
+* - "DS_TOPOLOGY_RESOLUTION_IN_PROGRESS"
+* - "RANGING_IN_PROGRESS"
+* - "RF_MUTE_ALL"
+*
 * @param[out] cm_status Pointer to a character array that will hold the Cable Modem DOCSIS status string to be returned.
-*                       \n  Expected Status values are "Unsupported status","OTHER","NOT_READY","NOT_SYNCHRONIZED","PHY_SYNCHRONIZED","US_PARAMETERS_ACQUIRED","RANGING_COMPLETE","DHCPV4_COMPLETE","TOD_ESTABLISHED","SECURITY_ESTABLISHED","CONFIG_FILE_DOWNLOAD_COMPLETE","REGISTRATION_COMPLETE","OPERATIONAL","ACCESS_DENIED","EAE_IN_PROGRESS","DHCPV4_IN_PROGRESS","DHCPV6_IN_PROGRESS","DHCPV6_COMPLETE","REGISTRATION_IN_PROGRESS","BPI_INIT","FORWARDING_DISABLED","DS_TOPOLOGY_RESOLUTION_IN_PROGRESS","RANGING_IN_PROGRESS",
-*                           "RF_MUTE_ALL"
+*                       \n The maximum size allocated should be atleast 40 bytes.
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any error is detected.
@@ -946,7 +978,11 @@ INT cm_hal_Get_HTTP_Download_Status();
 INT cm_hal_Reboot_Ready(ULONG *pValue);
 
 /**
-* @brief Http Download Reboot Now.
+* @brief Initiates a reboot operation after performing necessary checks and updates.
+*
+* This function creates a reboot file, retrieves information about the last reboot counter,
+* updates the counter if necessary, and triggers a system reboot.
+*
 * @return the status of the reboot operation.
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if the function fails to create the reboot file or encounters an error during the reboot process.
@@ -977,7 +1013,7 @@ INT cm_hal_FWupdateAndFactoryReset(char* pUrl, char* pImagename);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if the MAC reinitialization is successful.
-* @retval RETURN_ERR if any error is detected during the reinitialization process.
+* @retval RETURN_ERR if any error is detected during the reinitialization process, such as a failure to lock or unlock the CM.
 *
 */
 INT cm_hal_ReinitMac();
@@ -1002,8 +1038,8 @@ INT docsis_GetProvIpType(CHAR *pValue);
 *                   \n Example value: "/nvram/cmcert.bin"
 *
 * @return The status of the operation.
-* @retval RETURN_OK if the certificate location is successfully retrieved.
-* @retval RETURN_ERR if any error is detected during the retrieval process.
+* @retval RETURN_OK if the certificate location is successfully retrieved and stored.
+* @retval RETURN_ERR if any error is detected during the retrieval or storage process, such as a null pointer for the certificate path, failure to retrieve the certificate, or failure to write the certificate to the file.
 *
 */
 INT docsis_GetCert(CHAR* pCert);
