@@ -97,7 +97,7 @@ Following non functional requirement should be supported by the component.
 
 ## Logging and debugging requirements
 
-The component should log all the error and critical informative messages, preferably using syslog, printf which helps to debug/triage the issues and understand the functional flow of the system.
+The CM HAL component must record all errors and critical informative messages. This can be achieved by using either the printf or the syslog method. These tools are useful in identifying, and debugging the issues and understanding the functional flow of the system.
 
 The logging should be consistent across all HAL components.
 
