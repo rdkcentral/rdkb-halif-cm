@@ -18,13 +18,17 @@
 */
 
 /*
+ * DOCSIS (Data Over Cable Service Interface Specification) is an international telecommunications standard enabling high-bandwidth data transfer over cable TV systems.
+ * Cable modems, compliant with DOCSIS, allow subscribers to access high-speed internet via cable television networks.
+ * Therefore, functions in the cm_hal module typically deal with operations specific to cable modems, following the DOCSIS standard.
+ *
  * Docsis 3.1 specification:
  *
  * Physical Layer Specification: https://account.cablelabs.com/server/alfresco/6f4e0e98-cea4-465b-af19-28b1143c3c4e
  *
  * Cable Modem Operations Support System Interface Specification: https://account.cablelabs.com/server/alfresco/3fb47021-ef6f-499f-a319-84fc2a0ccc0f
  *
-*/
+ */
 
 #ifndef __CM_HAL_H__
 #define __CM_HAL_H__
