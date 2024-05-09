@@ -932,7 +932,7 @@ INT cm_hal_Set_HTTP_Download_Interface(unsigned int interface);
 *                        \n Values: interface=0 for wan0, interface=1 for erouter0.
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, , including invalid parameter passed and memory allocation failures.
+* @retval RETURN_ERR if any error is detected, including invalid parameter passed and memory allocation failures.
 *
 */
 INT cm_hal_Get_HTTP_Download_Interface(unsigned int* pinterface);
@@ -1133,7 +1133,7 @@ INT cm_hal_HTTP_LED_Flash( BOOLEAN LedFlash );
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs, including null pointer inputs, channel retrieval failures, memory allocation issues, or data processing errors within the function.
 *
 */
 INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_NumberOfEntries);
@@ -1149,7 +1149,7 @@ INT docsis_GetDsOfdmChanTable(PDOCSIF31_CM_DS_OFDM_CHAN *ppinfo, int *output_Num
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, including invalid parameter passed and memory allocation failures.
+* @retval RETURN_ERR if an error occurs, including null pointer inputs, channel retrieval failures, memory allocation issues, or data processing errors within the function.
 *
 */
 INT docsis_GetUsOfdmaChanTable(PDOCSIF31_CM_US_OFDMA_CHAN *ppinfo, int *output_NumberOfEntries);
@@ -1178,7 +1178,7 @@ INT docsis_GetStatusOfdmaUsTable(PDOCSIF31_CMSTATUSOFDMA_US *ppinfo, int *output
 * @return The status of the LLD status.
 * @retval ENABLE if LLD is enabled in bootfile.
 * @retval DISABLE if LLD is disabled/entry doesn't exists in bootfile.
-* @retval RETURN_ERR if any other error detected.
+* @retval RETURN_ERR if unable to retrieve the setting or if the function is called on unsupported firmware versions.
 *
 */
 
@@ -1190,7 +1190,7 @@ INT docsis_LLDgetEnableStatus();
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected during initialization, such as invalid input parameters or failure to set SNMPv3 security parameters.
 *
 */
 INT cm_hal_snmpv3_kickstart_initialize(snmpv3_kickstart_table_t *pKickstart_Table);
@@ -1204,7 +1204,7 @@ INT cm_hal_snmpv3_kickstart_initialize(snmpv3_kickstart_table_t *pKickstart_Tabl
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs, such as a null pointer for pEnergyDetected or if the function is called on unsupported firmware versions.
 *
 */
 
@@ -1221,7 +1221,7 @@ INT docsis_IsEnergyDetected( BOOLEAN *pEnergyDetected );
 *
 * @return The status of the operation:
 *         - RETURN_OK if the operation is successful.
-*         - RETURN_ERR if any error is detected.
+*         - RETURN_ERR if an error occurs, such as issues with setting the value in the system, validation failures, or configuration errors.
 */
 
 INT cm_hal_set_ReinitMacThreshold(ULONG value);
@@ -1236,7 +1236,7 @@ INT cm_hal_set_ReinitMacThreshold(ULONG value);
 *
 * @return The status of the operation:
 *         - RETURN_OK if the operation is successful.
-*         - RETURN_ERR if any error occurs.
+*         - RETURN_ERR if an error occurs, such as a null pointer provided for pValue, or if there is an issue accessing or reading the value from the modem's configuration.
 */
 INT cm_hal_get_ReinitMacThreshold(ULONG *pValue);
 
@@ -1248,7 +1248,7 @@ INT cm_hal_get_ReinitMacThreshold(ULONG *pValue);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, such as invalid parameters or failure to retrieve Diplexer settings.
 *
 */
 INT cm_hal_get_DiplexerSettings(CM_DIPLEXER_SETTINGS *pValue);
@@ -1259,7 +1259,7 @@ INT cm_hal_get_DiplexerSettings(CM_DIPLEXER_SETTINGS *pValue);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs, such as failure to register the callback.
 *
 */
 typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiplexerValue);
@@ -1278,7 +1278,6 @@ typedef INT ( * cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiple
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if not supported or implemented (e.g., stub, unsupported feature, misconfiguration).
 * 
-*
 */
 INT cm_hal_Register_DiplexerVariationCallback(cm_hal_DiplexerVariationCallback callback_proc);
 
