@@ -130,8 +130,8 @@ extern "C"{
 #define  ANSC_IPV4_ADDRESS                                                                  \
          union                                                                              \
          {                                                                                  \
-            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< An array of four unsigned characters representing each octet of the IPv4 address. Example value is {192, 168, 0, 100}*/                        \
-            uint32_t                Value;                          /**< A 32-bit unsigned integer representing the IPv4 address in big-endian format.*/                        \
+            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< Represents each octet of the IPv4 address. Example format: {192, 168, 0, 100}*/                        \
+            uint32_t                Value;                          /**< IPv4 address in big-endian format.*/                        \
          }
 #endif
 
@@ -167,28 +167,17 @@ extern "C"{
  * TODO: Coding Standard: structure should not be defined as CAPS, only Macros are allowed to be.
  */
 
-typedef  struct
-_CMMGMT_CM_DS_CHANNEL {
-    ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID.
-                                                         Example Value: 11. */
-    CHAR                            Frequency[64];  /**< It is a character array that represents the DS channel Frequency.
-                                                         Example Value: "6449". */
-    CHAR                            PowerLevel[64]; /**< It is a character array that represents the DS channel Power Level.
-                                                         Example Value: "75.1 dBmV"  */
-    CHAR                            SNRLevel[64];   /**< It is a character array that represents the DS channel SNR Level.
-                                                         Example Value: "50 dB".*/
-    CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the DS channel.
-                                                         Possible Values is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
-    ULONG                           Octets;         /**< It is an unsigned long value that represents the Octets.
-                                                         Example Value: 123.*/
-    ULONG                           Correcteds;     /**< It is an unsigned long value that represents the Correcteds.
-                                                         It is a vendor specific value. Example Value: 100. */
-    ULONG                           Uncorrectables; /**< It is an unsigned long value that represents the Uncorrectables.
-                                                         It is a vendor specific value. Example Value: 12.*/
-    CHAR                            LockStatus[64]; /**< It is a character array that represents the DS Lock Status.
-                                                         Possible value is "Locked", "NotLocked".*/
-}
-CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
+typedef struct _CMMGMT_CM_DS_CHANNEL {
+    ULONG ChannelID;             /**< Unique identifier for the downstream channel. Typically a sequential number starting from 1. */
+    CHAR Frequency[64];          /**< Operating frequency of the channel. Frequency range generally from 54 to 1002 MHz in DOCSIS 3.1. Example: "64400". */
+    CHAR PowerLevel[64];         /**< Current power level of the channel in dBmV or similar units. Typical power levels range from -15 to +15 dBmV. Example: "-1.5". */
+    CHAR SNRLevel[64];           /**< Signal-to-noise ratio of the channel, measured in dB. Typical SNR values for DOCSIS 3.1 range from 20 to 40 dB. Example: "38". */
+    CHAR Modulation[64];         /**< Modulation type used on the channel. Expected values: "QPSK", "256-QAM", "1024-QAM", "OFDM". */
+    ULONG Octets;                /**< Total number of octets received on this channel since last reset. Count can range widely based on network traffic. */
+    ULONG Correcteds;            /**< Count of corrected errors on the channel since last reset. This number can range from 0 to high counts depending on channel conditions. */
+    ULONG Uncorrectables;        /**< Count of uncorrectable errors since last reset, indicating potentially serious issues if high. */
+    CHAR LockStatus[64];         /**< Lock status of the channel. Expected values: "Locked", "Unlocked", "Not Available". */
+} CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 
 /**
  * @brief Represents the information about a upstream channel of a cable modem.
@@ -196,25 +185,15 @@ CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
  * This structure holds information about the upstream channel like channel ID, frequency, power level, ,channel type, symbol rate, modulation and lock status.
  */
 
-typedef  struct
-_CMMGMT_CM_US_CHANNEL {
-    ULONG                           ChannelID;      /**< It is an unsigned long value that represents the Channel ID of the US channel.
-                                                         Example Value: 12. */
-    CHAR                            Frequency[64];  /**< It is a character array that represents the Frequency of the US channel.
-                                                         Example Value: "12750".*/
-    CHAR                            PowerLevel[64]; /**< It is a character array that represents the PowerLevel of the US channel.
-                                                         Example Value: "60".*/
-    CHAR                            ChannelType[64];/**< It is a character array that represents the ChannelType of the US channel.
-                                                         Possible Values: "UNKNOWN","TDMA","ATDMA","SCDMA","TDMA_AND_ATDMA".*/
-    CHAR                            SymbolRate[64]; /**< It is a character array that represents the SymbolRate of the US channel.
-                                                         Example Value: "115200". */
-    CHAR                            Modulation[64]; /**< It is a character array that represents the Modulation of the US channel.
-                                                         Possible value is "QAM", "OFDM", "OFDMA", "UNKNOWN".*/
-    CHAR                            LockStatus[64]; /**< It is a character array that represents the LockStatus.
-                                                         Possible value is: "Locked", "NotLocked". */
-
-}
-CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
+typedef struct _CMMGMT_CM_US_CHANNEL {
+    ULONG ChannelID;                /**< Identifier for the channel. */
+    CHAR Frequency[64];             /**< Frequency of the upstream channel ranging from 5 MHz to 204 MHz. Example: "12750" */
+    CHAR PowerLevel[64];            /**< Transmit power level for the channel, typically ranging from 45 dBmV to 61 dBmV. Example: "60"*/
+    CHAR ChannelType[64];           /**< Type of the channel, could be 'ATDMA', 'SCDMA', or 'OFDMA'. */
+    CHAR SymbolRate[64];            /**< Symbol rate in symbols per second, varies widely based on configuration. */
+    CHAR Modulation[64];            /**< Type of modulation used, up to '4096-QAM'. */
+    CHAR LockStatus[64];            /**< Lock status of the channel. Expected Values: 'Locked', 'Unlocked'. */
+} CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
 
 /**
  * @brief Represents the information about DOCSIS of a cable modem.
@@ -222,49 +201,28 @@ CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
  * This structure holds information about various DOCSIS related information version downstream and upstream scannimg and ranging statuses, TFTP starus, DHCP attempts, cnfiguration file name,TFTP attempts, Time of Day status,BPI state, network access, upgrade server IP, maximum CPE allowed, service flow parameters,data rates for downstream and upstream and core version.
  */
 
-typedef  struct
-_CMMGMT_CM_DOCSIS_INFO
-{
-    CHAR                            DOCSISVersion[64];               /**< It is a character array that represents the DOCSIS Version.
-                                                                          Possible Values are "other","1.0","1.1","2.0","3.0","3.1" */
-    CHAR                            DOCSISDownstreamScanning[64];    /**< It is a character array that represents the DOCSIS Downstream Scanning Status.
-                                                                          Possible Values are "NotStarted", "InProgress", "Complete".  */
-    CHAR                            DOCSISDownstreamRanging[64];     /**< It is a character array that represents the DOCSIS Downstream Ranging Status.
-                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISUpstreamScanning[64];      /**< It is a character array that represents the DOCSIS Upstream Scanning Status.
-                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISUpstreamRanging[64];       /**< It is a character array that represents the DOCSIS Upstream Ranging Status.
-                                                                          Possible Values are "NotStarted", "InProgress", "Complete".*/
-    CHAR                            DOCSISTftpStatus[64];            /**< It is a character array that represents the DOCSIS Tftp Status.
-                                                                          Possible Values are "NotStarted","In Progress" ,"Download Complete" .*/
-    CHAR                            DOCSISDataRegComplete[64];       /**< It is a character array that represents the DOCSIS Data Reg Complete Status.
-                                                                          Possible Values are "In Progress" ,"Registration Complete" .*/
-    ULONG                           DOCSISDHCPAttempts;              /**< It is an unsigned long value that represents the DOCSIS DHCP Attempts.
-                                                                          The maximum value is (2^32)-1. 
-                                                                          Possible Value is 3.*/
-    CHAR                            DOCSISConfigFileName[64];        /**< It is a character array that represents the DOCSIS Config File Name.
-                                                                          Possible Value is "goldenjim.cm".*/
-    ULONG                           DOCSISTftpAttempts;              /**< It is an unsigned long value that represents the DOCSIS Tftp Attempts.
-                                                                          The maximum value is (2^32)-1.*/
-    CHAR                            ToDStatus[64];                   /**< It is a character array that represents the ToD Status.
-                                                                          Possible Values are "Complete", "NotStarted".*/
-    BOOLEAN                         BPIState;                        /**< It is an boolean value that represents the BPIState. */
-    BOOLEAN                         NetworkAccess;                   /**< It is an boolean value that represents the Network Access. */   
-    ANSC_IPV4_ADDRESS               UpgradeServerIP;                 /**< It a ANSC_IPV4_ADDRESS union type value that represents the Upgrade Server IP.*/
-    ULONG                           MaxCpeAllowed;                   /**< It is an unsigned long value that represents the Max Cpe Allowed.
-                                                                          The maximum value is (2^32)-1. */
-    CHAR                            UpstreamServiceFlowParams[64];   /**< It is a character array that holds the Upstream Service Flow Params.
-                                                                          Possible value is "Dummy"*/
-    CHAR                            DownstreamServiceFlowParams[64]; /**< It is a character array that represents the Downstream Service Flow Params.
-                                                                          Possible value is "Dummy"*/
-    CHAR                            DOCSISDownstreamDataRate[64];    /**< It is a character array that represents the DOCSIS Downstream Data Rate.
-                                                                          Possible value is "20000".*/
-    CHAR                            DOCSISUpstreamDataRate[64];      /**< It is a character array that represents the DOCSIS Upstream Data Rate.
-                                                                          Possible value is "10000".*/
-    CHAR                            CoreVersion[64];                 /**< It is a character array that represents the Core Version.
-                                                                          Possible value is "1.0".*/
-}
-CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
+typedef struct _CMMGMT_CM_DOCSIS_INFO {
+    CHAR DOCSISVersion[64];                          /**< DOCSIS protocol version, e.g., "3.1", "3.0". */
+    CHAR DOCSISDownstreamScanning[64];               /**< Status of downstream scanning. Values: "NotStarted", "InProgress", "Complete". */
+    CHAR DOCSISDownstreamRanging[64];                /**< Downstream ranging status. Values: "NotStarted", "InProgress", "Complete". */
+    CHAR DOCSISUpstreamScanning[64];                 /**< Upstream scanning status. Values: "NotStarted", "InProgress", "Complete". */
+    CHAR DOCSISUpstreamRanging[64];                  /**< Upstream ranging status. Values: "NotStarted", "InProgress", "Complete". */
+    CHAR DOCSISTftpStatus[64];                       /**< TFTP status for config file download. Values: "NotStarted","In Progress" ,"Download Complete". */
+    CHAR DOCSISDataRegComplete[64];                  /**< Data registration completion status. Values: "In Progress" ,"Registration Complete". */
+    ULONG DOCSISDHCPAttempts;                        /**< Number of DHCP attempts to acquire an IP address. Range can be from 0 to a high number based on retry strategies. */
+    CHAR DOCSISConfigFileName[64];                   /**< Filename of the downloaded DOCSIS configuration file. */
+    ULONG DOCSISTftpAttempts;                        /**< Number of TFTP attempts to download the configuration file. Range can be from 0 to a high number based on network conditions and retries. */
+    CHAR ToDStatus[64];                              /**< Time of Day synchronization status. Values: "Complete", "NotStarted". */
+    BOOLEAN BPIState;                                /**< Baseline Privacy Interface (BPI) security state. Values: TRUE, FALSE. */
+    BOOLEAN NetworkAccess;                           /**< Network access granted to the modem. Values: TRUE, FALSE. */
+    ANSC_IPV4_ADDRESS UpgradeServerIP;               /**< IP address of the firmware upgrade server. */
+    ULONG MaxCpeAllowed;                             /**< Maximum number of Customer Premises Equipment allowed. Typical values range from 1 to 255. */
+    CHAR UpstreamServiceFlowParams[64];              /**< Parameters for upstream service flow, including QoS settings. */
+    CHAR DownstreamServiceFlowParams[64];            /**< Parameters for downstream service flow, including QoS settings. */
+    CHAR DOCSISDownstreamDataRate[64];               /**< Downstream data rate in bits per second. Examples: "10000". */
+    CHAR DOCSISUpstreamDataRate[64];                 /**< Upstream data rate in bits per second. Examples: "35000". */
+    CHAR CoreVersion[64];                            /**< Core version of the modem's firmware. Example: "1.0". */
+} CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
 
 /**
  * @brief Represents the information of errorcode words of a cable modem.
@@ -274,16 +232,14 @@ CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
  * TODO: Correct CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS , no caps, and remove *PCMMGMT_CM_ERROR_CODEWORDS
  */
 
-typedef  struct
-_CMMGMT_CM_ERROR_CODEWORDS {
-    ULONG                           UnerroredCodewords;       /**< It is an unsigned long value that holds the Unerrored Codewords. 
-                                                                   It is a vendor specific value. */
-    ULONG                           CorrectableCodewords;     /**< It is an unsigned long value that holds the Correctable Codewords.   
-			                                           It is a vendor specific value.*/
-    ULONG                           UncorrectableCodewords;   /**< It is an unsigned long value that holds the Uncorrectable Codewords. 
-			                                           It is a vendor specific value.*/
-}
-CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
+typedef struct _CMMGMT_CM_ERROR_CODEWORDS {
+    ULONG UnerroredCodewords;       /**< Number of unerrored codewords. 
+                                         \n Indicates codewords that have been received without any errors detected. */
+    ULONG CorrectableCodewords;     /**< Number of correctable codewords. 
+                                         \n These are codewords that contained errors which were corrected by the modem's error correction algorithms. */
+    ULONG UncorrectableCodewords;   /**< Number of uncorrectable codewords. 
+                                         \n These are codewords where errors were detected that could not be corrected, indicating potential issues in the transmission quality. */
+} CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
 
 #define EVM_MAX_EVENT_TEXT      255      /**< Maximum length of event text */
 
@@ -293,21 +249,16 @@ CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
  * This structure holds information about an event log entry, including the event index, first and last time the event occured, event counts, event level, event ID and the text associated with the event.
  */
 
-typedef struct
-{
-    UINT                docsDevEvIndex;                   /**< It is an unsigned integer value that represents the snmp docsDevEvIndex.
-                                                               Example Value: 1. */
-    struct timeval      docsDevEvFirstTime;               /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
-    struct timeval      docsDevEvLastTime;                /**< It is a struct timeval type structure that holds the local date and time when this event was generated.*/
-    UINT                docsDevEvCounts;                  /**< It is an unsigned integer value that represents the docsDevEvCounts.
-                                                               Example Value: 1.*/
-    UINT                docsDevEvLevel;                   /**< It is an unsigned integer value that represents the DOCSIS priority level associated with the event. Possible value is 1.*/
-    UINT                docsDevEvId;                      /**< It is an unsigned integer value that represents the numeric identifier of the event. 
-                                                               Example Value: 1.*/
-    CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT];/**< It is a character array that represents the the numeric identifier of the event.
-                                                               It is a vendor specific value.*/
+typedef struct {
+    UINT                docsDevEvIndex;                          /**< Index of the event in the event log. (Range: 0 to UINT_MAX) */
+    struct timeval      docsDevEvFirstTime;                      /**< Local date and time when this event was first generated. */
+    struct timeval      docsDevEvLastTime;                       /**< Local date and time when this event was last generated. */
+    UINT                docsDevEvCounts;                         /**< Number of times the event has occurred. (Range: 0 to UINT_MAX) */
+    UINT                docsDevEvLevel;                          /**< Priority level of the event. (Range: 0 to 255) */
+    UINT                docsDevEvId;                             /**< ID of the event. (Range: 0 to UINT_MAX) */
+    CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT];       /**< Text description of the event.*/
+} CMMGMT_CM_EventLogEntry_t;
 
-}CMMGMT_CM_EventLogEntry_t;
 /**
  * @brief Represents the configuration settings of CM logging.
  *
@@ -319,8 +270,8 @@ typedef struct
 
 typedef  struct
 _CMMGMT_DML_CM_LOG {
-    BOOLEAN                         EnableLog;             /**< Represents whether the CM logging is enabled*/
-    BOOLEAN                         ClearDocsisLog;        /**< Represents whether to clear the  Docsis Log*/
+    BOOLEAN                         EnableLog;             /**< Indicates whether logging is enabled for the cable modem. */
+    BOOLEAN                         ClearDocsisLog;        /**< Indicates whether the DOCSIS log should be cleared. */
 }
 CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
 
@@ -349,27 +300,21 @@ CMMGMT_DML_DOCSISLOG_FULL,  *PCMMGMT_DML_DOCSISLOG_FULL;
  * This structure holds information about the DHCP configuration like the IP Address, boot file name, subnet mask, gateway, TFTP server, time server, time offset, remaining lease time, remaining rebind time, remaining renew time, MAC address and DOCSIS DHCP status.
  */
 
-typedef  struct
-_CMMGMT_CM_DHCP_INFO
+typedef struct _CMMGMT_CM_DHCP_INFO
 {
-    ANSC_IPV4_ADDRESS               IPAddress;              /**< It a ANSC_IPV4_ADDRESS union type value that represents the IP Address.
-                                                                 Example value: "IPAddress.Dot = {192, 168, 0, 100}".*/
-    CHAR                            BootFileName[64];       /**< It is a character array that represents the Boot File Name. Example value: "ccsp.boot".*/
-    ANSC_IPV4_ADDRESS               SubnetMask;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the Subnet Mask.
-                                                                 Example value: "SubnetMask.Dot = {255, 255, 255, 0}".*/
-    ANSC_IPV4_ADDRESS               Gateway;                /**< It a ANSC_IPV4_ADDRESS union type value that represents the Gateway.
-                                                                 Example value: "Gateway.Dot={192, 168, 0, 1}".*/
-    ANSC_IPV4_ADDRESS               TFTPServer;             /**< It a ANSC_IPV4_ADDRESS union type value that represents the TFTP Server.
-                                                                 Example value: "TFTPServer.Dot = {192, 168, 0, 10}".*/
-    CHAR                            TimeServer[64];         /**< It is a character array that represents the Time Server. Example value: "ntp.cisco.com"*/
-    INT                             TimeOffset;             /**< It is an integer value. The maximum value is (2^31)-1 that represents the Time Offset. Example value: 8.*/
-    ULONG                           LeaseTimeRemaining;     /**< It is an unsigned long value that represents the Lease Time Remaining. Example value: 3600.*/
-    CHAR                            RebindTimeRemaining[64]; /**< It is a character array that represents the Rebind Time Remaining. Example value: 3700.*/
-    CHAR                            RenewTimeRemaining[64];  /**< It is a character array that represents the Renew Time Remaining. Example value: 1200. */
-    CHAR                            MACAddress[64];          /**< It is a character array that represents the MAC Address. Example value: "00:1A:2B:11:22:33".*/
-    CHAR                            DOCSISDHCPStatus[64];    /**< It is a character array that represents the DOCSIS DHCP Status. Example value: "Complete".*/
-}
-CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
+    ANSC_IPV4_ADDRESS               IPAddress;                  /**< IPv4 address assigned to the cable modem. */
+    CHAR                            BootFileName[64];           /**< Name of the file from which the cable modem booted. */
+    ANSC_IPV4_ADDRESS               SubnetMask;                 /**< Subnet mask associated with the cable modem's IP address. */
+    ANSC_IPV4_ADDRESS               Gateway;                    /**< Default gateway IP address. */
+    ANSC_IPV4_ADDRESS               TFTPServer;                 /**< IP address of the TFTP server. */
+    CHAR                            TimeServer[64];             /**< Name or IP address of the time server. */
+    INT                             TimeOffset;                 /**< Time offset from UTC in seconds. */
+    ULONG                           LeaseTimeRemaining;         /**< Remaining lease time for the IP address. */
+    CHAR                            RebindTimeRemaining[64];    /**< Remaining time for DHCP rebind process. */
+    CHAR                            RenewTimeRemaining[64];     /**< Remaining time for DHCP renew process. */
+    CHAR                            MACAddress[64];             /**< MAC address of the cable modem. Example format: "00:1A:2B:11:22:33" */
+    CHAR                            DOCSISDHCPStatus[64];       /**< Status of the DOCSIS DHCP process. */
+} CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
 
 /**
  * @brief Represents the information of IPv6 DHCP configuration of a cable modem.
@@ -377,29 +322,18 @@ CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
  * This structure holds information about the IPv6 DHCP configuration like the IPv6 address, IPv6 boot file name, IPv6 prefix, IPv6 router, IPv6 TFTP server, IPv6 time server, remaining IPv6 lease time, remaining IPv6 rebind time and remaining IPv6 renew time.
  */
 
-typedef  struct
-_CMMGMT_CM_IPV6DHCP_INFO
+typedef struct _CMMGMT_CM_IPV6DHCP_INFO
 {
-    CHAR                            IPv6Address[40];             /**< It is a character array that represents the IPv6 Address.
-                                                                      Example value: "2012:cafe:100::1".*/
-    CHAR                            IPv6BootFileName[64];        /**< It is a character array that represents the IPv6 Boot File Name. 
-                                                                      Example value: "ccsp.v6.boot".*/
-    CHAR                            IPv6Prefix[40];               /**< It is a character array that represents the IPv6 Prefix. 
-                                                                       Example value: "2012:cafe::/32"*/
-    CHAR                            IPv6Router[40];               /**< It is a character array that represents the IPv6 Router.
-                                                                       Example value: 2012:cafe::1.*/
-    CHAR                            IPv6TFTPServer[40];           /**< It is a character array that represents the IPv6 TFTP Server.
-                                                                       Example value: "2012:cafe::2".*/
-    CHAR                            IPv6TimeServer[40];            /**< It is a character array that represents the IPv6 Time Server. 
-                                                                        Example value: "ntp.cisco.com"*/
-    ULONG                           IPv6LeaseTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Lease Time Remaining. 
-                                                                         Example value: 3600.*/
-    ULONG                           IPv6RebindTimeRemaining;        /**< It is an unsigned long value that represents the IPv6 Rebind Time Remaining. 
-                                                                         Example value: 3700.*/
-    ULONG                           IPv6RenewTimeRemaining;         /**< It is an unsigned long value that represents the IPv6 Renew Time Remaining. 
-                                                                         Example value: 1200.*/
-}
-CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
+    CHAR                            IPv6Address[40];             /**< IPv6 address assigned to the cable modem. */
+    CHAR                            IPv6BootFileName[64];        /**< Name of the file from which the cable modem booted (IPv6). */
+    CHAR                            IPv6Prefix[40];              /**< IPv6 prefix assigned to the cable modem. */
+    CHAR                            IPv6Router[40];              /**< IPv6 address of the router. */
+    CHAR                            IPv6TFTPServer[40];          /**< IPv6 address of the TFTP server. */
+    CHAR                            IPv6TimeServer[40];          /**< IPv6 address or name of the time server. */
+    ULONG                           IPv6LeaseTimeRemaining;      /**< Remaining lease time for the IPv6 address. */
+    ULONG                           IPv6RebindTimeRemaining;     /**< Remaining time for IPv6 DHCP rebind process. */
+    ULONG                           IPv6RenewTimeRemaining;      /**< Remaining time for IPv6 DHCP renew process. */
+} CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 
 /**
  * @brief Represents the list of customer premises equipment.
@@ -410,10 +344,8 @@ CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
 typedef  struct
 _CMMGMT_DML_CPE_LIST
 {
-    CHAR                            IPAddress[32];      /**< It is a character array that contains the IP Address of the CPE. 
-                                                             Example value: 192.168.0.1.*/
-    CHAR                            MACAddress[32];     /**< It is a character array that contains the MAC Address of the CPE. 
-                                                             The MAC Address should be in the format AA:BB:CC:DD:EE:FF (colon-separated).*/
+    CHAR                            IPAddress[32];      /**< IP Address of the CPE. Format: "192.168.0.1" */
+    CHAR                            MACAddress[32];     /**< MAC Address of the CPE. Format: AA:BB:CC:DD:EE:FF (colon-separated). */
 }
 CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
 
@@ -501,10 +433,8 @@ typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
  */
 
 typedef struct _fixed_length_buffer {
-    USHORT length;                               /**< length variable is unsigned short. 
-                                                      The maximum value is (2^16)-1.*/
-    UINT8 *buffer;                               /**< buffer variable is unsigned charcter pointer. 
-                                                      It is a variable that can store an integer value. */
+    USHORT length;                               /**< Length of the buffer. Maximum value is (2^16)-1. */
+    UINT8 *buffer;                               /**< Pointer to the buffer. */
 } fixed_length_buffer_t;
 
 /**
