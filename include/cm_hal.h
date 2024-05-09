@@ -627,7 +627,7 @@ INT docsis_InitUS(void);
 *                       \n The maximum size allocated should be atleast 40 bytes.
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error if an error occurs during the retrieval of CM status or memory allocation fails.
 *
 * TODO: cm_status must be updated to an enum
 *
@@ -644,7 +644,7 @@ INT docsis_getCMStatus(CHAR *cm_status);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs during the retrieval of downstream channel information or memory allocation fails.
 *
 */
 INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
@@ -657,7 +657,7 @@ INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs during the retrieval of upstream status or memory allocation fails.
 *
 */
 INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
@@ -672,7 +672,7 @@ INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs during the retrieval of upstream channel information or memory allocation fails.
 *
 */
 INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
@@ -685,7 +685,7 @@ INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs during the retrieval of DOCSIS information or if the input parameter is invalid.
 *
 */
 INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
@@ -696,7 +696,7 @@ INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error occurs during the retrieval of the number of active upstream channels or if the input parameter `cnt` is invalid.
 *
 */
 INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
@@ -707,7 +707,7 @@ INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error occurs during the retrieval of the number of active downstream channels or if the input parameter `cnt` is invalid.
 *
 */
 INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
@@ -722,7 +722,7 @@ INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
 * 
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR occurs during the scanning of downstream channels or if the input parameter `ppinfo` is invalid.
 *
 */
 INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
