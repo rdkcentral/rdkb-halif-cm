@@ -736,8 +736,7 @@ INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
-*
+* @retval RETURN_ERR if any error is detected, such as an invalid parameter or failure to retrieve the IP Provisioning Mode Override status.
 *
 */
 INT docsis_GetMddIpModeOverride(CHAR *pValue);
@@ -751,7 +750,7 @@ INT docsis_GetMddIpModeOverride(CHAR *pValue);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, such as an invalid parameter or failure to set the IP Provisioning Mode Override status.
 *
 */
 INT docsis_SetMddIpModeOverride(CHAR *pValue);
@@ -787,7 +786,6 @@ ULONG docsis_GetDownFreq(void);
 /**
 * @brief Set the current primary downstream (DS) channel frequency in the LKF (Low-Level Kernel Filtering) table.
 * @param[in] value  It is an unsigned long value which provides primary channel frequency value that is to be set.
-*                  \n The maximum value is (2^32)-1. Example: 12750.
 *
 */
 void docsis_SetStartFreq(ULONG value);
@@ -823,7 +821,7 @@ INT docsis_ClearDocsisEventLog(void);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if there are errors during the retrieval process, such as null pointer exceptions, failure in data acquisition from DHCP server, or internal processing errors.
 *
 */
 INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
@@ -837,7 +835,7 @@ INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if there are errors during the retrieval process, such as null pointer exceptions, failure in data acquisition from DHCP server, or internal processing errors.
 *
 */
 INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
@@ -856,7 +854,7 @@ INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if any error is detected, including invalid input parameters, memory allocation failure, and failure in retrieving CPE results.
 *
 */
 INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR* LanMode);
@@ -871,7 +869,7 @@ INT cm_hal_GetCPEList(PCMMGMT_DML_CPE_LIST * ppCPEList, ULONG* InstanceNum, CHAR
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs, such as null pointers, insufficient buffer size, or failures in data retrieval, locking mechanisms, or during the synchronization process.
 *
 */
 INT cm_hal_GetMarket(CHAR* market);
@@ -924,7 +922,7 @@ INT cm_hal_Get_HTTP_Download_Url (char *pHttpUrl, char* pfilename);
 *
 * @return the status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, if invalid interface is passed.
+* @retval RETURN_ERR if invalid interface is passed.
 */
 INT cm_hal_Set_HTTP_Download_Interface(unsigned int interface);
 
@@ -1006,7 +1004,6 @@ INT cm_hal_HTTP_Download_Reboot_Now();
 * @retval RETURN_OK if successful.
 * @retval RETURN_ERR if any reboot is in process.
 *
-*
 */
 INT cm_hal_FWupdateAndFactoryReset(char* pUrl, char* pImagename);
 
@@ -1028,7 +1025,7 @@ INT cm_hal_ReinitMac();
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected.
+* @retval RETURN_ERR if an error occurs, such as a null pointer provided for pValue or a failure in retrieving the IP type from the system.
 *
 */
 INT docsis_GetProvIpType(CHAR *pValue);
@@ -1058,7 +1055,7 @@ INT docsis_GetCert(CHAR* pCert);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if the certificate status is successfully retrieved.
-* @retval RETURN_ERR if any error is detected during the retrieval process.
+* @retval RETURN_ERR if an error occurs, such as a null pointer provided for pVal or a failure in accessing the system configuration to retrieve the certificate status.
 *
 */
 INT docsis_GetCertStatus(ULONG *pVal);
@@ -1070,7 +1067,7 @@ INT docsis_GetCertStatus(ULONG *pVal);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
+* @retval RETURN_ERR  if errors occur, such as null pointers or data access failures.
 *
 */
 INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
@@ -1082,7 +1079,7 @@ INT cm_hal_Get_CableModemResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
+* @retval RETURN_ERR  if errors occur, such as null pointers or data access failures.
 *
 */
 
@@ -1095,7 +1092,7 @@ INT cm_hal_Get_LocalResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
+* @retval RETURN_ERR  if errors occur, such as null pointers or data access failures.
 *
 */
 
@@ -1108,7 +1105,7 @@ INT cm_hal_Get_DocsisResetCount(ULONG *resetcnt);
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error is detected, including invalid parameter passed.
+* @retval RETURN_ERR  if errors occur, such as null pointers or data access failures.
 *
 */
 
