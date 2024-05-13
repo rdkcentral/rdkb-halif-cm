@@ -705,32 +705,34 @@ INT docsis_GetDocsisEventLogItems(CMMGMT_CM_EventLogEntry_t *entryArray, INT len
  */
 INT docsis_ClearDocsisEventLog(void);
 
-/**
-* @brief Retrieve all the relevant DHCP info for this CM.
-* The caller is responsible for allocating memory for the pInfo structure before calling this function.
-* The memory allocated for pInfo should be freed by the caller when it is no longer needed.
-*
-* @param[out] pInfo All DHCP info for CM, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if there are errors during the retrieval process, such as null pointer exceptions, failure in data acquisition from DHCP server, or internal processing errors.
-*
-*/
+/**!
+ * @brief Retrieves the DHCP information for the Cable Modem (CM).
+ *
+ * Populates the provided `PCMMGMT_CM_DHCP_INFO` structure with the CM's DHCP details.
+ *
+ * **Important:** The caller is responsible for allocating and freeing the memory for the `pInfo` structure.
+ *
+ * @param[out] pInfo - Pointer to a pre-allocated `PCMMGMT_CM_DHCP_INFO` structure to be populated.
+ *
+ * @returns Status of the operation:
+ * @retval RETURN_OK - On success.
+ * @retval RETURN_ERR - On failure (e.g., null pointer, data acquisition failure, internal error).
+ */
 INT cm_hal_GetDHCPInfo(PCMMGMT_CM_DHCP_INFO pInfo);
 
-/**
-* @brief Retrieve all the relevant IPv6 DHCP info for this CM.
-* The caller is responsible for allocating memory for the pInfo structure before calling this function.
-* The memory allocated for pInfo should be freed by the caller when it is no longer needed.
-*
-* @param[out] pInfo All IPv6 DHCP info for CM, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if there are errors during the retrieval process, such as null pointer exceptions, failure in data acquisition from DHCP server, or internal processing errors.
-*
-*/
+/**!
+ * @brief Retrieves IPv6 DHCP information for the Cable Modem (CM).
+ *
+ * This function populates a caller-provided `CMMGMT_CM_IPV6DHCP_INFO` structure with IPv6 DHCP details obtained from the CM.
+ *
+ * **Important:** The caller is responsible for allocating and freeing the memory for the `pInfo` structure.
+ *
+ * @param[out] pInfo - Pointer to a pre-allocated `CMMGMT_CM_IPV6DHCP_INFO` structure to be filled with the IPv6 DHCP information.
+ *
+ * @returns Status of the operation:
+ * @retval RETURN_OK - On success.
+ * @retval RETURN_ERR - On failure (e.g., null pointer, retrieval error, invalid data from DHCP server).
+ */
 INT cm_hal_GetIPv6DHCPInfo(PCMMGMT_CM_IPV6DHCP_INFO pInfo);
 
 /**!
