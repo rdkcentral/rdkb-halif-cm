@@ -18,16 +18,11 @@
 */
 
 /*
- * DOCSIS (Data Over Cable Service Interface Specification) is an international telecommunications standard enabling high-bandwidth data transfer over cable TV systems.
- * Cable modems, compliant with DOCSIS, allow subscribers to access high-speed internet via cable television networks.
- * Therefore, functions in the cm_hal module typically deal with operations specific to cable modems, following the DOCSIS standard.
+ * The cm_hal module provides an interface for interacting with cable modems adhering to the DOCSIS (Data Over Cable Service Interface Specification) standard.
  *
- * Docsis 3.1 specification:
- *
- * Physical Layer Specification: https://account.cablelabs.com/server/alfresco/6f4e0e98-cea4-465b-af19-28b1143c3c4e
- *
- * Cable Modem Operations Support System Interface Specification: https://account.cablelabs.com/server/alfresco/3fb47021-ef6f-499f-a319-84fc2a0ccc0f
- *
+ * For detailed information about DOCSIS 3.1, refer to the following specifications:
+ * * Physical Layer Specification: https://account.cablelabs.com/server/alfresco/6f4e0e98-cea4-465b-af19-28b1143c3c4e
+ * * Cable Modem Operations Support System Interface Specification: https://account.cablelabs.com/server/alfresco/3fb47021-ef6f-499f-a319-84fc2a0ccc0f
  */
 
 #ifndef __CM_HAL_H__
@@ -125,29 +120,32 @@ extern "C"{
 
 #ifndef ANSC_IPV4_ADDRESS
 /* 
- * TODO: While we're trying really hard to smooth the procedure of switch-over from IPv4 to IPv4, there are many places where using the IP address as an integer for comparision and calculation is much easier than array-based operation.
+ *  TODO: IPV4 to IPV6 Transition
+ *  - Many parts of the codebase still rely on IPv4 addresses for comparison and calculation.  
+ *  - While transitioning to IPv6, it may be beneficial to refactor these areas to use a more flexible address representation that can handle both IPv4 and IPv6.
  */
-#define  ANSC_IPV4_ADDRESS                                                                  \
-         union                                                                              \
-         {                                                                                  \
-            unsigned char           Dot[IPV4_ADDRESS_SIZE];         /**< Represents each octet of the IPv4 address. Example format: {192, 168, 0, 100}*/                        \
-            uint32_t                Value;                          /**< IPv4 address in big-endian format.*/                        \
-         }
+
+#define ANSC_IPV4_ADDRESS \
+    union { \
+        /**!< Represents each octet (byte) of the IPv4 address in dotted-decimal format (e.g., {192, 168, 0, 100}). */
+        unsigned char Dot[IPV4_ADDRESS_SIZE];  
+
+        /**!< Stores the IPv4 address as a 32-bit integer in network byte order (big-endian). */
+        uint32_t Value; 
+    } 
 #endif
 
 /**
-* @defgroup CM_HAL CM HAL
-*
-* @brief Cable Modem HAL component provides interface that cable modem software developers can use to interface to RDK-B.
-*
-* @defgroup CM_HAL_TYPES  CM HAL Data Types
-* @ingroup  CM_HAL
-*
-* @defgroup CM_HAL_APIS   CM HAL  APIs
-* @ingroup  CM_HAL
-*
-**/
-
+ * @defgroup CM_HAL Cable Modem HAL Interface
+ * @brief Provides a standardized interface for interacting with cable modem hardware and software.
+ *
+ * This component enables communication between RDK-B (Reference Design Kit for Broadband) and cable modem implementations.
+ *
+ * @{
+ * @defgroup CM_HAL_TYPES Data Types
+ * @defgroup CM_HAL_APIS APIs
+ * @}
+ */
 
 /**
  * @addtogroup CM_HAL_TYPES
@@ -158,197 +156,148 @@ extern "C"{
                 STRUCTURE DEFINITIONS
 **********************************************************************/
 
-/**
- * @brief Represents the information about a downstream channel of a cable modem.
- *
- * This structure holds information about the downstream channel like channel ID, frequency, power level, SNR level,modulation, octets, correcteds and lock status.
- *
- * TODO: Coding Standard: usage of *PCMMGMT_CM_DS_CHANNEL , *PCMMGMT_CM_US_CHANNEL; etc. should be removed.
- * TODO: Coding Standard: structure should not be defined as CAPS, only Macros are allowed to be.
- */
+/**!< Represents a cable modem's downstream channel information. */
+typedef struct _CMMGMT_CM_DS_CHANNEL {  
+    ULONG ChannelID;  /**!< Unique channel identifier (typically sequential, starting at 1). */
+    CHAR Frequency[64];   /**!< Channel's operating frequency (54 - 1002 MHz in DOCSIS 3.1). Example: "64400". */
+    CHAR PowerLevel[64];  /**!< Channel power level (dBmV or similar). Typical range: -15 to +15 dBmV. Example: "-1.5". */   
+    CHAR SNRLevel[64];    /**!< Channel signal-to-noise ratio (dB). DOCSIS 3.1 typical range: 20 - 40 dB. Example: "38". */ 
+    CHAR Modulation[64];  /**!< Modulation type (e.g., "QPSK", "256-QAM", "1024-QAM", "OFDM"). */ 
+    ULONG Octets;         /**!< Total octets received on this channel since reset (range depends on traffic). */
+    ULONG Correcteds;     /**!< Count of corrected errors since reset (varies based on channel conditions). */  
+    ULONG Uncorrectables; /**!< Count of uncorrectable errors since reset (high values indicate potential issues). */  
+    CHAR LockStatus[64];  /**!< Channel lock status. Expected values: "Locked", "Unlocked", "Not Available". */   
 
-typedef struct _CMMGMT_CM_DS_CHANNEL {
-    ULONG ChannelID;             /**< Unique identifier for the downstream channel. Typically a sequential number starting from 1. */
-    CHAR Frequency[64];          /**< Operating frequency of the channel. Frequency range generally from 54 to 1002 MHz in DOCSIS 3.1. Example: "64400". */
-    CHAR PowerLevel[64];         /**< Current power level of the channel in dBmV or similar units. Typical power levels range from -15 to +15 dBmV. Example: "-1.5". */
-    CHAR SNRLevel[64];           /**< Signal-to-noise ratio of the channel, measured in dB. Typical SNR values for DOCSIS 3.1 range from 20 to 40 dB. Example: "38". */
-    CHAR Modulation[64];         /**< Modulation type used on the channel. Expected values: "QPSK", "256-QAM", "1024-QAM", "OFDM". */
-    ULONG Octets;                /**< Total number of octets received on this channel since last reset. Count can range widely based on network traffic. */
-    ULONG Correcteds;            /**< Count of corrected errors on the channel since last reset. This number can range from 0 to high counts depending on channel conditions. */
-    ULONG Uncorrectables;        /**< Count of uncorrectable errors since last reset, indicating potentially serious issues if high. */
-    CHAR LockStatus[64];         /**< Lock status of the channel. Expected values: "Locked", "Unlocked", "Not Available". */
-} CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
+} CMMGMT_CM_DS_CHANNEL, *CMMGMT_CM_DS_CHANNEL;
+/* 
+ * TODO: Coding Standard: 
+ *  - Remove usage of `*PCMMGMT_CM_DS_CHANNEL` and `*PCMMGMT_CM_US_CHANNEL`.
+ *  - Rename the struct to follow lowercase naming conventions (e.g., `cmgmt_cm_ds_channel`).
+ */ 
 
-/**
- * @brief Represents the information about a upstream channel of a cable modem.
- *
- * This structure holds information about the upstream channel like channel ID, frequency, power level, ,channel type, symbol rate, modulation and lock status.
- */
-
+/**!< Represents a cable modem's upstream channel information.  */
 typedef struct _CMMGMT_CM_US_CHANNEL {
-    ULONG ChannelID;                /**< Identifier for the channel. */
-    CHAR Frequency[64];             /**< Frequency of the upstream channel ranging from 5 MHz to 204 MHz. Example: "12750" */
-    CHAR PowerLevel[64];            /**< Transmit power level for the channel, typically ranging from 45 dBmV to 61 dBmV. Example: "60"*/
-    CHAR ChannelType[64];           /**< Type of the channel, could be 'ATDMA', 'SCDMA', or 'OFDMA'. */
-    CHAR SymbolRate[64];            /**< Symbol rate in symbols per second, varies widely based on configuration. */
-    CHAR Modulation[64];            /**< Type of modulation used, up to '4096-QAM'. */
-    CHAR LockStatus[64];            /**< Lock status of the channel. Expected Values: 'Locked', 'Unlocked'. */
+    ULONG ChannelID;      /**!< Unique channel identifier. */
+    CHAR Frequency[64];   /**!< Upstream frequency (5 - 204 MHz). Example: "12750". */ 
+    CHAR PowerLevel[64];  /**!< Transmit power level (45 - 61 dBmV). Example: "60". */
+    CHAR ChannelType[64]; /**!< Channel type (e.g., "ATDMA", "SCDMA", "OFDMA"). */
+    CHAR SymbolRate[64];  /**!< Symbol rate (symbols/second, varies with configuration). */
+    CHAR Modulation[64];  /**!< Modulation type (up to "4096-QAM"). */
+    CHAR LockStatus[64];  /**!< Lock status ("Locked" or "Unlocked"). */
+
 } CMMGMT_CM_US_CHANNEL, *PCMMGMT_CM_US_CHANNEL;
 
-/**
- * @brief Represents the information about DOCSIS of a cable modem.
- *
- * This structure holds information about various DOCSIS related information version downstream and upstream scannimg and ranging statuses, TFTP starus, DHCP attempts, cnfiguration file name,TFTP attempts, Time of Day status,BPI state, network access, upgrade server IP, maximum CPE allowed, service flow parameters,data rates for downstream and upstream and core version.
- */
-
+/**!< Represents DOCSIS-related information for a cable modem. */
 typedef struct _CMMGMT_CM_DOCSIS_INFO {
-    CHAR DOCSISVersion[64];                          /**< DOCSIS protocol version, e.g., "3.1", "3.0". */
-    CHAR DOCSISDownstreamScanning[64];               /**< Status of downstream scanning. Values: "NotStarted", "InProgress", "Complete". */
-    CHAR DOCSISDownstreamRanging[64];                /**< Downstream ranging status. Values: "NotStarted", "InProgress", "Complete". */
-    CHAR DOCSISUpstreamScanning[64];                 /**< Upstream scanning status. Values: "NotStarted", "InProgress", "Complete". */
-    CHAR DOCSISUpstreamRanging[64];                  /**< Upstream ranging status. Values: "NotStarted", "InProgress", "Complete". */
-    CHAR DOCSISTftpStatus[64];                       /**< TFTP status for config file download. Values: "NotStarted","In Progress" ,"Download Complete". */
-    CHAR DOCSISDataRegComplete[64];                  /**< Data registration completion status. Values: "In Progress" ,"Registration Complete". */
-    ULONG DOCSISDHCPAttempts;                        /**< Number of DHCP attempts to acquire an IP address. Range can be from 0 to a high number based on retry strategies. */
-    CHAR DOCSISConfigFileName[64];                   /**< Filename of the downloaded DOCSIS configuration file. */
-    ULONG DOCSISTftpAttempts;                        /**< Number of TFTP attempts to download the configuration file. Range can be from 0 to a high number based on network conditions and retries. */
-    CHAR ToDStatus[64];                              /**< Time of Day synchronization status. Values: "Complete", "NotStarted". */
-    BOOLEAN BPIState;                                /**< Baseline Privacy Interface (BPI) security state. Values: TRUE, FALSE. */
-    BOOLEAN NetworkAccess;                           /**< Network access granted to the modem. Values: TRUE, FALSE. */
-    ANSC_IPV4_ADDRESS UpgradeServerIP;               /**< IP address of the firmware upgrade server. */
-    ULONG MaxCpeAllowed;                             /**< Maximum number of Customer Premises Equipment allowed. Typical values range from 1 to 255. */
-    CHAR UpstreamServiceFlowParams[64];              /**< Parameters for upstream service flow, including QoS settings. */
-    CHAR DownstreamServiceFlowParams[64];            /**< Parameters for downstream service flow, including QoS settings. */
-    CHAR DOCSISDownstreamDataRate[64];               /**< Downstream data rate in bits per second. Examples: "10000". */
-    CHAR DOCSISUpstreamDataRate[64];                 /**< Upstream data rate in bits per second. Examples: "35000". */
-    CHAR CoreVersion[64];                            /**< Core version of the modem's firmware. Example: "1.0". */
-} CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO;
+    CHAR DOCSISVersion[64];               /**!< DOCSIS version (e.g., "3.0", "3.1"). */
+    CHAR DOCSISDownstreamScanning[64];    /**!< Downstream scanning status ("NotStarted", "InProgress", "Complete"). */
+    CHAR DOCSISDownstreamRanging[64];     /**!< Downstream ranging status ("NotStarted", "InProgress", "Complete"). */
+    CHAR DOCSISUpstreamScanning[64];      /**!< Upstream scanning status ("NotStarted", "InProgress", "Complete"). */
+    CHAR DOCSISUpstreamRanging[64];       /**!< Upstream ranging status ("NotStarted", "InProgress", "Complete"). */
+    CHAR DOCSISTftpStatus[64];            /**!< TFTP status for config download ("NotStarted", "InProgress", "DownloadComplete"). */
+    CHAR DOCSISDataRegComplete[64];       /**!< Data registration status ("InProgress", "RegistrationComplete"). */
+    ULONG DOCSISDHCPAttempts;             /**!< Number of DHCP attempts for IP acquisition (range depends on retries). */
+    CHAR DOCSISConfigFileName[64];        /**!< Name of the downloaded DOCSIS config file. */ 
+    ULONG DOCSISTftpAttempts;             /**!< Number of TFTP attempts for config download (range depends on retries). */
+    CHAR ToDStatus[64];                   /**!< Time of Day sync status ("NotStarted", "Complete"). */
+    BOOLEAN BPIState;                     /**!< Baseline Privacy Interface (BPI) security state (TRUE or FALSE). */
+    BOOLEAN NetworkAccess;                /**!< Network access status for the modem (TRUE or FALSE). */
+    ANSC_IPV4_ADDRESS UpgradeServerIP;    /**!< IP address of the firmware upgrade server. */
+    ULONG MaxCpeAllowed;                  /**!< Maximum Customer Premises Equipment (CPE) allowed (typically 1 - 255). */
+    CHAR UpstreamServiceFlowParams[64];   /**!< Upstream service flow parameters (including QoS). */
+    CHAR DownstreamServiceFlowParams[64]; /**!< Downstream service flow parameters (including QoS). */
+    CHAR DOCSISDownstreamDataRate[64];    /**!< Downstream data rate (bits per second, e.g., "10000"). */
+    CHAR DOCSISUpstreamDataRate[64];      /**!< Upstream data rate (bits per second, e.g., "35000"). */
+    CHAR CoreVersion[64];                 /**!< Modem firmware core version (e.g., "1.0"). */
 
-/**
- * @brief Represents the information of errorcode words of a cable modem.
- *
- * This structure holds information about the error codewords including the number of unerrored, correctable and uncorrectable codewords.
- *
- * TODO: Correct CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS , no caps, and remove *PCMMGMT_CM_ERROR_CODEWORDS
- */
+} CMMGMT_CM_DOCSIS_INFO, *PCMMGMT_CM_DOCSIS_INFO; 
 
+/**!< Represents codeword error statistics for a cable modem. */ 
 typedef struct _CMMGMT_CM_ERROR_CODEWORDS {
-    ULONG UnerroredCodewords;       /**< Number of unerrored codewords. 
-                                         \n Indicates codewords that have been received without any errors detected. */
-    ULONG CorrectableCodewords;     /**< Number of correctable codewords. 
-                                         \n These are codewords that contained errors which were corrected by the modem's error correction algorithms. */
-    ULONG UncorrectableCodewords;   /**< Number of uncorrectable codewords. 
-                                         \n These are codewords where errors were detected that could not be corrected, indicating potential issues in the transmission quality. */
+    ULONG UnerroredCodewords;    /**!< Count of codewords received without detected errors. */
+    ULONG CorrectableCodewords;  /**!< Count of codewords with errors that were corrected. */
+    ULONG UncorrectableCodewords;/**!< Count of codewords with uncorrectable errors (indicating potential transmission issues). */
 } CMMGMT_CM_ERROR_CODEWORDS, *PCMMGMT_CM_ERROR_CODEWORDS;
+/**
+ * TODO: Address the following within this code:
+ *   - Correct capitalization in 'CMMGMT_CM_ERROR_CODEWORDS'.
+ *   - Remove the redundant `*PCMMGMT_CM_ERROR_CODEWORDS` typedef.  
+ */
 
 #define EVM_MAX_EVENT_TEXT      255      /**< Maximum length of event text */
 
-/**
- * @brief Represents the information of entry in the cable modem's event log.
- *
- * This structure holds information about an event log entry, including the event index, first and last time the event occured, event counts, event level, event ID and the text associated with the event.
- */
-
+/**!< Represents a single entry within a cable modem's event log. */
 typedef struct {
-    UINT                docsDevEvIndex;                          /**< Index of the event in the event log. (Range: 0 to UINT_MAX) */
-    struct timeval      docsDevEvFirstTime;                      /**< Local date and time when this event was first generated. */
-    struct timeval      docsDevEvLastTime;                       /**< Local date and time when this event was last generated. */
-    UINT                docsDevEvCounts;                         /**< Number of times the event has occurred. (Range: 0 to UINT_MAX) */
-    UINT                docsDevEvLevel;                          /**< Priority level of the event. (Range: 0 to 255) */
-    UINT                docsDevEvId;                             /**< ID of the event. (Range: 0 to UINT_MAX) */
-    CHAR                docsDevEvText[EVM_MAX_EVENT_TEXT];       /**< Text description of the event.*/
-} CMMGMT_CM_EventLogEntry_t;
+    UINT docsDevEvIndex;          /**!< Event index within the log (0 to UINT_MAX). */
+    struct timeval docsDevEvFirstTime; /**!< Timestamp of the event's first occurrence. */
+    struct timeval docsDevEvLastTime;  /**!< Timestamp of the event's most recent occurrence. */
+    UINT docsDevEvCounts;         /**!< Total count of event occurrences (0 to UINT_MAX). */
+    UINT docsDevEvLevel;          /**!< Event priority level (0 - 255). */
+    UINT docsDevEvId;             /**!< Event identifier (0 to UINT_MAX). */
+    CHAR docsDevEvText[EVM_MAX_EVENT_TEXT]; /**!< Textual description of the event. */
+} CMMGMT_CM_EventLogEntry_t; 
+
+/**!< Represents configuration settings for cable modem (CM) logging. */
+typedef struct _CMMGMT_DML_CM_LOG {
+    BOOLEAN EnableLog;      /**< Enables or disables cable modem logging. */
+    BOOLEAN ClearDocsisLog; /**< Controls whether the DOCSIS log should be cleared. */
+
+} CMMGMT_DML_CM_LOG, , *PCMMGMT_DML_CM_LOG;
 
 /**
- * @brief Represents the configuration settings of CM logging.
- *
- * This structure holds information of the configuration settings of CM logging related to CM logging and if the Docsis log should be cleared.
- *
- * TODO: Correct CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG , no caps, and remove *PCMMGMT_DML_CM_LOG
- *
+ * TODO: Address the following within this code:
+ *   - Correct capitalization in 'CMMGMT_DML_CM_LOG'.
+ *   - Remove the redundant `*PCMMGMT_DML_CM_LOG` typedef.  
  */
 
-typedef  struct
-_CMMGMT_DML_CM_LOG {
-    BOOLEAN                         EnableLog;             /**< Indicates whether logging is enabled for the cable modem. */
-    BOOLEAN                         ClearDocsisLog;        /**< Indicates whether the DOCSIS log should be cleared. */
-}
-CMMGMT_DML_CM_LOG,  *PCMMGMT_DML_CM_LOG;
+/**!< Represents a single entry within a DOCSIS log. */
+typedef struct _CMMGMT_DML_DOCSISLOG_FULL {
+    ULONG Index;         /**!< Index of the log entry within the full log. */
+    ULONG EventID;       /**!< Unique identifier for the type of event logged. */   
+    ULONG EventLevel;    /**!< Severity level of the event (e.g., error, warning, informational). */
+    CHAR Time[64];       /**!< Timestamp of the event's occurrence. */
+    CHAR Description[256];/**!< Textual description of the event. */
+
+} CMMGMT_DML_DOCSISLOG_FULL, *PCMMGMT_DML_DOCSISLOG_FULL; 
 
 /**
- * @brief Represents the information for a Docsis log entry.
- *
- * This structure holds information related to the Docsis log entry like the index, event ID, event level, timestamp and description.
- *
  * TODO: Correct CMMGMT_DML_DOCSISLOG_FULL, *PCMMGMT_DML_DOCSISLOG_FULL , no caps, and remove *PCMMGMT_DML_DOCSISLOG_FULL
- *
  */
 
-typedef  struct
-_CMMGMT_DML_DOCSISLOG_FULL {
-    ULONG                           Index;         /**< Index of Docsis log entry*/
-    ULONG                           EventID;       /**< Event ID associated with the log entry*/
-    ULONG                           EventLevel;    /**< Event level of the log entry*/
-    CHAR                            Time[64];      /**< Timestamp of the log entry*/
-    CHAR                            Description[256]; /**< Description of log entry*/
-}
-CMMGMT_DML_DOCSISLOG_FULL,  *PCMMGMT_DML_DOCSISLOG_FULL;
+/**!< Represents a cable modem's DHCP configuration. */
+typedef struct _CMMGMT_CM_DHCP_INFO {
+    ANSC_IPV4_ADDRESS IPAddress;        /**!< IPv4 address assigned to the cable modem. */
+    CHAR BootFileName[64];             /**!< Name of the boot configuration file. */
+    ANSC_IPV4_ADDRESS SubnetMask;      /**!< Subnet mask for the modem's IP address. */
+    ANSC_IPV4_ADDRESS Gateway;         /**!< Default gateway IP address. */
+    ANSC_IPV4_ADDRESS TFTPServer;      /**!< IP address of the TFTP server. */
+    CHAR TimeServer[64];               /**!< Hostname or IP of the time server. */
+    INT TimeOffset;                    /**!< Time offset from UTC (in seconds). */
+    ULONG LeaseTimeRemaining;          /**!< Remaining IP lease time (in seconds). */
+    CHAR RebindTimeRemaining[64];      /**!< Remaining time for DHCP rebind (in seconds). */
+    CHAR RenewTimeRemaining[64];       /**!< Remaining time for DHCP renewal (in seconds). */
+    CHAR MACAddress[64];               /**!< Modem's MAC address (e.g., "00:1A:2B:11:22:33"). */
+    CHAR DOCSISDHCPStatus[64];         /**!< Status of the DOCSIS DHCP process. */
+} CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO; 
 
-/**
- * @brief Represents the information of DHCP configuration of a cable modem.
- *
- * This structure holds information about the DHCP configuration like the IP Address, boot file name, subnet mask, gateway, TFTP server, time server, time offset, remaining lease time, remaining rebind time, remaining renew time, MAC address and DOCSIS DHCP status.
- */
+/**!< Represents a cable modem's IPv6 DHCP configuration. */
+typedef struct _CMMGMT_CM_IPV6DHCP_INFO {
+    CHAR IPv6Address[40];       /**!< IPv6 address assigned to the modem. */   
+    CHAR IPv6BootFileName[64];  /**!< Name of the IPv6 boot configuration file. */
+    CHAR IPv6Prefix[40];        /**!< IPv6 prefix assigned to the modem. */
+    CHAR IPv6Router[40];        /**!< IPv6 address of the router. */
+    CHAR IPv6TFTPServer[40];    /**!< IPv6 address of the TFTP server. */
+    CHAR IPv6TimeServer[40];    /**!< IPv6 address or hostname of the time server. */
+    ULONG IPv6LeaseTimeRemaining;  /**!< Remaining IPv6 lease time (in seconds). */  
+    ULONG IPv6RebindTimeRemaining; /**!< Remaining time for IPv6 DHCP rebind (in seconds). */
+    ULONG IPv6RenewTimeRemaining;  /**!< Remaining time for IPv6 DHCP renewal (in seconds). */
+} CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO; 
 
-typedef struct _CMMGMT_CM_DHCP_INFO
-{
-    ANSC_IPV4_ADDRESS               IPAddress;                  /**< IPv4 address assigned to the cable modem. */
-    CHAR                            BootFileName[64];           /**< Name of the file from which the cable modem booted. */
-    ANSC_IPV4_ADDRESS               SubnetMask;                 /**< Subnet mask associated with the cable modem's IP address. */
-    ANSC_IPV4_ADDRESS               Gateway;                    /**< Default gateway IP address. */
-    ANSC_IPV4_ADDRESS               TFTPServer;                 /**< IP address of the TFTP server. */
-    CHAR                            TimeServer[64];             /**< Name or IP address of the time server. */
-    INT                             TimeOffset;                 /**< Time offset from UTC in seconds. */
-    ULONG                           LeaseTimeRemaining;         /**< Remaining lease time for the IP address. */
-    CHAR                            RebindTimeRemaining[64];    /**< Remaining time for DHCP rebind process. */
-    CHAR                            RenewTimeRemaining[64];     /**< Remaining time for DHCP renew process. */
-    CHAR                            MACAddress[64];             /**< MAC address of the cable modem. Example format: "00:1A:2B:11:22:33" */
-    CHAR                            DOCSISDHCPStatus[64];       /**< Status of the DOCSIS DHCP process. */
-} CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO;
-
-/**
- * @brief Represents the information of IPv6 DHCP configuration of a cable modem.
- *
- * This structure holds information about the IPv6 DHCP configuration like the IPv6 address, IPv6 boot file name, IPv6 prefix, IPv6 router, IPv6 TFTP server, IPv6 time server, remaining IPv6 lease time, remaining IPv6 rebind time and remaining IPv6 renew time.
- */
-
-typedef struct _CMMGMT_CM_IPV6DHCP_INFO
-{
-    CHAR                            IPv6Address[40];             /**< IPv6 address assigned to the cable modem. */
-    CHAR                            IPv6BootFileName[64];        /**< Name of the file from which the cable modem booted (IPv6). */
-    CHAR                            IPv6Prefix[40];              /**< IPv6 prefix assigned to the cable modem. */
-    CHAR                            IPv6Router[40];              /**< IPv6 address of the router. */
-    CHAR                            IPv6TFTPServer[40];          /**< IPv6 address of the TFTP server. */
-    CHAR                            IPv6TimeServer[40];          /**< IPv6 address or name of the time server. */
-    ULONG                           IPv6LeaseTimeRemaining;      /**< Remaining lease time for the IPv6 address. */
-    ULONG                           IPv6RebindTimeRemaining;     /**< Remaining time for IPv6 DHCP rebind process. */
-    ULONG                           IPv6RenewTimeRemaining;      /**< Remaining time for IPv6 DHCP renew process. */
-} CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO;
-
-/**
- * @brief Represents the list of customer premises equipment.
- *
- * This structure holds information about the customer premises equipment including the IP address and MAC address.
- */
-
-typedef  struct
-_CMMGMT_DML_CPE_LIST
-{
-    CHAR                            IPAddress[32];      /**< IP Address of the CPE. Format: "192.168.0.1" */
-    CHAR                            MACAddress[32];     /**< MAC Address of the CPE. Format: AA:BB:CC:DD:EE:FF (colon-separated). */
-}
-CMMGMT_DML_CPE_LIST,  *PCMMGMT_DML_CPE_LIST;
-
+/**!< Represents a single Customer Premises Equipment (CPE) entry. */
+typedef struct _CMMGMT_DML_CPE_LIST {
+    CHAR IPAddress[32];  /**< IP address of the CPE (e.g., "192.168.0.1"). */
+    CHAR MACAddress[32]; /**< MAC address of the CPE (e.g., "AA:BB:CC:DD:EE:FF"). */
+} CMMGMT_DML_CPE_LIST, *PCMMGMT_DML_CPE_LIST; 
 
 /**
  * @brief Represents the information about a DOCSIS 3.1 OFDM downstream channel in a cable modem.
