@@ -2,16 +2,55 @@
 
 ## Acronyms
 
-- `HAL` \- Hardware Abstraction Layer
-- `RDK-B` \- Reference Design Kit for Broadband Devices
-- `OEM` \- Original Equipment Manufacture
-- `CM` \- Cable Modem
-- `US` \- Upstream
-- `DS` \- Downstream 
-- `PLC` \- PHY Link Channel
-- `NCP` \-  Network Control Protocol
-- `OFDM` \- Orthogonal Frequency Division Multiplexing
-- `LKF` \- Low-Level Kernel Filtering
+The following list consolidates acronyms found in the `cm_hal.h` header file and the `CMhalSpec.md` documentation. This comprehensive list encompasses abbreviations specific to cable modem hardware abstraction layers, DOCSIS protocols, network management (including SNMPv3). Understanding these acronyms is crucial for comprehending the technical details and functionality of the RDK-B cable modem ecosystem.
+
+* `ACS`: Auto Configuration Server
+* `ANSC`: Adaptive Network Security Configuration
+* `BPI`: Baseline Privacy Interface (security protocol for cable modems)
+* `CA`: Certificate Authority
+* `CBC`: Cipher Block Chaining 
+* `CLI`: Command Line Interface
+* `CM`: Cable Modem
+* `CM HAL`: Cable Modem Hardware Abstraction Layer (simplifies interaction with cable modem hardware and software)
+* `CMTS`: Cable Modem Termination System
+* `CPE`: Customer Premises Equipment (devices like modems and routers)
+* `DHCP`: Dynamic Host Configuration Protocol (assigns network configurations to devices)
+* `DOCSIS`: Data Over Cable Service Interface Specification
+* `DS`: Downstream (data flow from the provider to the user)
+* `DSG`: Downstream Service Group
+* `DSOFDM`: Downstream Orthogonal Frequency Division Multiplexing
+* `HAL`: Hardware Abstraction Layer
+* `HTTP`: Hypertext Transfer Protocol
+* `ICCID`: Integrated Circuit Card Identification (unique SIM card identifier)
+* `IP`: Internet Protocol
+* `IPv4`: Internet Protocol version 4
+* `IPv6`: Internet Protocol version 6
+* `LKF`: Low-Level Kernel Filtering
+* `LLD`: Low Latency DOCSIS
+* `LPA`: Local Profile Assistant
+* `MAC`: Media Access Control (network protocol for device communication)
+* `MDD`: MAC Domain Descriptor
+* `MIB`: Management Information Base
+* `NCP`: Network Control Protocol 
+* `OEM`: Original Equipment Manufacturer
+* `OFDM`: Orthogonal Frequency Division Multiplexing
+* `OFDMA`: Orthogonal Frequency Division Multiple Access
+* `OSA`: Open Systems Architecture
+* `PHY`: Physical Layer
+* `PLC`: PHY Link Channel
+* `QoS`: Quality of Service
+* `RDK-B`: Reference Design Kit for Broadband
+* `SCDMA`: Synchronous Code Division Multiple Access
+* `SNMP`: Simple Network Management Protocol
+* `SNR`: Signal-to-Noise Ratio
+* `TFTP`: Trivial File Transfer Protocol
+* `ToD`: Time of Day
+* `TLV`: Type-Length-Value
+* `TR-069`: Technical Report 069 (CPE WAN Management Protocol)
+* `UCD`: Upstream Channel Descriptor
+* `US`: Upstream (data flow from the user to the provider)
+* `USG`: Upstream Service Group
+* `USOFDMA`: Upstream Orthogonal Frequency Division Multiple Access
 
 
 ## Description
@@ -46,9 +85,8 @@ This interface is expected to block if the hardware is not ready.
 
 The interface is not required to be thread safe.
 
-Callers to this API have the responsibility to use it in a thread safe manner.
+Vendors can implement internal threading and event mechanisms for operational purposes. These mechanisms must ensure thread safety when interacting with the provided interface. Additionally, they must guarantee cleanup of resources upon closure.
 
-Vendors have the flexibility to create internal threads and events for tailored operations, but they must assume full accountability for their synchronization, call management, and thorough cleanup upon closure.
 
 ## Process Model
 
@@ -60,17 +98,17 @@ The requirement is to ensure that the module can handle concurrent calls effecti
 
 ### Caller Responsiblities
 
-   1. Callers must assume full responsibility for managing any memory explicitly given to the module functions to populate. This includes proper allocation and de-allocation to prevent memory leaks.
+- Callers must assume full responsibility for managing any memory explicitly given to the module functions to populate. This includes proper allocation and de-allocation to prevent memory leaks.
 
 ### Module Responsibilities
 
-   1. Modules must independently allocate and de-allocate memory for their internal operations, ensuring efficient resource management.
-   
-   2. Modules are required to release all internally allocated memory upon closure to prevent resource leaks.
-   
-   3. All module implementations and caller code must strictly adhere to these memory management requirements for optimal performance and system stability. Unless otherwise stated specifically in the API documentation.
+ - Modules must allocate and de-allocate memory for their internal operations, ensuring efficient resource management.
 
-   4. All strings used in this module must be null-terminated, meaning they should end with a null character ('\0'). This ensures that string functions can accurately determine the length of the string and prevents buffer overflows when manipulating strings.
+ - Modules are required to release all internally allocated memory upon closure to prevent resource leaks.
+
+ - All module implementations and caller code must strictly adhere to these memory management requirements for optimal performance and system stability. Unless otherwise stated specifically in the API documentation.
+
+- All strings used in this module must be zero-terminated. This ensures that string functions can accurately determine the length of the string and prevents buffer overflows when manipulating strings.
    
 TODO: State a footprint requirement. Example: This should not exceed XXXX KB.
 
@@ -81,17 +119,21 @@ There are no asynchronous notifications.
 ## Blocking calls
 
 The APIs are expected to work synchronously and should complete within a time period commensurate with the complexity of the operation and in accordance with any relevant Broadband CM specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any API documentation.
-The upper layers will call this API from a single thread context, this API should not suspend.
+This API is called from a single thread context, therefore it must not suspend.
 
 TODO: As we state that they should complete within a time period, we need to state what that time target is, and pull it from the spec if required. Define the timeout requirement.
 
 ## Internal Error Handling
 
-All the Broadband CM HAL APIs should return error synchronously as a return argument. While HAL is responsible for managing internal system errors, such as out of memory conditions, it's important to note that the interface level may not always handle recovery from severe system errors effectively. Instead, HAL should prioritize graceful handling of recoverable errors and logging critical issues for further investigation and resolution.
+**Synchronous Error Handling:** All Broadband CM HAL APIs must return errors synchronously as a return value. This ensures immediate notification of errors to the caller.
+
+**Internal Error Reporting:** The HAL is responsible for reporting any internal system errors (e.g., out-of-memory conditions) through the return value.
+
+**Focus on Logging for Errors:** For system errors, the HAL should prioritize logging the error details for further investigation and resolution. Recovery attempts at the interface level are not expected to be successful in these cases.
 
 ## Persistence Model
 
-There is no requirement for the HAL to persist any setting information. The caller is responsible to persist any settings.
+There is no requirement for the HAL to persist any setting information.
 
 ## Nonfunctional requirements
 
@@ -115,9 +157,9 @@ The component should not contributing more to memory and CPU utilization while p
 
 ## Quality Control
 
-To maintain software quality, it is recommended that the Firmware Management HAL implementation is verified without any errors using third-party tools such as Coverity, Black Duck, Valgrind, etc.
+To maintain software quality, it is recommended that the CM HAL implementation is verified without any errors using third-party tools such as Coverity, Black Duck, Valgrind, etc.
 
-There should not be any memory leaks/corruption introduced by HAL and underneath 3rd party software implementation.
+Both HAL wrapper and 3rd party software implementations should prioritize robust memory management to guarantee leak-free and corruption-resistant operation.
 
 ## Licensing
 
@@ -125,7 +167,7 @@ Broadband CM HAL implementation is expected to released under the Apache License
 
 ## Build Requirements
 
-The source code should be capable of being built under Linux Yocto environment and should be delivered as a shared library `libcm_mgnt.so`
+The source code should be capable of, but not be limited to, building under the Yocto distribution environment. The recipe should deliver a shared library named as libcm_mgnt.so
 
 ## Variability Management
 
