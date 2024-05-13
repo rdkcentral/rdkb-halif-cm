@@ -36,7 +36,7 @@
 /**********************************************************************
                CONSTANT DEFINITIONS
 **********************************************************************/
-#define OFDM_PARAM_STR_MAX_LEN 64  /**< Maximum length of OFDM parameter */
+#define OFDM_PARAM_STR_MAX_LEN 64  /**!<  Maximum length of OFDM parameter */
 
 #ifdef __cplusplus
 extern "C"{
@@ -224,7 +224,7 @@ typedef struct _CMMGMT_CM_ERROR_CODEWORDS {
  *   - Remove the redundant `*PCMMGMT_CM_ERROR_CODEWORDS` typedef.  
  */
 
-#define EVM_MAX_EVENT_TEXT      255      /**< Maximum length of event text */
+#define EVM_MAX_EVENT_TEXT      255      /**!<  Maximum length of event text */
 
 /**!< Represents a single entry within a cable modem's event log. */
 typedef struct {
@@ -240,8 +240,8 @@ typedef struct {
 
 /**!< Represents configuration settings for cable modem (CM) logging. */
 typedef struct _CMMGMT_DML_CM_LOG {
-    BOOLEAN EnableLog;      /**< Enables or disables cable modem logging. */
-    BOOLEAN ClearDocsisLog; /**< Controls whether the DOCSIS log should be cleared. */
+    BOOLEAN EnableLog;      /**!<  Enables or disables cable modem logging. */
+    BOOLEAN ClearDocsisLog; /**!<  Controls whether the DOCSIS log should be cleared. */
 
 } CMMGMT_DML_CM_LOG, , *PCMMGMT_DML_CM_LOG;
 
@@ -298,8 +298,8 @@ typedef struct _CMMGMT_CM_IPV6DHCP_INFO {
 
 /**!< Represents a single Customer Premises Equipment (CPE) entry. */
 typedef struct _CMMGMT_DML_CPE_LIST {
-    CHAR IPAddress[32];  /**< IP address of the CPE (e.g., "192.168.0.1"). */
-    CHAR MACAddress[32]; /**< MAC address of the CPE (e.g., "AA:BB:CC:DD:EE:FF"). */
+    CHAR IPAddress[32];  /**!<  IP address of the CPE (e.g., "192.168.0.1"). */
+    CHAR MACAddress[32]; /**!<  MAC address of the CPE (e.g., "AA:BB:CC:DD:EE:FF"). */
 
 } CMMGMT_DML_CPE_LIST, *PCMMGMT_DML_CPE_LIST; 
 
@@ -379,33 +379,33 @@ typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
 
 } DOCSIF31_CMSTATUSOFDMA_US, *PDOCSIF31_CMSTATUSOFDMA_US;
 
-#define MAX_KICKSTART_ROWS 5   /**<! Maximum number of rows of kickstart*/
+#define MAX_KICKSTART_ROWS 5   /**!<  Maximum number of rows of kickstart*/
 
 /**!< Represents a buffer of fixed length. */
 typedef struct _fixed_length_buffer {
-    USHORT length;        /**< Size of the buffer in bytes. (Maximum: 65535) */ 
-    UINT8 *buffer;        /**< Pointer to the buffer's data. */
+    USHORT length;        /**!<  Size of the buffer in bytes. (Maximum: 65535) */ 
+    UINT8 *buffer;        /**!<  Pointer to the buffer's data. */
 
 } fixed_length_buffer_t; 
 
 /**!< Represents a single row in an SNMPv3 kickstart configuration. */
 typedef struct _snmpv3_kickstart_row {
-    fixed_length_buffer_t security_name;     /**< Holds the SNMPv3 security name. */
-    fixed_length_buffer_t security_number;   /**< Holds the SNMPv3 security number. */
+    fixed_length_buffer_t security_name;     /**!<  Holds the SNMPv3 security name. */
+    fixed_length_buffer_t security_number;   /**!<  Holds the SNMPv3 security number. */
 
 } snmp_kickstart_row_t; 
 
 /**!< Represents an SNMPv3 kickstart configuration table. */
 typedef struct _snmpv3_kickstart_table {
-    UINT8 n_rows;                                                /**< Number of rows in the table. */ 
-    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< Array of SNMPv3 kickstart row entries. */
+    UINT8 n_rows;                                                /**!<  Number of rows in the table. */ 
+    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**!<  Array of SNMPv3 kickstart row entries. */
 
 } snmpv3_kickstart_table_t; 
 
 /**!< Represents diplexer frequency settings for a cable modem. */
 typedef struct _CM_DIPLEXER_SETTINGS {
-    UINT usDiplexerSetting; /**< Upstream diplexer upper band edge (MHz). */
-    UINT dsDiplexerSetting; /**< Downstream diplexer upper band edge (MHz). */ 
+    UINT usDiplexerSetting; /**!<  Upstream diplexer upper band edge (MHz). */
+    UINT dsDiplexerSetting; /**!<  Downstream diplexer upper band edge (MHz). */ 
 
 } CM_DIPLEXER_SETTINGS; 
 
@@ -671,7 +671,6 @@ void docsis_SetUSChannelId(INT index);
 ULONG docsis_GetDownFreq(void); 
 
 /**!
-
  * @brief Set the primary downstream channel frequency in the LKF table.
  *
  * Modifies the Low-Level Kernel Filtering (LKF) table to use the specified frequency for the primary downstream channel.
