@@ -235,6 +235,7 @@ typedef struct {
     UINT docsDevEvLevel;          /**!< Event priority level (0 - 255). */
     UINT docsDevEvId;             /**!< Event identifier (0 to UINT_MAX). */
     CHAR docsDevEvText[EVM_MAX_EVENT_TEXT]; /**!< Textual description of the event. */
+
 } CMMGMT_CM_EventLogEntry_t; 
 
 /**!< Represents configuration settings for cable modem (CM) logging. */
@@ -278,6 +279,7 @@ typedef struct _CMMGMT_CM_DHCP_INFO {
     CHAR RenewTimeRemaining[64];       /**!< Remaining time for DHCP renewal (in seconds). */
     CHAR MACAddress[64];               /**!< Modem's MAC address (e.g., "00:1A:2B:11:22:33"). */
     CHAR DOCSISDHCPStatus[64];         /**!< Status of the DOCSIS DHCP process. */
+
 } CMMGMT_CM_DHCP_INFO, *PCMMGMT_CM_DHCP_INFO; 
 
 /**!< Represents a cable modem's IPv6 DHCP configuration. */
@@ -291,137 +293,121 @@ typedef struct _CMMGMT_CM_IPV6DHCP_INFO {
     ULONG IPv6LeaseTimeRemaining;  /**!< Remaining IPv6 lease time (in seconds). */  
     ULONG IPv6RebindTimeRemaining; /**!< Remaining time for IPv6 DHCP rebind (in seconds). */
     ULONG IPv6RenewTimeRemaining;  /**!< Remaining time for IPv6 DHCP renewal (in seconds). */
+
 } CMMGMT_CM_IPV6DHCP_INFO, *PCMMGMT_CM_IPV6DHCP_INFO; 
 
 /**!< Represents a single Customer Premises Equipment (CPE) entry. */
 typedef struct _CMMGMT_DML_CPE_LIST {
     CHAR IPAddress[32];  /**< IP address of the CPE (e.g., "192.168.0.1"). */
     CHAR MACAddress[32]; /**< MAC address of the CPE (e.g., "AA:BB:CC:DD:EE:FF"). */
+
 } CMMGMT_DML_CPE_LIST, *PCMMGMT_DML_CPE_LIST; 
 
 /**
- * @brief Represents the information about a DOCSIS 3.1 OFDM downstream channel in a cable modem.
- *
- * This structure holds information about parameters in associattion with the DOCSIS 3.1. OFDM downstream channel.
- */
-
-//>> Docsis3.1, please refer to the specification at the top of this file
+* @brief Represents parameters of a DOCSIS 3.1 OFDM downstream channel in a cable modem. 
+* @note for detailed information on Docsis3.1, please refer to the specification at the top of this file
+*/ 
 typedef struct _DOCSIF31_CM_DS_OFDM_CHAN {
-    unsigned int ChannelId;                     /**< The identification number of the downstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS). */
-    unsigned int ChanIndicator;                 /**< This attribute is used to identify the OFDM downstream channel as primary, backup primary or non-primary. A value of'primary(2)' indicates that OFDM channel is assigned to be the CM's primary downstream channel.  A value of 'backupPrimary(3)' indicates that the OFDM channel is assigned to be the CM's backup primary downstream channel.  A value of 'nonPrimary(4)'indicates the OFDM channel is not assigned to be CM's primary or backup primary downstream channel*/
-    unsigned int SubcarrierZeroFreq;            /**< The center frequency of subcarrier 0 of the OFDM transmission within a downstream channel of the Cable Modem Termination System (CMTS).*/
-    unsigned int FirstActiveSubcarrierNum;      /**< The number of the first non-excluded subcarrier. The valid range is 148 to 7895 */
-    unsigned int LastActiveSubcarrierNum;       /**< The number of the last non-excluded subcarrier. The valid range is 148 to 7895 */
-    unsigned int NumActiveSubcarriers;          /**< The number of active data subcarriers within the OFDM downstream channel (i.e. this exclude subcarriers for continuous pilots and the PLC). For 4K FFT mode, the maximum number of subcarriers including continuous pilots and the PLC cannot exceed 3800, and for 8K FFT mode, the maximum number of active subcarriers including continuous pilots and the PLC cannot be greater than 7600. */
-                                                /**< There are a minimum of 56 continuous pilots in a 192MHz channel that has no exclusions, and the size of the PLC is 8 subcarriers for 4K FFT mode and 16 subcarriers for 8K FFT mode. Therefore the maximum value of NumActiveSubcarriers is 3736 (or 3800 - 56 - 8) for 4K FFT mode and 7528 (or 7600 - 56 - 16) for 8K FFT mode. */
-    unsigned int SubcarrierSpacing;             /**< The subcarrier spacing associated with a particular FFT mode configured on the OFDM downstream channel. If it is 4K mode, then the subcarrier spacing is 50kHz. If it is 8K mode, then the subcarrier spacing is 25kHz (in kHz) */
-    unsigned int CyclicPrefix;                  /**< Cyclic prefix enables the receiver to overcome the effects of inter-symbol-interference and intercarrier-interference caused  by micro-reflections in the channel. There are five possible alues for the length of the CP and the choice depends on the delay spread of the channel - a longer delay spread requires a longer cyclic prefix. The cyclic prefix (in usec) are converted into samples using the sample rate of 204.8 Msamples/s and is an integer multiple of: 1/64 * 20 us. */
-    unsigned int RollOffPeriod;                 /**< Roll off period maximizes channel capacity by sharpening the edges of the spectrum of the OFDM signal. For windowing purposes another segment at the start of the IDFT output is appended to the end of the IDFT output - the roll-off postfix (RP). There are five possible values for the (RP), and the choice depends on the bandwidth of the channel and the number of exclusion bands within the channel. A larger RP provides sharper edges in the spectrum of the OFDM signal; however,  there is a time vs. frequency trade-off. Larger RP values reduce the efficiency of transmission in the time domain, but because the spectral edges are sharper, more useful subcarriers appear in the frequency domain. There is an optimum value for the RP that maximizes capacity for a given bandwidth and/or exclusion band scenario. */
-    unsigned int PlcFreq;                       /**< This is the PHY Link Channel (PLC) frequency. It is the center frequency of the lowest frequency subcarrier of the PLC. The aim of the PLC is for the CMTS to convey to the CM the physical properties of the OFDM channel */
-    unsigned int NumPilots;                     /**< The number of continuous pilots configured for the OFDM downstream channel as received in the OCD message. */
-    unsigned int TimeInterleaverDepth;          /**< The time interleaving used for this downstream channel as received in the OCD message. */
-    char averageSNR[OFDM_PARAM_STR_MAX_LEN];    /**< Average Signal-to-Noise Ratio (SNR) of the downstream channel */
-    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];    /**< The power level of this downstream channel. Power level is expressed as in tenths of a dBmV */
-    unsigned long long PlcTotalCodewords;       /**< The total number of PLC codewords received by the CM. */
-    unsigned long long PlcUnreliableCodewords;  /**< The total number of PLC codewords which failed post-decoding LDPC syndrome check. */
-    unsigned long long NcpTotalFields;          /**< The total number of NCP fields received by the CM. */
-    unsigned long long NcpFieldCrcFailures;     /**< The total number of NCP fields received by the CM which failed the CRC check. */
+
+    unsigned int ChannelId;           /**!< Downstream channel ID within a CMTS MAC interface. */
+    unsigned int ChanIndicator;       /**!< Indicates channel role: primary (2), backup primary (3), non-primary (4). */
+    unsigned int SubcarrierZeroFreq;  /**!< Center frequency (Hz) of subcarrier 0. */ 
+
+    unsigned int FirstActiveSubcarrierNum; /**!< Index of the first non-excluded subcarrier (148 - 7895). */
+    unsigned int LastActiveSubcarrierNum;  /**!< Index of the last non-excluded subcarrier (148 - 7895). */
+
+    unsigned int NumActiveSubcarriers;   /**!< Count of active data subcarriers (excludes pilots, PLC). */ 
+
+   /**! 
+    * Max value depends on FFT mode (4K/8K) and subcarrier exclusions. 
+    * See spec for details.
+    */
+
+    unsigned int SubcarrierSpacing;      /**!< Spacing between subcarriers (50 kHz for 4K mode, 25 kHz for 8K). */
+    unsigned int CyclicPrefix;           /**!< Cyclic prefix length (in usec, multiple of 1/64 * 20us, see spec). */
+    unsigned int RollOffPeriod;          /**!< Roll-off period (in usec, see spec for bandwidth/exclusion implications). */
+
+    unsigned int PlcFreq;                /**!< Center frequency (Hz) of the PLC's lowest subcarrier. */
+    unsigned int NumPilots;              /**!< Count of continuous pilots, from the OCD message. */
+    unsigned int TimeInterleaverDepth;   /**!< Time interleaving depth, from the OCD message. */
+
+    char averageSNR[OFDM_PARAM_STR_MAX_LEN];  /**!< Average downstream channel SNR. */
+    char PowerLevel[OFDM_PARAM_STR_MAX_LEN];  /**!< Downstream channel power level (dBmV * 10). */
+
+    unsigned long long PlcTotalCodewords;    /**!< Total PLC codewords received. */
+    unsigned long long PlcUnreliableCodewords;/**!< PLC codewords failing LDPC syndrome check. */
+    unsigned long long NcpTotalFields;       /**!< Total NCP fields received. */
+    unsigned long long NcpFieldCrcFailures;  /**!< NCP fields failing CRC check. */
 
 } DOCSIF31_CM_DS_OFDM_CHAN, *PDOCSIF31_CM_DS_OFDM_CHAN;
 
-
 /**
- * @brief Represents information about a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
- *
- * This structure about various parameters of DOCSIS 3.1 OFDMA upstream channel
- */
-
-
+* @brief Represents parameters of a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
+* @note for detailed information on Docsis3.1, please refer to the specification at the top of this file
+*/ 
 typedef struct _DOCSIF31_CM_US_OFDMA_CHAN {
-    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
-    unsigned int ConfigChangeCt;                /**< Count that keeps track of how many times the configuration of the Upstream Channel Descriptor (UCD) MAC Management Message has been changed for a specific OFDMA channel. */
-    unsigned int SubcarrierZeroFreq;            /**< Lower edge frequency of the OFDMA upstream channel in Hertz (Hz). */
-    unsigned int FirstActiveSubcarrierNum;      /**< Index or number of the first active subcarrier in the OFDMA upstream channel. The valid range is 74 to 3947. */
-    unsigned int LastActiveSubcarrierNum;       /**< Index or number of the last active subcarrier in the OFDMA upstream channel. The valid range is 74 to 3947. */
-    unsigned int NumActiveSubcarriers;          /**< The number of active subcarriers within the OFDMA upstream channel. The valid range is 1 to 3800. */
-    unsigned int SubcarrierSpacing;             /**< The subcarrier spacing associated with a particular FFT mode configured on the OFDMA upstream channel. If it is 2K mode, then the subcarrier spacing is 50kHz. If it is 4K mode, then the subcarrier spacing is 25kHz. */
-    unsigned int CyclicPrefix;                  /**< Cyclic prefix is added in order to enable the receiver to overcome the effects of inter-symbol interference (ISI) and inter-carrier interference caused by microreflections in the channel. The cyclic prefix (in usec) is converted into samples using the sample rate of 102.4 Msamples/s. There are eleven values for the length of the CP and the choice depends on the delay spread of the channel; a longer delay spread requires a longer cyclic prefix. */
-    unsigned int RollOffPeriod;                 /**< Duration of the windowing applied to maximize the channel capacity by sharpening the edges of the spectrum of the OFDMA signal. There are typically eight possible values of roll-off prefix, each corresponding to a specific roll-off period. The roll-off period may be provided in microseconds and also in the number of samples using a sample rate of 102.4 Msamples/s. */
-    unsigned int NumSymbolsPerFrame;            /**< The number of symbol periods per frame. For channel bandwidth greater than 72MHz, the maximum number of symbol periods per frame is 18 for 2K mode and 9 for 4K mode. For channel bandwidth less than 72 MHz but greater than 48MHz, the maximum number of symbols per frame is 24 for 2K mode and 12 for 4K mode. For channel bandwidth less than 48MHz, the maximum number of symbol periods is 36 for 2K mode and 18 for 4K mode. The minimum number of symbol periods per frame is 6 for both the FFT modes and is independent of the channel bandwidth. */
-    unsigned int TxPower;                       /**< The operational transmit power for the associated OFDMA upstream channel.The CM reports its Target Power, P1.6r_n as described in [PHYv3.1]. Valid values for this object are 68 to (213 + (4*(Pmax - 65 dBmV))), since 68 quarter dBmV represents the lowest Tx power value 17 dBmV and 213 represents the nearest quarter dBmV to the highest Tx power value 53.2 dBmV. */
-    unsigned char PreEqEnabled;                 /**< Whether pre-equalization is enabled on the associated OFDMA upstream channel. */
-} DOCSIF31_CM_US_OFDMA_CHAN, *PDOCSIF31_CM_US_OFDMA_CHAN;
+    unsigned int ChannelId;         /**!< Upstream channel ID within a CMTS MAC interface. */
+    unsigned int ConfigChangeCt;    /**!< Count of configuration changes (via the UCD message). */
+    unsigned int SubcarrierZeroFreq;/**!< Lowest frequency (Hz) of the upstream channel. */
 
+    unsigned int FirstActiveSubcarrierNum; /**!< Index of the first active subcarrier (range 74-3947). */
+    unsigned int LastActiveSubcarrierNum;  /**!< Index of the last active subcarrier (range 74-3947). */
+    unsigned int NumActiveSubcarriers;  /**!< Count of active data subcarriers (range 1-3800). */
+    unsigned int SubcarrierSpacing;     /**!< Spacing between subcarriers (50 kHz for 2K, 25 kHz for 4K mode). */
+
+    unsigned int CyclicPrefix;      /**!< Cyclic prefix length (in usec, see spec for values). */
+    unsigned int RollOffPeriod;     /**!< Roll-off period (in usec, see spec for values). */
+
+    unsigned int NumSymbolsPerFrame;/**!< Symbols per frame (bandwidth dependent, see spec). */
+    unsigned int TxPower;           /**!< Transmit power level (quarter dBmV units, refer to PHYv3.1). */
+    unsigned char PreEqEnabled;     /**!< Indicates if pre-equalization is enabled. */
+
+} DOCSIF31_CM_US_OFDMA_CHAN, *PDOCSIF31_CM_US_OFDMA_CHAN; 
 
 /**
- * @brief Represents information about a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
- *
- *
- * This structure holds information about various parameters of DOCSIS 3.1 OFDMA upstream channel.
- */
-
+* @brief Represents status information for a DOCSIS 3.1 OFDMA upstream channel in a cable modem.
+* @note for detailed information on Docsis3.1, please refer to the specification at the top of this file
+*/ 
 typedef struct _DOCSIF31_CMSTATUSOFDMA_US {
-    // The full definitions for the fields below can be referenced within DOCS-IF31-MIB.
-    unsigned int ChannelId;                     /**< The identification number of the OFDMA upstream channel within a particular MAC interface of the Cable Modem Termination System (CMTS).*/
-    unsigned int T3Timeouts;                    /**< Number of T3 counter timeouts. */
-    unsigned int T4Timeouts;                    /**< Number of T4 counter timeouts.*/
-    unsigned int RangingAborteds;               /**< Number of times ranging process has been aborted.*/
-    unsigned int T3Exceededs;                   /**< Number of excessive T3 timeouts.*/
-    unsigned char IsMuted;                      /**< Indicates if upstream channel is muted.*/
-    unsigned int RangingStatus;                 /**< Ranging State of CM: other(1),aborted(2),retriesExceeded(3),success(4),continue(5),timeoutT4(6)*/
+    unsigned int ChannelId;        /**!< Upstream channel ID within a CMTS MAC interface. */
+    unsigned int T3Timeouts;       /**!< Count of T3 timeout occurrences. */
+    unsigned int T4Timeouts;       /**!< Count of T4 timeout occurrences. */
+    unsigned int RangingAborteds;  /**!< Count of aborted ranging attempts. */
+    unsigned int T3Exceededs;      /**!< Count of excessive T3 timeouts. */
+    unsigned char IsMuted;         /**!< Indicates if the upstream channel is muted. */ 
+    unsigned int RangingStatus;    /**!< Ranging state: other(1), aborted(2), retriesExceeded(3), success(4), continue(5), timeoutT4(6) */ 
+
 } DOCSIF31_CMSTATUSOFDMA_US, *PDOCSIF31_CMSTATUSOFDMA_US;
-//<< Docsis3.1, please refer to the specification at the top of this file
 
-#define MAX_KICKSTART_ROWS 5   /**< Maximum number of rows of kickstart*/
+#define MAX_KICKSTART_ROWS 5   /**<! Maximum number of rows of kickstart*/
 
-
-/**
- * @brief Represents the fixed-length buffer.
- *
- * This structure holds information about the fixed-length buffer with a specified length and a pointer to the buffer data .
- */
-
+/**!< Represents a buffer of fixed length. */
 typedef struct _fixed_length_buffer {
-    USHORT length;                               /**< Length of the buffer. Maximum value is (2^16)-1. */
-    UINT8 *buffer;                               /**< Pointer to the buffer. */
-} fixed_length_buffer_t;
+    USHORT length;        /**< Size of the buffer in bytes. (Maximum: 65535) */ 
+    UINT8 *buffer;        /**< Pointer to the buffer's data. */
 
-/**
- * @brief Represents a row in the SNMPv3 kickstart.
- *
- * This structure holds information about the fixed length buffer for security name and security number .
- */
+} fixed_length_buffer_t; 
 
+/**!< Represents a single row in an SNMPv3 kickstart configuration. */
 typedef struct _snmpv3_kickstart_row {
-    fixed_length_buffer_t security_name;          /**< Structure to describe the buffer for the security name */
-    fixed_length_buffer_t security_number;        /**< Structure to describe the buffer for the security number*/
-} snmp_kickstart_row_t;
+    fixed_length_buffer_t security_name;     /**< Holds the SNMPv3 security name. */
+    fixed_length_buffer_t security_number;   /**< Holds the SNMPv3 security number. */
 
+} snmp_kickstart_row_t; 
 
-/**
- * @brief Represents a SNMPv3 kickstart table.
- *
- * This structure holds information about the SNMPv3 kickstart table including the number of rows and an array of SNMPv3 kickstart rows.
- */
-
+/**!< Represents an SNMPv3 kickstart configuration table. */
 typedef struct _snmpv3_kickstart_table {
-    UINT8 n_rows;                                                /**< Count of snmp kickstart rows. */
-    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< Pointer to an array of smp kickstart rows. */
-} snmpv3_kickstart_table_t;
+    UINT8 n_rows;                                                /**< Number of rows in the table. */ 
+    snmp_kickstart_row_t *kickstart_values[MAX_KICKSTART_ROWS];  /**< Array of SNMPv3 kickstart row entries. */
 
-/**
- * @brief Diplexer settings for cable modem.
- *
- * This structure holds information about the diplexer settings for both upstream and downstream channels including the upper edge frequency in megahertz (MHz).
- */
+} snmpv3_kickstart_table_t; 
 
-typedef  struct
-_CM_DIPLEXER_SETTINGS
-{
-    UINT    usDiplexerSetting; /**< Upstream upper band edge of diplexer in MHz*/
-    UINT    dsDiplexerSetting; /**< Downstream upper band edge of diplexer in MHz*/
-}
-CM_DIPLEXER_SETTINGS;
+/**!< Represents diplexer frequency settings for a cable modem. */
+typedef struct _CM_DIPLEXER_SETTINGS {
+    UINT usDiplexerSetting; /**< Upstream diplexer upper band edge (MHz). */
+    UINT dsDiplexerSetting; /**< Downstream diplexer upper band edge (MHz). */ 
+
+} CM_DIPLEXER_SETTINGS; 
 
 /** @} */  //END OF GROUP CM_HAL_TYPES
 
