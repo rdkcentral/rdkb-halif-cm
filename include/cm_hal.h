@@ -903,17 +903,16 @@ INT cm_hal_HTTP_Download_Reboot_Now();
  */
 INT cm_hal_FWupdateAndFactoryReset(char *pUrl, char *pImagename);
 
-/**
-* @brief Reinitializes the Cable Modem (CM) by reinitializing the Media Access Control (MAC) layer, preserving the existing downstream (DS) and upstream (US) channels.
-*
-* This function triggers a reinitialization of the MAC layer of the CM, ensuring that the current DS and US channels are retained.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if the MAC reinitialization is successful.
-* @retval RETURN_ERR if any error is detected during the reinitialization process, such as a failure to lock or unlock the CM.
-*
-*/
-INT cm_hal_ReinitMac();
+/**!
+ * @brief Resets the Cable Modem's (CM) MAC layer while preserving channels.
+ * 
+ * This function reinitializes the Media Access Control (MAC) layer of the CM. Existing downstream (DS) and upstream (US) channels are maintained during this process.
+ *
+ * @returns Status of the operation:
+ * @retval RETURN_OK - On success.
+ * @retval RETURN_ERR - On failure (e.g., locking/unlocking CM issues).
+ */
+INT cm_hal_ReinitMac(); 
 
 /**!
  * @brief Retrieves the provisioned IP type for the wan0 interface.
