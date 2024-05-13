@@ -55,6 +55,18 @@ The following list consolidates acronyms found in the `cm_hal.h` header file and
 
 ## Description
 
+The CM HAL (Cable Modem Hardware Abstraction Layer) module provides a standardized interface for managing and interacting with cable modems within the Reference Design Kit (RDK) environment. It acts as a bridge between higher-level applications and the underlying cable modem hardware, abstracting the complexities of different DOCSIS (Data Over Cable Service Interface Specification) versions and cable modem implementations.
+
+**Key functionalities of the CM HAL include:**
+
+* **Device Management:** Initializing and deinitializing the cable modem, managing its operational status (online/offline), and retrieving device information (e.g., model, firmware version).
+* **DOCSIS Operations:** Configuring and managing DOCSIS channels and parameters, retrieving downstream and upstream channel information, and obtaining DOCSIS-related statistics.
+* **Network Configuration:** Setting and retrieving network parameters, such as IP addresses, subnet masks, and default gateways for the cable modem.
+* **Event Notifications:** Providing notifications to applications about changes in the cable modem's operational status, channel configurations, or other relevant events.
+* **Diagnostics:** Offering tools for diagnosing and troubleshooting issues with the cable modem, including retrieving error logs and signal quality information.
+
+By abstracting the complexities of DOCSIS and cable modem hardware, the CM HAL simplifies the development of applications that rely on cable modem connectivity within the RDK ecosystem. It provides a consistent and reliable way to interact with cable modems across different platforms and configurations, facilitating seamless integration of cable modem capabilities into RDK devices.
+
 The diagram below describes a high-level software architecture of the Broadband CM HAL module stack.
 
 ```mermaid
@@ -68,8 +80,6 @@ flowchart
     style Vendor_Wrapper fill:#00ffee;
     style Vendor_Software fill:#00ffee;
 ```
-
-Broadband CM HAL is an abstraction layer implemented to abstract the underlying Cable Modem hardware and interact with the underlying vendor software through a standard set of APIs. CM HAL provides interfaces for integrating WAN interfaces with RDK-B. CM related parameters are fetched through CM HAL APIs.
 
 ## Component Runtime Execution Requirements
 
