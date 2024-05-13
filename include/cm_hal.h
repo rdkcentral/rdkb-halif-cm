@@ -418,8 +418,16 @@ typedef struct _CM_DIPLEXER_SETTINGS {
  *
 **********************************************************************************/
 
-/*
- * TODO: Extend the return codes by listing out the possible reasons of failure, to improve the interface in the future. This was reported during the review for header file migration to opensource github.
+/* 
+ * TODO: Enhance Error Reporting 
+ * - Replace the generic `RETURN_ERR` with a more informative error code enumeration.
+ * - Define specific error codes for common failure scenarios, such as:
+ *      - Invalid input parameters (e.g., null pointers, out-of-range values)
+ *      - Resource allocation failures (e.g., out-of-memory)
+ *      - Communication issues with hardware or external systems
+ *      - Timeouts or unexpected responses
+ *      - Internal module errors 
+ * - Document the new error codes thoroughly, including their meanings and potential causes. 
  */
 
 /**
@@ -427,98 +435,100 @@ typedef struct _CM_DIPLEXER_SETTINGS {
  * @{
  */
 
-
-/**
-* @brief Initialize the Hal and associated requirements.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if initialization is successful.
-* @retval RETURN_ERR if any error is encountered during initialization, such as failure to create threads or open files.
-*
-*/
+/**!
+ * @brief Initializes the Hardware Abstraction Layer (HAL) and its dependencies.
+ *
+ * @returns Status of the initialization.
+ * @retval RETURN_OK on successful initialization.
+ * @retval RETURN_ERR on initialization failure, such as failure to create threads or open files.
+ */ 
 INT cm_hal_InitDB(void);
 
-/**
-* @brief Initiates global Physical (PHY) level information and databases, and establishes direct access to the Downstream (DS) hardware (HW).
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-*
-*/
+/**!
+ * @brief Initializes the downstream (DS) PHY layer and hardware access.
+ *
+ * This function prepares the following for downstream communication:
+ * - Global PHY-level data structures
+ * - Direct access to the DS hardware
+ *
+ * @returns Status of the initialization.
+ * @retval RETURN_OK on success. 
+ */ 
 INT docsis_InitDS(void);
 
-/**
-* @brief Initiates global Physical (PHY) level information and databases, and establishes direct access to the Upstream (US) hardware (HW).
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-*
-*/
+/**!
+ * @brief Initializes the upstream (US) PHY layer and hardware access.
+ *
+ * Prepares the following for upstream communication:
+ * - Global PHY-level data structures
+ * - Direct access to the US hardware 
+ *
+ * @returns Status of the initialization.
+ * @retval RETURN_OK on success.
+ */ 
 INT docsis_InitUS(void);
 
-/**
-* @brief Retrieve, format, and output the Cable Modem DOCSIS status.
-*
-* This function retrieves, formats, and outputs the Cable Modem DOCSIS status.
-* The status is stored in the character array pointed to by cm_status.
-*
-* Expected status values are:
-* - "Unsupported status"
-* - "OTHER"
-* - "NOT_READY"
-* - "NOT_SYNCHRONIZED"
-* - "PHY_SYNCHRONIZED"
-* - "US_PARAMETERS_ACQUIRED"
-* - "RANGING_COMPLETE"
-* - "DHCPV4_COMPLETE"
-* - "TOD_ESTABLISHED"
-* - "SECURITY_ESTABLISHED"
-* - "CONFIG_FILE_DOWNLOAD_COMPLETE"
-* - "REGISTRATION_COMPLETE"
-* - "OPERATIONAL"
-* - "ACCESS_DENIED"
-* - "EAE_IN_PROGRESS"
-* - "DHCPV4_IN_PROGRESS"
-* - "DHCPV6_IN_PROGRESS"
-* - "DHCPV6_COMPLETE"
-* - "REGISTRATION_IN_PROGRESS"
-* - "BPI_INIT"
-* - "FORWARDING_DISABLED"
-* - "DS_TOPOLOGY_RESOLUTION_IN_PROGRESS"
-* - "RANGING_IN_PROGRESS"
-* - "RF_MUTE_ALL"
-*
-* @param[out] cm_status Pointer to a character array that will hold the Cable Modem DOCSIS status string to be returned.
-*                       \n The maximum size allocated should be atleast 40 bytes.
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error if an error occurs during the retrieval of CM status or memory allocation fails.
-*
-* TODO: cm_status must be updated to an enum
-*
-*/
-INT docsis_getCMStatus(CHAR *cm_status);
+/**!
+ * @brief Retrieves and formats the Cable Modem's DOCSIS status.
+ *
+ * This function populates the provided buffer with a string representing the current DOCSIS status.
+ *
+ * @param[out] cm_status Pointer to a character array (at least 40 bytes) to hold the status string.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., retrieval error, memory allocation issue).
+ *
+ * TODO: cm_status must be updated to an enum. 
+ * 
+ * **Possible cm_status values:**
+ * - "Unsupported status"
+ * - "OTHER"
+ * - "NOT_READY"
+ * - "NOT_SYNCHRONIZED"
+ * - "PHY_SYNCHRONIZED"
+ * - "US_PARAMETERS_ACQUIRED"
+ * - "RANGING_COMPLETE"
+ * - "DHCPV4_COMPLETE"
+ * - "TOD_ESTABLISHED"
+ * - "SECURITY_ESTABLISHED"
+ * - "CONFIG_FILE_DOWNLOAD_COMPLETE"
+ * - "REGISTRATION_COMPLETE"
+ * - "OPERATIONAL"
+ * - "ACCESS_DENIED"
+ * - "EAE_IN_PROGRESS"
+ * - "DHCPV4_IN_PROGRESS"
+ * - "DHCPV6_IN_PROGRESS"
+ * - "DHCPV6_COMPLETE"
+ * - "REGISTRATION_IN_PROGRESS"
+ * - "BPI_INIT"
+ * - "FORWARDING_DISABLED"
+ * - "DS_TOPOLOGY_RESOLUTION_IN_PROGRESS"
+ * - "RANGING_IN_PROGRESS"
+ * - "RF_MUTE_ALL"
+ */ 
+INT docsis_getCMStatus(CHAR *cm_status); 
 
-/**
-* @brief Retrieve relevant downstream (DS) channel information.
-*
-* This function retrieves relevant downstream channel information and allocates memory for the PCMMGMT_CM_DS_CHANNEL structure.
-* The memory allocated for the PCMMGMT_CM_DS_CHANNEL structure is owned by the function and should be freed by the caller when no longer needed.
-*
-* @param[out] ppinfo Pointer to PCMMGMT_CM_DS_CHANNEL structure that will hold all the info of DS channel to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if an error occurs during the retrieval of downstream channel information or memory allocation fails.
-*
-*/
-INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
+/**!
+ * @brief Retrieves information about a downstream (DS) channel.
+ *
+ * This function populates a provided `PCMMGMT_CM_DS_CHANNEL` structure with downstream channel details. 
+ *
+ * **Important:** The caller is responsible for freeing the dynamically allocated memory of the returned structure.
+ *
+ * @param[out] ppinfo Pointer to a `PCMMGMT_CM_DS_CHANNEL` structure to be populated.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success.
+ * @retval RETURN_ERR on failure (e.g., retrieval error, memory allocation issue). 
+ */
+INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL *ppinfo);
 
 /**
 * @brief Retrieve status of the upstream (US) channel information.
 *
-* @param[in]  i     Index of the upstream channel. Valid range is from 0 to n, where n is an unsigned short value.
-* @param[out] pinfo Info of upstream channel to be returned.
+* @param[in]  i     - Index of the upstream channel. Valid range is from 0 to n, where n is an unsigned short value.
+* @param[out] pinfo - Info of upstream channel to be returned.
 *
 * @return The status of the operation.
 * @retval RETURN_OK if successful.
@@ -527,70 +537,76 @@ INT docsis_GetDSChannel(PCMMGMT_CM_DS_CHANNEL * ppinfo);
 */
 INT docsis_GetUsStatus(USHORT i, PCMMGMT_CM_US_CHANNEL pinfo);
 
-/**
-* @brief Retrieve relevant upstream (US) channel information.
-*
-* This function retrieves relevant upstream channel information and allocates memory for the PCMMGMT_CM_US_CHANNEL structure.
-* The memory allocated for the PCMMGMT_CM_US_CHANNEL structure is owned by the function and should be freed by the caller when no longer needed.
-*
-* @param[out] ppinfo Pointer to a PCMMGMT_CM_US_CHANNEL structure that will hold all the info of the specific Upstream channel, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if an error occurs during the retrieval of upstream channel information or memory allocation fails.
-*
-*/
-INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL * ppinfo);
+/**!
+ * @brief Retrieves information about an upstream (US) channel.
+ *
+ * This function populates a provided `PCMMGMT_CM_US_CHANNEL` structure with upstream channel details. 
+ *
+ * **Important:** The caller is responsible for freeing the dynamically allocated memory of the returned structure.
+ *
+ * @param[out] ppinfo - Pointer to a `PCMMGMT_CM_US_CHANNEL` structure to be populated.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., retrieval error, memory allocation issue).
+ */
+INT docsis_GetUSChannel(PCMMGMT_CM_US_CHANNEL *ppinfo);
 
-/**
-* @brief Retrieve current DOCSIS registration status and report it.
-* The memory for the PCMMGMT_CM_DOCSIS_INFO structure is allocated by the caller of this function. The function populates the structure with the DOCSIS registration information, but it does not allocate or free memory for the structure.
-* 
-* @param[out] pinfo DOCSIS Registration info, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if an error occurs during the retrieval of DOCSIS information or if the input parameter is invalid.
-*
-*/
+/**!
+ * @brief Retrieves the current DOCSIS registration status.
+ *
+ * This function populates a provided `PCMMGMT_CM_DOCSIS_INFO` structure with DOCSIS registration details. 
+ *
+ * **Important:** The caller must provide a pre-allocated `PCMMGMT_CM_DOCSIS_INFO` structure. The function does *not* manage memory allocation for this structure.
+ *
+ * @param[out] pinfo - Pointer to a `PCMMGMT_CM_DOCSIS_INFO` structure to be populated.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., retrieval error, invalid input).
+ */
 INT docsis_GetDOCSISInfo(PCMMGMT_CM_DOCSIS_INFO pinfo);
 
-/**
-* @brief Retrieve number of Upstream channels actively in use in current registration.
-* @param[out] cnt Pointer to an unsigned long variable that will store the number of active Upstream channels, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error occurs during the retrieval of the number of active upstream channels or if the input parameter `cnt` is invalid.
-*
-*/
-INT docsis_GetNumOfActiveTxChannels(ULONG * cnt);
+/**!
+ * @brief Retrieves the number of active upstream channels in the current registration. 
+ *
+ * This function populates the provided variable with the count of active upstream channels. 
+ *
+ * @param[out] cnt - Pointer to an unsigned long variable to store the active channel count.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., retrieval error, NULL 'cnt' pointer).
+ */
+INT docsis_GetNumOfActiveTxChannels(ULONG *cnt); 
 
-/**
-* @brief Retrieve number of Downstream channels actively in use in current registration.
-* @param[out] cnt Pointer to an unsigned long variable that will store the number of active Downstream channels, to be returned.
-*
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR if any error occurs during the retrieval of the number of active downstream channels or if the input parameter `cnt` is invalid.
-*
-*/
-INT docsis_GetNumOfActiveRxChannels(ULONG * cnt);
+/**!
+ * @brief Retrieves the number of active downstream channels in the current registration. 
+ *
+ * This function populates the provided variable with the count of active downstream channels. 
+ *
+ * @param[out] cnt - Pointer to an unsigned long variable to store the active channel count.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., retrieval error, NULL 'cnt' pointer).
+ */
+INT docsis_GetNumOfActiveRxChannels(ULONG *cnt); 
 
-/**
-* @brief Scan all active downstream (DS) channels and report errors in received packets.
-*
-* This function scans all active downstream channels and reports errors in received packets. 
-* Error information is stored in a PCMMGMT_CM_ERROR_CODEWORDS structure, the memory for which is allocated and released by the caller of this function.
-*
-* @param[out] ppinfo Pointer to a pointer to the PCMMGMT_CM_ERROR_CODEWORDS structure where the error information will be stored. 
-* 
-* @return The status of the operation.
-* @retval RETURN_OK if successful.
-* @retval RETURN_ERR occurs during the scanning of downstream channels or if the input parameter `ppinfo` is invalid.
-*
-*/
-INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS * ppinfo);
+/**!
+ * @brief Scans active downstream channels and reports packet errors.
+ *
+ * This function populates a provided `PCMMGMT_CM_ERROR_CODEWORDS` structure with error details.  
+ *
+ * **Important:** The caller must provide a pre-allocated `PCMMGMT_CM_ERROR_CODEWORDS` structure. The function does *not* manage memory allocation for this structure.
+ *
+ * @param[out] ppinfo - Pointer to a `PCMMGMT_CM_ERROR_CODEWORDS` structure to be populated with error information.
+ *
+ * @returns Status of the operation.
+ * @retval RETURN_OK on success. 
+ * @retval RETURN_ERR on failure (e.g., scanning error, NULL 'ppinfo' pointer).
+ */
+INT docsis_GetErrorCodewords(PCMMGMT_CM_ERROR_CODEWORDS *ppinfo); 
 
 /**
 * @brief Retrieve the current IP Provisioning Mode Override status.
