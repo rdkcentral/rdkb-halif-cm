@@ -197,7 +197,31 @@ All HAL function prototypes and datatype definitions are available in `cm_hal.h`
 
 ## Theory of operation and key concepts
 
-Covered as per "Description" sections in the API documentation.
+**Object Lifecycles**
+
+- **Creation/Initialization:** The CM HAL interface is initialized using the `cm_hal_InitDB()` function. This function sets up the necessary database connections and initializes various subsystems required for further operations with the cable modem.
+- **Usage:** After initialization, the cable modem can be managed using various API functions that rely on the initialized state. These functions allow for configuring and querying modem parameters, managing downstream and upstream channels, handling events, and controlling operational states.
+- **Destruction/Cleanup:** The CM HAL interface does not provide a specific function for system deinitialization. Applications are responsible for managing and freeing resources manually to prevent memory leaks. Cleanup processes are generally handled internally upon application termination.
+
+**Method Sequencing**
+
+- **Initialization is Mandatory:** The system must be initialized (`cm_hal_InitDB()`) before any other operations are performed. This ensures that all subsystems are properly configured.
+- **Sequential Dependency:** While most functions can be called independently once initialization is complete, some operations logically depend on the state of the modem or previous API calls (e.g., configuring channels before retrieving channel-specific data).
+- **Event Handling:** Functions such as `cm_hal_Register_DiplexerVariationCallback` allow for dynamic event handling and should be set up early in the application lifecycle if needed.
+
+**State-Dependent Behavior**
+
+- **Implicit State Model:** The CM HAL interface operates under several implicit states:
+    - **Uninitialized:** Before any initialization function has been called.
+    - **Initialized:** The system has been initialized but may not yet be fully operational or connected to network services.
+    - **Operational:** The modem is fully operational, and all functionality is available.
+    - **Error states:** Various functions may return errors if the system is not in an appropriate state for the requested operation.
+
+**Additional Considerations**
+
+- **Error Handling:** The CM HAL interface uses standard error codes (`RETURN_OK`, `RETURN_ERR`) to indicate the success or failure of operations. Detailed error reporting is crucial for robust application design.
+- **Event Notifications:** The interface supports registering callbacks for certain events (e.g., `cm_hal_Register_DiplexerVariationCallback`), allowing applications to respond to changes in modem configuration or state dynamically.
+- **Modular Design:** The interface is designed to support a wide range of cable modem operations, from basic configuration to advanced diagnostics. This modular approach allows applications to interact with the modem hardware at different levels of abstraction, depending on the requirements.
 
 ## Sequence Diagram
 Here, XXXX refers to multiple functions, please refer header file (cm_hal.h) for more information.
