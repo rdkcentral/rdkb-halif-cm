@@ -1,58 +1,5 @@
 # Broadband CM HAL Documentation
 
-## Acronyms
-
-The following list consolidates acronyms found in the `cm_hal.h` header file and the `CMhalSpec.md` documentation. This comprehensive list encompasses abbreviations specific to cable modem hardware abstraction layers, DOCSIS protocols, network management (including SNMPv3). Understanding these acronyms is crucial for comprehending the technical details and functionality of the RDK-B cable modem ecosystem.
-
-* `ACS`: Auto Configuration Server
-* `ANSC`: Adaptive Network Security Configuration
-* `BPI`: Baseline Privacy Interface (security protocol for cable modems)
-* `CA`: Certificate Authority
-* `CBC`: Cipher Block Chaining 
-* `CLI`: Command Line Interface
-* `CM`: Cable Modem
-* `CM HAL`: Cable Modem Hardware Abstraction Layer (simplifies interaction with cable modem hardware and software)
-* `CMTS`: Cable Modem Termination System
-* `CPE`: Customer Premises Equipment (devices like modems and routers)
-* `DHCP`: Dynamic Host Configuration Protocol (assigns network configurations to devices)
-* `DOCSIS`: Data Over Cable Service Interface Specification
-* `DS`: Downstream (data flow from the provider to the user)
-* `DSG`: Downstream Service Group
-* `DSOFDM`: Downstream Orthogonal Frequency Division Multiplexing
-* `HAL`: Hardware Abstraction Layer
-* `HTTP`: Hypertext Transfer Protocol
-* `ICCID`: Integrated Circuit Card Identification (unique SIM card identifier)
-* `IP`: Internet Protocol
-* `IPv4`: Internet Protocol version 4
-* `IPv6`: Internet Protocol version 6
-* `LKF`: Low-Level Kernel Filtering
-* `LLD`: Low Latency DOCSIS
-* `LPA`: Local Profile Assistant
-* `MAC`: Media Access Control (network protocol for device communication)
-* `MDD`: MAC Domain Descriptor
-* `MIB`: Management Information Base
-* `NCP`: Network Control Protocol 
-* `OEM`: Original Equipment Manufacturer
-* `OFDM`: Orthogonal Frequency Division Multiplexing
-* `OFDMA`: Orthogonal Frequency Division Multiple Access
-* `OSA`: Open Systems Architecture
-* `PHY`: Physical Layer
-* `PLC`: PHY Link Channel
-* `QoS`: Quality of Service
-* `RDK-B`: Reference Design Kit for Broadband
-* `SCDMA`: Synchronous Code Division Multiple Access
-* `SNMP`: Simple Network Management Protocol
-* `SNR`: Signal-to-Noise Ratio
-* `TFTP`: Trivial File Transfer Protocol
-* `ToD`: Time of Day
-* `TLV`: Type-Length-Value
-* `TR-069`: Technical Report 069 (CPE WAN Management Protocol)
-* `UCD`: Upstream Channel Descriptor
-* `US`: Upstream (data flow from the user to the provider)
-* `USG`: Upstream Service Group
-* `USOFDMA`: Upstream Orthogonal Frequency Division Multiple Access
-
-
 ## Description
 
 The CM HAL (Cable Modem Hardware Abstraction Layer) module provides a standardized interface for managing and interacting with cable modems within the Reference Design Kit (RDK) environment. It acts as a bridge between higher-level applications and the underlying cable modem hardware, abstracting the complexities of different DOCSIS (Data Over Cable Service Interface Specification) versions and cable modem implementations.
@@ -151,14 +98,21 @@ Following non functional requirement should be supported by the component.
 
 ## Logging and debugging requirements
 
-The CM HAL component must record all errors and critical informative messages. This can be achieved by using either the printf or the syslog method. These tools are useful in identifying, and debugging the issues and understanding the functional flow of the system.
+The component is required to record all errors and critical informative messages to aid in identifying, debugging, and understanding the functional flow of the system. Logging should be implemented using the syslog method, as it provides robust logging capabilities suited for system-level software. The use of `printf` is discouraged unless `syslog` is not available.
 
-The logging should be consistent across all HAL components.
+All HAL components must adhere to a consistent logging process. When logging is necessary, it should be performed into the `cm_vendor_hal.log` file, which is located in either the `/rdklogs/logs/` directory.
 
-If the vendor is going to log then it has to be logged in `cm_vendor_hal.log` file name which can be placed in `/rdklogs/logs/` directory.
+Logs must be categorized according to the following log levels, as defined by the Linux standard logging system, listed here in descending order of severity:
 
-Logging should be defined with log levels as per Linux standard logging.
-The logging levels specified by the Linux standard logging, in descending order of severity, are FATAL, ERROR, WARNING, NOTICE, INFO, DEBUG, TRACE.
+- **FATAL**: Critical conditions, typically indicating system crashes or severe failures that require immediate attention.
+- **ERROR**: Non-fatal error conditions that nonetheless significantly impede normal operation.
+- **WARNING**: Potentially harmful situations that do not yet represent errors.
+- **NOTICE**: Important but not error-level events.
+- **INFO**: General informational messages that highlight system operations.
+- **DEBUG**: Detailed information typically useful only when diagnosing problems.
+- **TRACE**: Very fine-grained logging to trace the internal flow of the system.
+
+Each log entry should include a timestamp, the log level, and a message describing the event or condition. This standard format will facilitate easier parsing and analysis of log files across different vendors and components.
 
 ## Memory and performance requirements
 
@@ -231,79 +185,105 @@ sequenceDiagram
 participant Caller
 participant CM HAL
 participant Vendor
-Note over Caller: Init once during bootup, Needed for Dependent API's. <br> Ignore this if caller doesn't have any Dependent API's
+
+Note over Caller,CM HAL: Initialization Process
 Caller->>CM HAL: cm_hal_InitDB()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
+CM HAL->>Vendor: Initialize database and dependencies
+Vendor ->>CM HAL: Initialization complete
 CM HAL->>Caller: cm_hal_InitDB() return
 
-Caller->>CM HAL: docsis_InitXXXX()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_InitXXXX() return
+Note over Caller,CM HAL: DOCSIS Initialization
+Caller->>CM HAL: docsis_InitDS() and docsis_InitUS()
+CM HAL->>Vendor: Initialize DS/US PHY layers
+Vendor ->>CM HAL: DS/US initialized
+CM HAL->>Caller: docsis_InitDS/US() return
 
-Caller->>CM HAL: docsis_getXXXX()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_getXXXX() return
+Note over Caller,CM HAL: Normal Operation
+Caller->>CM HAL: docsis_getCMStatus(), docsis_getXXXX(), etc.
+CM HAL->>Vendor: Fetch status and other data
+Vendor ->>CM HAL: Data returned
+CM HAL->>Caller: Returns operation data
 
-Caller->>CM HAL: docsis_XXXXMddIpModeOverride()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_XXXXMddIpModeOverride() return
+Caller->>CM HAL: cm_hal_GetXXXX(), cm_hal_SetXXXX(), etc.
+CM HAL->>Vendor: Get/Set configurations and statuses
+Vendor ->>CM HAL: Configuration/status updated
+CM HAL->>Caller: cm_hal_Get/SetXXXX() return
 
-Caller->>CM HAL: docsis_XXXXUSChannelId()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_XXXXUSChannelId() return
-
-Caller->>CM HAL: docsis_XXXXFreq()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_XXXXFreq() return
-
-Caller->>CM HAL: docsis_XXXXLogItems()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_XXXXLogItems() return
-
-Caller->>CM HAL: cm_hal_XXXXDHCPInfo()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_XXXXDHCPInfo() return
-
-Caller->>CM HAL: cm_hal_GetXXXX()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_GetXXXX() return
-
-Caller->>CM HAL: cm_hal_SetXXXX()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_SetXXXX() return
-
-Caller->>CM HAL: cm_hal_Reboot_Ready/cm_hal_HTTPXXXX()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_Reboot_Ready/cm_hal_HTTPXXXX() return
-
-Caller->>CM HAL: cm_hal_FWupdateAndFactoryReset/cm_hal_ReinitMac()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_FWupdateAndFactoryReset/cm_hal_ReinitMac() return
-
-Caller->>CM HAL: docsis_LLDgetEnableStatus()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: docsis_LLDgetEnableStatus() return
-
-Caller->>CM HAL: cm_hal_snmpv3_kickstart_initialize()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
-CM HAL->>Caller: cm_hal_snmpv3_kickstart_initialize() return
+Caller->>CM HAL: docsis_XXXXMddIpModeOverride(), docsis_XXXXUSChannelId(), docsis_XXXXFreq(), etc.
+CM HAL->>Vendor: Apply changes and fetch results
+Vendor ->>CM HAL: Changes applied
+CM HAL->>Caller: Operation complete
 
 Caller->>CM HAL: docsis_IsEnergyDetected()
-CM HAL->>Vendor: 
-Vendor ->>CM HAL: 
+CM HAL->>Vendor: Detect DOCSIS energy
+Vendor ->>CM HAL: Energy detection result
 CM HAL->>Caller: docsis_IsEnergyDetected() return
+
+Note over Caller,CM HAL: Reboot and System Updates
+Caller->>CM HAL: cm_hal_Reboot_Ready(), cm_hal_HTTPXXXX()
+CM HAL->>Vendor: Check reboot readiness and perform HTTP operations
+Vendor ->>CM HAL: Reboot readiness confirmed/HTTP operations done
+CM HAL->>Caller: Operations return
+
+Caller->>CM HAL: cm_hal_FWupdateAndFactoryReset(), cm_hal_ReinitMac()
+CM HAL->>Vendor: Firmware update and factory reset/Reinit MAC layer
+Vendor ->>CM HAL: Update/reset complete/Reinit done
+CM HAL->>Caller: Return update/reset status
+
+Caller->>CM HAL: cm_hal_snmpv3_kickstart_initialize()
+CM HAL->>Vendor: Initialize SNMPv3 security parameters
+Vendor ->>CM HAL: SNMPv3 initialized
+CM HAL->>Caller: cm_hal_snmpv3_kickstart_initialize() return
 ```
+
+## Acronyms
+
+The following list consolidates acronyms found in the `cm_hal.h` header file and the `CMhalSpec.md` documentation. This comprehensive list encompasses abbreviations specific to cable modem hardware abstraction layers, DOCSIS protocols, network management (including SNMPv3). Understanding these acronyms is crucial for comprehending the technical details and functionality of the RDK-B cable modem ecosystem.
+
+* `ACS`: Auto Configuration Server
+* `ANSC`: Adaptive Network Security Configuration
+* `BPI`: Baseline Privacy Interface (security protocol for cable modems)
+* `CA`: Certificate Authority
+* `CBC`: Cipher Block Chaining 
+* `CLI`: Command Line Interface
+* `CM`: Cable Modem
+* `CM HAL`: Cable Modem Hardware Abstraction Layer (simplifies interaction with cable modem hardware and software)
+* `CMTS`: Cable Modem Termination System
+* `CPE`: Customer Premises Equipment (devices like modems and routers)
+* `DHCP`: Dynamic Host Configuration Protocol (assigns network configurations to devices)
+* `DOCSIS`: Data Over Cable Service Interface Specification
+* `DS`: Downstream (data flow from the provider to the user)
+* `DSG`: Downstream Service Group
+* `DSOFDM`: Downstream Orthogonal Frequency Division Multiplexing
+* `HAL`: Hardware Abstraction Layer
+* `HTTP`: Hypertext Transfer Protocol
+* `ICCID`: Integrated Circuit Card Identification (unique SIM card identifier)
+* `IP`: Internet Protocol
+* `IPv4`: Internet Protocol version 4
+* `IPv6`: Internet Protocol version 6
+* `LKF`: Low-Level Kernel Filtering
+* `LLD`: Low Latency DOCSIS
+* `LPA`: Local Profile Assistant
+* `MAC`: Media Access Control (network protocol for device communication)
+* `MDD`: MAC Domain Descriptor
+* `MIB`: Management Information Base
+* `NCP`: Network Control Protocol 
+* `OEM`: Original Equipment Manufacturer
+* `OFDM`: Orthogonal Frequency Division Multiplexing
+* `OFDMA`: Orthogonal Frequency Division Multiple Access
+* `OSA`: Open Systems Architecture
+* `PHY`: Physical Layer
+* `PLC`: PHY Link Channel
+* `QoS`: Quality of Service
+* `RDK-B`: Reference Design Kit for Broadband
+* `SCDMA`: Synchronous Code Division Multiple Access
+* `SNMP`: Simple Network Management Protocol
+* `SNR`: Signal-to-Noise Ratio
+* `TFTP`: Trivial File Transfer Protocol
+* `ToD`: Time of Day
+* `TLV`: Type-Length-Value
+* `TR-069`: Technical Report 069 (CPE WAN Management Protocol)
+* `UCD`: Upstream Channel Descriptor
+* `US`: Upstream (data flow from the user to the provider)
+* `USG`: Upstream Service Group
+* `USOFDMA`: Upstream Orthogonal Frequency Division Multiple Access
