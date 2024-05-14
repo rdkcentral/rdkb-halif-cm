@@ -1134,8 +1134,6 @@ INT docsis_LLDgetEnableStatus();
 */
 INT cm_hal_snmpv3_kickstart_initialize(snmpv3_kickstart_table_t *pKickstart_Table);
 
-/** @} */  //END OF GROUP CM_HAL_APIS
-
 /**!
  * @brief Detects DOCSIS energy to determine WAN connection status.
  *
@@ -1223,6 +1221,8 @@ typedef INT (*cm_hal_DiplexerVariationCallback)(CM_DIPLEXER_SETTINGS stCMDiplexe
  * @retval RETURN_ERR - If not supported/implemented, or in case of errors (e.g., stub function, misconfiguration).
  */
 INT cm_hal_Register_DiplexerVariationCallback(cm_hal_DiplexerVariationCallback callback_proc);
+
+/** @} */  //END OF GROUP CM_HAL_APIS
 
 #ifdef __cplusplus
 }
