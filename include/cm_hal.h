@@ -814,7 +814,7 @@ INT cm_hal_GetMarket(CHAR *market);
  *
  * **TODO:** Change `pHttpUrl` and `pfilename` to `const char*` as they are input parameters and should not be modified.
  */
-INT cm_hal_Set_HTTP_Download_Url(const char *pHttpUrl, const char *pfilename); 
+INT cm_hal_Set_HTTP_Download_Url(char *pHttpUrl, char *pfilename); 
 
 /**!
  * @brief Retrieves the configured HTTP download URL and filename.
