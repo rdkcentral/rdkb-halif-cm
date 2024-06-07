@@ -1,2 +1,1 @@
-# rdkb-cm-hal
-RDKB CM Hardware Abstraction Layer api headers and documentation
+docs/pages/CMhalSpec.md
