@@ -125,14 +125,19 @@ extern "C"{
  *  - While transitioning to IPv6, it may be beneficial to refactor these areas to use a more flexible address representation that can handle both IPv4 and IPv6.
  */
 
-#define ANSC_IPV4_ADDRESS \
-    union { \
-        /*!< Represents each octet (byte) of the IPv4 address in dotted-decimal format (e.g., {192, 168, 0, 100}). */
-        unsigned char Dot[IPV4_ADDRESS_SIZE];  
-
-        /*!< Stores the IPv4 address as a 32-bit integer in network byte order (big-endian). */
-        uint32_t Value; 
-    } 
+/**
+ * @brief Represents an IPv4 address.
+ * 
+ * This union provides two ways to represent an IPv4 address:
+ * - Dot: An array of bytes (octets) representing the IPv4 address in dotted-decimal format (e.g., {192, 168, 0, 100}).
+ * - Value: A 32-bit integer storing the IPv4 address in network byte order (big-endian).
+ */
+#define  ANSC_IPV4_ADDRESS                                                                  \
+         union                                                                              \
+         {                                                                                  \
+            unsigned char           Dot[IPV4_ADDRESS_SIZE];                                 \
+            uint32_t                Value;                                                  \
+         }
 #endif
 
 /**
@@ -170,7 +175,7 @@ typedef struct _CMMGMT_CM_DS_CHANNEL {
     ULONG Uncorrectables; /*!< Count of uncorrectable errors since reset (high values indicate potential issues). */  
     CHAR LockStatus[64];  /*!< Channel lock status. Expected values: "Locked", "Unlocked", "Not Available". */   
 
-} CMMGMT_CM_DS_CHANNEL, *CMMGMT_CM_DS_CHANNEL;
+} CMMGMT_CM_DS_CHANNEL, *PCMMGMT_CM_DS_CHANNEL;
 /* 
  * TODO: Coding Standard: 
  *  - Remove usage of `*PCMMGMT_CM_DS_CHANNEL` and `*PCMMGMT_CM_US_CHANNEL`.
@@ -262,7 +267,7 @@ typedef struct _CMMGMT_DML_CM_LOG {
     BOOLEAN EnableLog;      /*!<  Enables or disables cable modem logging. */
     BOOLEAN ClearDocsisLog; /*!<  Controls whether the DOCSIS log should be cleared. */
 
-} CMMGMT_DML_CM_LOG, , *PCMMGMT_DML_CM_LOG;
+} CMMGMT_DML_CM_LOG, *PCMMGMT_DML_CM_LOG;
 
 /**
  * TODO: Address the following within this code:
