@@ -292,7 +292,7 @@ typedef struct _CMMGMT_DML_DOCSISLOG_FULL {
   */
 typedef struct _CMMGMT_CM_DHCP_INFO {
     ANSC_IPV4_ADDRESS IPAddress;        /*!< IPv4 address assigned to the cable modem. */
-    CHAR BootFileName[64];             /*!< Name of the boot configuration file. */
+    CHAR BootFileName[256];             /*!< Name of the boot configuration file. */
     ANSC_IPV4_ADDRESS SubnetMask;      /*!< Subnet mask for the modem's IP address. */
     ANSC_IPV4_ADDRESS Gateway;         /*!< Default gateway IP address. */
     ANSC_IPV4_ADDRESS TFTPServer;      /*!< IP address of the TFTP server. */
@@ -311,7 +311,7 @@ typedef struct _CMMGMT_CM_DHCP_INFO {
   */
 typedef struct _CMMGMT_CM_IPV6DHCP_INFO {
     CHAR IPv6Address[40];       /*!< IPv6 address assigned to the modem. */   
-    CHAR IPv6BootFileName[64];  /*!< Name of the IPv6 boot configuration file. */
+    CHAR IPv6BootFileName[256];  /*!< Name of the IPv6 boot configuration file. */
     CHAR IPv6Prefix[40];        /*!< IPv6 prefix assigned to the modem. */
     CHAR IPv6Router[40];        /*!< IPv6 address of the router. */
     CHAR IPv6TFTPServer[40];    /*!< IPv6 address of the TFTP server. */
