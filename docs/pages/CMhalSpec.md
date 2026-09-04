@@ -71,7 +71,7 @@ The `CM HAL` (Cable Modem Hardware Abstraction Layer) module provides a standard
 
 - **Device Management:** Initializing and deinitializing the cable modem, managing its operational status (online/offline), and retrieving device information (e.g., model, firmware version).
 - **DOCSIS Operations:** Configuring and managing `DOCSIS` channels and parameters, retrieving downstream and upstream channel information, and obtaining DOCSIS-related statistics.
-Network Configuration: Setting and retrieving network parameters, such as IP addresses, subnet masks, and default gateways for the cable modem.
+- **Network Configuration:** Setting and retrieving network parameters, such as IP addresses, subnet masks, and default gateways for the cable modem.
 - **Event Notifications:** Providing notifications to applications about changes in the cable modem's operational status, channel configurations, or other relevant events.
 - **Diagnostics:** Offering tools for diagnosing and troubleshooting issues with the cable modem, including retrieving error logs and signal quality information.
 By abstracting the complexities of `DOCSIS` and cable modem hardware, the `CM HAL` simplifies the development of applications that rely on cable modem connectivity within the RDK ecosystem. It provides a consistent and reliable way to interact with cable modems across different platforms and configurations, facilitating seamless integration of cable modem capabilities into `RDK-B` devices.
@@ -99,7 +99,7 @@ flowchart
 - **Addressing information, read-only:** `DHCP` and `IPv6` `DHCP` information and the `CPE` list are retrieved, never set. **This interface declares no setter for an `IP` address, a subnet mask or a default gateway**; a caller that must change addressing does so outside this interface.
 - **Firmware download and recovery:** `HTTP` download configuration, initiation and status polling, `LED` flashing during a download, reboot readiness, reboot, firmware update with factory reset, and `MAC`-layer re-initialisation with its threshold.
 - **Diagnostics and identity:** The `DOCSIS` event log, certificate file path and status, four reset counters, market region, `SNMP` v3 kickstart initialisation and `DOCSIS` energy detection.
-- **Asynchronous notification"** One callback, for diplexer variation - see `Asynchronous Notification Model`.
+- **Asynchronous notification:** One callback, for diplexer variation - see `Asynchronous Notification Model`.
 
 The interface is layered rather than monolithic: a caller may stay at the level of "is the modem online" through `docsis_getCMStatus()`, or descend to per-channel `DOCSIS 3.1` statistics, without changing how it links against the `HAL`. `API Surface` is the complete index of what is available at either level.
 
@@ -129,9 +129,9 @@ The consequence for a caller is concrete: two threads must not call into this in
 
 ### Process Model
 
-This module is expected to be called from multiple process.
+This module is expected to be called from multiple processes.
 
-The requirement is to ensure that the module can handle concurrent calls effectively. The vendor needs to implement proper synchronization and scalability measures for robust performance.
+The requirement is to ensure that the module can handle concurrent calls effectively. The vendor needs to implement proper synchronisation and scalability measures for robust performance.
 
 ### Memory Model
 
@@ -225,7 +225,7 @@ Logging carries more weight in this interface than in one with a richer error vo
 
 ### Memory and performance requirements
 
-The component should not contributing more to memory and CPU utilization while performing normal Broadband CM operations and commensurate with the operation required.
+The component should not contribute more to memory and CPU utilization while performing normal Broadband CM operations and commensurate with the operation required.
 
 **No memory footprint limit is specified for this interface.** Neither `include/cm_hal.h` nor this specification states a maximum resident size, a heap budget or a `CPU` share, so a vendor implementation is held to the proportionality requirement above rather than to a number. Where a caller needs a bound - on a memory-constrained platform, for instance - it must be agreed with the vendor outside this interface. The one memory obligation this interface does state precisely is ownership, under `Memory Model`.
 
@@ -237,7 +237,7 @@ Both HAL wrapper and 3rd party software implementations should prioritize robust
 
 ### Licensing
 
-Broadband CM HAL implementation is expected to released under the Apache License 2.0.
+Broadband CM HAL implementation is expected to be released under the Apache License 2.0.
 
 The full licence text is in `LICENSE`, with attribution in `NOTICE` and the copyright statement in `COPYING`; all three are linked into `docs/pages/` so the generated documentation carries them.
 
@@ -577,7 +577,7 @@ This is one path, not the whole interface. The declarations it does not walk - `
 
 Two state vocabularies exist here and they are not the same thing. The interface's **own** lifecycle is short and *is* established by `include/cm_hal.h`, which chains the three initializers by pre-condition and post-condition. The **modem's** `DOCSIS` status is longer, is reported rather than driven, and is **not** a state machine: the declaration of `docsis_getCMStatus` states that "this interface reports these values but specifies neither which transitions between them are legal nor in what order they occur, so a caller must not infer a state machine from the list" (`cm_hal.h`). This topic therefore draws the first and tabulates the second.
 
-**The `HAL` lifecycle, which the interface does establish.** Each edge below is a documented pre-condition or post-condition, not an inference: `cm_hal_InitDB` is a pre-condition of every other operation and no other function may be called before it returns `RETURN_OK`, on success `docsis_InitDS` may be called , `docsis_InitDS` requires `cm_hal_InitDB` to have returned `RETURN_OK`, and `docsis_InitUS` requires the same and completes the mandatory sequence, after which `cm_hal_InitDB`'s own contract leaves every other function callable.
+**The `HAL` lifecycle, which the interface does establish.** Each edge below is a documented pre-condition or post-condition, not an inference: `cm_hal_InitDB` is a pre-condition of every other operation and no other function may be called before it returns `RETURN_OK`, on success `docsis_InitDS` may be called, `docsis_InitDS` requires `cm_hal_InitDB` to have returned `RETURN_OK`, and `docsis_InitUS` requires the same and completes the mandatory sequence, after which `cm_hal_InitDB`'s own contract leaves every other function callable.
 
 ```mermaid
 stateDiagram-v2
