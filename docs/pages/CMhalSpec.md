@@ -1,4 +1,4 @@
-# CM HAL Documentation
+# Cable Modem HAL Documentation
 
 ## Version History
 
@@ -71,7 +71,7 @@ The `CM HAL` (Cable Modem Hardware Abstraction Layer) module provides a standard
 
 - **Device Management:** Initializing and deinitializing the cable modem, managing its operational status (online/offline), and retrieving device information (e.g., model, firmware version).
 - **DOCSIS Operations:** Configuring and managing `DOCSIS` channels and parameters, retrieving downstream and upstream channel information, and obtaining DOCSIS-related statistics.
-- **Network Configuration:** Setting and retrieving network parameters, such as IP addresses, subnet masks, and default gateways for the cable modem.
+- **Network Configuration:** Retrieving network parameters, such as IP addresses, subnet masks, default gateways and the `CPE` list; this interface does not provide setters for IP addressing.
 - **Event Notifications:** Providing notifications to applications about changes in the cable modem's operational status, channel configurations, or other relevant events.
 - **Diagnostics:** Offering tools for diagnosing and troubleshooting issues with the cable modem, including retrieving error logs and signal quality information.
 By abstracting the complexities of `DOCSIS` and cable modem hardware, the `CM HAL` simplifies the development of applications that rely on cable modem connectivity within the RDK ecosystem. It provides a consistent and reliable way to interact with cable modems across different platforms and configurations, facilitating seamless integration of cable modem capabilities into `RDK-B` devices.
