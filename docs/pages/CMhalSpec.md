@@ -7,6 +7,7 @@
 | --- | --- | --- |
 | 2024-06-10 | Initial release. Cable Modem HAL header migrated to GitHub. | 1.0.0 |
 | 2024-06-20 | Fixing Syntax Errors | 1.0.1 |
+| 2026-08-24 | Specification rewritten to the canonical RDK-B HAL topic set: every declared function named in `API Surface`, the asynchronous-notification and device-management claims are corrected against `include/cm_hal.h`, and the placeholder identifiers in the sequence diagram are replaced with declared ones. | 1.0.1 |
 
 
 ## Acronyms
