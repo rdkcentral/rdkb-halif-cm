@@ -58,7 +58,7 @@ The expansions below cover the terms this document uses. Interface terminology f
 - `UCD` \- Upstream Channel Descriptor
 - `URL` \- Uniform Resource Locator
 - `US` \- Upstream, the direction from the modem toward the network
-- `US` \- Upstream Service Group
+- `USG` \- Upstream Service Group
 - `USOFDMA` \- Upstream Orthogonal Frequency Division Multiple Access
 - `WAN` \- Wide Area Network
 
@@ -359,7 +359,7 @@ A caller of this interface constructs or interprets the types below. Every one i
 | `snmpv3_kickstart_table_t` | An `SNMP` v3 kickstart configuration table: a row count and up to `MAX_KICKSTART_ROWS` row pointers. |
 | `CM_DIPLEXER_SETTINGS` | Diplexer frequency settings: the upstream and downstream upper band edges in `MHz`. This is the structure the notification handler receives. |
 
-**The callback typedef.** `cm_hal_DiplexerVariationCallback`is the one handler type this interface defines. It is installed by `cm_hal_Register_DiplexerVariationCallback`, it receives a `CM_DIPLEXER_SETTINGS` structure by value, and it returns `RETURN_OK` or `RETURN_ERR`. There is no matching unregister function; `Asynchronous Notification Model` states the obligations that follow.
+**The callback typedef.** `cm_hal_DiplexerVariationCallback` is the one handler type this interface defines. It is installed by `cm_hal_Register_DiplexerVariationCallback`, it receives a `CM_DIPLEXER_SETTINGS` structure by value, and it returns `RETURN_OK` or `RETURN_ERR`. There is no matching unregister function; `Asynchronous Notification Model` states the obligations that follow.
 
 ### API Surface
 
@@ -368,7 +368,7 @@ This topic is the boundary between the two ways of reading this document. Everyt
 **Initialization \- 3 functions.** The sequence `Initialization and Startup` requires, in that order.
 
 | API | Purpose |
-| --- | --- | --- |
+| --- | --- |
 | `cm_hal_InitDB` | Initializes the `HAL` and its dependencies; may block if the hardware is not ready. |
 | `docsis_InitDS` | Initializes the downstream `PHY` layer and direct hardware access. |
 | `docsis_InitUS` | Initializes the upstream `PHY` layer and direct hardware access. |
